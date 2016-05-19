@@ -1,0 +1,51 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+   <link rel="icon" href="{% static 'favicon/dcp.png' %}" type="image/png" />
+   <meta charset="utf-8">
+
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <title>DCP &mdash; Disaster Communication Platform</title>
+
+   <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+</head>
+<body>
+
+   <nav class="navbar navbar-default">
+      <div class="container-fluid">
+         <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+               <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> DCP</a>
+         </div>
+         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+               <li><a href="/info/">Informationen</a></li>
+               <li><a href="/add/">Hinzufügen</a></li>
+            </ul>
+            <div class="navbar-form navbar-right">
+               <form role="search" method="POST">
+                  {% csrf_token %}
+                  <div class="form-group">
+                     <input type="text" name="search" class="form-control" placeholder="Suchbegriff eingeben...">
+                  </div>
+                  <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Suchen</button>
+               </form>
+            </div>
+         </div>
+      </div>
+   </nav>
+
+
+{% block content %}{% endblock content%}
+
+
+<!-- Load scripts at the end in order to be faster... -->
+<script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>  
+</body>
+</html>

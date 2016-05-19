@@ -17,6 +17,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-	url(r'^dcp/', include('dcp.urls')),
+	url(r'', include('dcp.urls', namespace="dcp")),
     url(r'^admin/', admin.site.urls),
 ]
