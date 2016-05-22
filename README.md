@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/EN152/dcp.png?label=ready&title=Ready)](https://waffle.io/EN152/dcp)
 # Disaster Communication Platform
 
 ## Installation
