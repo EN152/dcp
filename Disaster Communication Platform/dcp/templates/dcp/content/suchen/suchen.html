@@ -1,8 +1,44 @@
 {% extends "dcp/design/base.html" %}
 
-{% block title %} Suchen {% endblock %}
+{% block title %} Wonach suchst Du? {% endblock %}
 
 {% block content %}
 
-{% endblock content %}
+<div class="col-lg-4">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			Materielles
+		</div>
+		<div class="panel-body">
+			<p>Hier kannst Du ein Gesuch einstellen, das einen Gegenstand betrifft. Wähle eine Kategorie und lade optional ein Beispielfoto hoch. Bevor du dein Gesuch einstellt, ist es sinnvoll, bei den <a href="/bieten/materielles/">Angeboten</a> vorbeizuschauen.</p>
+			<h2><span class="glyphicon glyphicon-th-large"></span> <a href="/suchen/materielles/">Materielles</a></h2>
+		</div>
+	</div>
+</div>
 
+<div class="col-lg-4">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			Immaterielles
+		</div>
+		<div class="panel-body">
+			<p>Hier kannst Du ein Gesuch einstellen, das eine Dienstleistung betrifft. Wähle eine Kategorie und versuche, deine Beschreibung möglichst eindeutig zu formulieren. Bitte beachte mögliche Einschränkungen wie ggf. benötigte Berufsausbildung (Ärzte, Handwerker...).</p>
+			<h2><span class="glyphicon glyphicon-tags"></span> <a href="/suchen/immaterielles/">Immaterielles</a></h2>
+		</div>
+	</div>
+</div>
+
+
+<div class="col-lg-4">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			Personen
+		</div>
+		<div class="panel-body">
+			<p>Hier kannst Du nach einer vermissten Person suchen. Bestenfalls lädst du ein aktuelles Foto und eine treffende Beschreibung hoch. Nenne Erkennungsmerkmale, Namen und den Ort, an dem Du die Person zuletzt gesehen hast.</p>
+			<h2><span class="glyphicon glyphicon-user"></span> <a href="/suchen/personen/">Personen</a></h2>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}
