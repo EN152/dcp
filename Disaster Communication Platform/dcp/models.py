@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from datetime import timezone
 from django.utils import timezone
 from enum import Enum
 from django.core.validators import MinValueValidator, MaxValueValidator
