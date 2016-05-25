@@ -11,4 +11,9 @@
 .Trash-*
 
 
+# Eclipse Djangoproject import preferences
+.project
+.pydevproject
 
+#pycache temps
+*.pyc
