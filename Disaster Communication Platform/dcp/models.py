@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
-
 from django.db import models
 from datetime import timezone
 from django.utils import timezone
 from enum import Enum
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
 
 class Catastrophe(models.Model):
 	cat_title = models.CharField(max_length=200)
@@ -13,14 +13,10 @@ class Catastrophe(models.Model):
 	
 	def __unicode__(self):
 		return self.cat_title 
-
-class Categorys(Enum):
-	groceries = ('Groceries', 1)
-	infarstructure = ('Infrastructure', 2)
-	tools = ('Tools', 3)
-	drugs = ('Drugs', 4)
 	
 class Search(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True)
 	CATEGORY_TYPE = (
 				('1','Groceries',),
 				('2,', 'Infrastructure'),
@@ -36,8 +32,13 @@ class Search(models.Model):
 	image = models.ImageField()
 	created_date = models.DateTimeField(default=timezone.now)
 	visibility = models.BooleanField(default=True)
+
+	def __unicode__(self):
+		return self.title
 	
 class Offer(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True)
 	CATEGORY_TYPE = (
 				('1','Groceries',),
 				('2,', 'Infrastructure'),
@@ -54,4 +55,7 @@ class Offer(models.Model):
 	bump_date = models.DateTimeField(default=timezone.now)
 	report_cnt = models.PositiveSmallIntegerField(default=0)
 	visibility = models.BooleanField(default=True)
+
+	def __unicode__(self):
+		return self.title
 	
