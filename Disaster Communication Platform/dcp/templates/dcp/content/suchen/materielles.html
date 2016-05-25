@@ -4,6 +4,83 @@
 
 {% block content %}
 
+
+
+<div class="panel panel-default">
+	<div class="panel-heading"><span class="glyphicon glyphicon-search"></span> Suche</div>
+	<div class="panel-body">
+	 <div class="col-sm-6">
+		<form method="POST">
+			 
+				<h2><span class="glyphicon glyphicon-search"></span> Nach welchem Gegenstand suchst Du?</h2>
+				<div class="form-group">
+					<label>Titel:</label>
+					<input name="title" type="text" placeholder="Suche leistungsstarkes Stromaggregat" class="form-control">
+				</div>
+
+			
+				<label>Kategorie:</label><br />
+				
+				<div class="radio">
+					<label>
+				    <input type="radio" name="category" id="lebensmittel" value="lebensmittel">
+				    <span class="glyphicon glyphicon-cutlery"></span> Lebensmittel
+				  </label>
+				</div>
+
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="category" id="infrastruktur" value="infrastruktur">
+				   <span class="glyphicon glyphicon-flash"></span> Infrastruktur
+				  </label>
+				</div>
+
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="category" id="werkzeug" value="werkzeug">
+				   <span class="glyphicon glyphicon-wrench"></span> Werkzeug
+				  </label>
+				</div>
+
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="category" id="medizin" value="medizin">
+				   <span class="glyphicon glyphicon-heart"></span> Medizin
+				  </label>
+				</div>
+
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="category" id="sonstiges" value="sonstiges">
+				   <span class="glyphicon glyphicon-option-horizontal"></span> Sonstiges
+				  </label>
+				</div>
+
+				<div class="form-group">
+					<label>Bild:</label><input type="file">
+               </div>
+
+				<div class="form-group">
+					<label>Kurzbeschreibung:</label>
+					<textarea name="description" class="form-control" rows="5" id="description" placeholder="Nenne hier wichtige Details."></textarea>
+				</div>
+
+				<div class="form-group">
+					<label>Standort:</label>
+					<input name="location" type="text" class="form-control" id="inputlg" placeholder="Berlin">
+				</div>
+
+
+				<div class="form-group">{% csrf_token %}
+					<button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-share"></span> Absenden</button>
+				</div>
+			
+			</form>
+		</div>	
+		</div>
+	</div>
+
+
 <div class="panel panel-default">
 	<div class="panel-heading"><i class="fa fa-th-list"></i> Aktuelle Gesuche</div>
 	<div class="panel-body">
@@ -110,4 +187,5 @@
 							</ul> <!-- # -->
 						</div>
 					</div>
+
 {% endblock content %}
