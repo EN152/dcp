@@ -1,10 +1,8 @@
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.utils import timezone
-from django.views import generic
-from django.shortcuts import redirect
+# -*- coding: utf-8 -*-
+from django.views.generic import View
+from django.shortcuts import render
 
+<<<<<<< HEAD
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -55,3 +53,67 @@ def index(request):
 
 def imprint(request):
     return render(request, 'dcp/content/imprint.html', {})
+=======
+# Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
+#   
+#class Login(View):
+#    template = 'dcp/login.html'
+#   
+#    def get(self, request):
+#        params = {}
+#        return render(request, self.template, params)
+#   
+#   def post ist analog
+
+class Login(View):
+   template = 'dcp/content/spezial/login.html'
+   
+   def get(self, request):
+        params = {}
+        return render(request, self.template, params)   
+        
+   def post(self, request):
+       params = {}
+       return render(request, self.template, params)  
+       #doSomething
+
+
+class Index(View):
+    template = 'dcp/index.html'
+   
+    def get(self, request):
+        params = {}
+        return render(request, self.template, params)
+        
+        
+class Suchen(View):
+    template = 'dcp/content/suchen/suchen.html'
+   
+    def get(self, request):
+        params = {}
+        return render(request, self.template, params)        
+   
+   
+class Suchen_Materielles(View):
+    template = 'dcp/content/suchen/materielles.html'
+   
+    def get(self, request):
+        params = {}
+        return render(request, self.template, params)
+
+
+class Suchen_Immaterielles(View):
+    template = 'dcp/content/suchen/immaterielles.html'
+   
+    def get(self, request):
+        params = {}
+        return render(request, self.template, params)
+
+
+class Suchen_Personen(View):
+    template = 'dcp/content/suchen/personen.html'
+   
+    def get(self, request):
+        params = {}
+        return render(request, self.template, params)
+>>>>>>> e708912534f66164aa2c8e1a84d33a7daecb4a99
