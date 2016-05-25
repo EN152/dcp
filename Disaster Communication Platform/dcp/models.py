@@ -57,4 +57,33 @@ class Offer(models.Model):
 
 	def __unicode__(self):
 		return self.title
+
+class Search_Immaterial(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True)
+	title = models.CharField(max_length=100)
+	description = models.TextField(max_length=500)
+	radius = models.PositiveSmallIntegerField(default=10, validators=[MinValueValidator(0), MaxValueValidator(1000)])
+	location_x = models.FloatField()
+	location_y = models.FloatField()
+	created_date = models.DateTimeField(default=timezone.now)
+	visibility = models.BooleanField(default=True)
+
+	def __unicode__(self):
+		return self.title
+	
+class Offer_Immaterial(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True)
+	title = models.CharField(max_length=100)
+	description = models.TextField(max_length=500)
+	location_x = models.FloatField()
+	location_y = models.FloatField()
+	created_date = models.DateTimeField(default=timezone.now)
+	bump_date = models.DateTimeField(default=timezone.now)
+	report_cnt = models.PositiveSmallIntegerField(default=0)
+	visibility = models.BooleanField(default=True)
+
+	def __unicode__(self):
+		return self.title
 	
