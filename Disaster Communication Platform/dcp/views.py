@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from dcpcontainer import settings
 from django.contrib.auth.decorators import login_required
 
-
 # The authentification for the login of the user
 # Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
 #   
@@ -19,6 +18,7 @@ from django.contrib.auth.decorators import login_required
 #        return render(request, self.template, params)
 #   
 #   def post ist analog
+
 
 
 class Login(View):
@@ -34,7 +34,6 @@ class Login(View):
            password = request.POST['password']
            valid = bool(False)
            user = authenticate(username=username, password=password)
-
            if user is not None:
                if user.is_active:
                    login(request, user)
@@ -42,33 +41,53 @@ class Login(View):
                else:
                    return HttpResponse("Inactive user.")
            else:
-               return render(request, 'dcp/design/login.html', {'notVaild': valid})
-       return render(request, "dcp/design/login.html", {})
+               return render(request, self.template, {'notVaild': valid})
+       return render(request, self.template, {})
 
+
+
+
+class Logout(View):
+    def get(self, request):
+        if request.user.is_authenticated():
+            params = {}
+            logout(request)
+            return HttpResponseRedirect("login/")
 
 
 class Index(View):
     template = 'dcp/index.html'
     def get(self, request):
-        params = {}
-        return render(request, self.template, params)
-        
-        
+        if request.user.is_authenticated():
+            params = {}
+            return render(request, 'dcp/index.html', params)
+        else:
+            return HttpResponseRedirect("login/")
+
+    def post(self, request):
+        if request.user.is_authenticated():
+            params = {}
+            return render(request, 'dcp/index.html', params)
+        else:
+            return HttpResponseRedirect("login/")
+
 class Suchen(View):
     template = 'dcp/content/suchen/suchen.html'
 
 
     def get(self, request):
-        params = {}
-        return render(request, self.template, params)        
+        if request.user.is_authenticated():
+            params = {}
+            return render(request, self.template, params)
    
    
 class Suchen_Materielles(View):
     template = 'dcp/content/suchen/materielles.html'
 
     def get(self, request):
-        params = {}
-        return render(request, self.template, params)
+        if request.user.is_authenticated():
+            params = {}
+            return render(request, self.template, params)
 
 
 class Suchen_Immaterielles(View):
@@ -76,13 +95,15 @@ class Suchen_Immaterielles(View):
 
 
     def get(self, request):
-        params = {}
-        return render(request, self.template, params)
+        if request.user.is_authenticated():
+            params = {}
+            return render(request, self.template, params)
 
 
 class Suchen_Personen(View):
     template = 'dcp/content/suchen/personen.html'
 
     def get(self, request):
-        params = {}
-        return render(request, self.template, params)
+        if request.user.is_authenticated():
+            params = {}
+            return render(request, self.template, params)

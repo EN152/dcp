@@ -6,6 +6,7 @@ urlpatterns = [
     
     # Spezialseiten
     url(r'^login/$', Login.as_view()),
+    url(r'^logout/$', Logout.as_view()),
    # url(r'^administration/$', views.administration),
    # url(r'^suchergebnisse/$', views.suchergebnisse),
 
