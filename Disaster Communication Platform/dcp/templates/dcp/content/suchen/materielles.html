@@ -3,12 +3,20 @@
 {% block title %} Suche: Materielles {% endblock %}
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 
-
+<script>
+	$(document).ready(function(){
+		$("#newSearch").click(function(){
+			$("#suchFormular").toggle();
+			$("#suchFormularHeading").hide();
+		});
+	});
+</script>
 
 <div class="panel panel-default">
-	<div class="panel-heading"><span class="glyphicon glyphicon-search"></span> Suche</div>
-	<div class="panel-body">
+	<div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon glyphicon-search"></span> Neues Gesuch</button></div>
+	<div class="panel-body" id="suchFormular" style="display: none;">
 	 <div class="col-sm-6">
 		<form method="POST">
 			 
@@ -91,7 +99,6 @@
 
 					<img src="http://www.wasserfilter-hannover.de/wp-content/uploads/2015/04/Wasser-Zitrone-200x200.jpg" width="150em" style="float:right;" class="img-thumbnail">
 
-
 					<div class="timeline-heading">
 						<h4 class="timeline-title"><b>Suche sauberes Trinkwasser</b></h4>
 						<p><span class="glyphicon glyphicon-user"></span> <a href="#">Max Müller</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor 1 Minute </small></p>
@@ -131,7 +138,6 @@
 										</div>
 									</p>
 
-									<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 									<script>
 										$(document).ready(function(){
 											$("#btnEinblenden").click(function(){
@@ -159,7 +165,7 @@
 													<div class="header">
 														<span class="glyphicon glyphicon-user"></span> <a href="#">Lea Meier</a>
 														<small class="pull-right text-muted">
-															<i class="fa fa-clock-o fa-fw"></i> 26.05.2016 <b>12:36 Uhr</b>
+															<i class="fa fa-clock-o fa-fw"></i> 26.05.2016: <b>12:36 Uhr</b>
 														</small>
 													</div>
 													<p>

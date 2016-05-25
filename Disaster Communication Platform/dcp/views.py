@@ -53,16 +53,11 @@ class Login(View):
                return render(request, self.template, {'notVaild': valid})
        return render(request, self.template, {})
 
-
-
-
 class Logout(View):
     def get(self, request):
         if request.user.is_authenticated():
             logout(request)
             return HttpResponseRedirect("../login/")
-
-
 
 class Index(View):
     template = 'dcp/index.html'
