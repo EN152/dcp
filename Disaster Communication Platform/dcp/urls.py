@@ -2,13 +2,11 @@ from django.conf.urls import url
 from dcp.views import *
 
 urlpatterns = [
-<<<<<<< HEAD
     url(r'^$', views.index, name='index'),
     url(r'^imprint/$', views.imprint, name='imprint'),
     url(r'^login/$', views.Login),
     url(r'^logout/$', views.Logout),
     url(r'^register/$', views.register),
-=======
     url(r'^$', Index.as_view()),
     
     # Spezialseiten
@@ -46,5 +44,4 @@ urlpatterns = [
 #    url(r'^profil/daten/$', views.profil_daten),
 #    url(r'^profil/netzwerke/$', views.profil_netzwerke),
 
->>>>>>> e708912534f66164aa2c8e1a84d33a7daecb4a99
 ]

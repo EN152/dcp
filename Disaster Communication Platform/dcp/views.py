@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import View
 from django.shortcuts import render
-
-<<<<<<< HEAD
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -12,6 +10,16 @@ from .models import Catastrophe
 
 
 # The authentification for the login of the user
+# Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
+#   
+#class Login(View):
+#    template = 'dcp/login.html'
+#   
+#    def get(self, request):
+#        params = {}
+#        return render(request, self.template, params)
+#   
+#   def post ist analog
 
 def Login(request):
     if request.method == "POST":
@@ -53,17 +61,6 @@ def index(request):
 
 def imprint(request):
     return render(request, 'dcp/content/imprint.html', {})
-=======
-# Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
-#   
-#class Login(View):
-#    template = 'dcp/login.html'
-#   
-#    def get(self, request):
-#        params = {}
-#        return render(request, self.template, params)
-#   
-#   def post ist analog
 
 class Login(View):
    template = 'dcp/content/spezial/login.html'
@@ -116,4 +113,3 @@ class Suchen_Personen(View):
     def get(self, request):
         params = {}
         return render(request, self.template, params)
->>>>>>> e708912534f66164aa2c8e1a84d33a7daecb4a99
