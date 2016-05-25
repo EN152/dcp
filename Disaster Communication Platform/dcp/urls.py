@@ -1,6 +1,5 @@
 from django.conf.urls import url
 from dcp.views import *
-from django.contrib.auth.decorators import login_required, permission_required
 
 urlpatterns = [
     url(r'^$', Index.as_view()),

@@ -46,10 +46,9 @@ class Login(View):
        return render(request, "dcp/design/login.html", {})
 
 
+
 class Index(View):
     template = 'dcp/index.html'
-
-    @login_required
     def get(self, request):
         params = {}
         return render(request, self.template, params)
@@ -58,7 +57,7 @@ class Index(View):
 class Suchen(View):
     template = 'dcp/content/suchen/suchen.html'
 
-    @login_required
+
     def get(self, request):
         params = {}
         return render(request, self.template, params)        
@@ -67,7 +66,6 @@ class Suchen(View):
 class Suchen_Materielles(View):
     template = 'dcp/content/suchen/materielles.html'
 
-    @login_required
     def get(self, request):
         params = {}
         return render(request, self.template, params)
@@ -76,7 +74,7 @@ class Suchen_Materielles(View):
 class Suchen_Immaterielles(View):
     template = 'dcp/content/suchen/immaterielles.html'
 
-    @login_required
+
     def get(self, request):
         params = {}
         return render(request, self.template, params)
@@ -85,7 +83,6 @@ class Suchen_Immaterielles(View):
 class Suchen_Personen(View):
     template = 'dcp/content/suchen/personen.html'
 
-    @login_required
     def get(self, request):
         params = {}
         return render(request, self.template, params)
