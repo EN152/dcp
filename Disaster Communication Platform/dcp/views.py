@@ -21,46 +21,6 @@ from .models import Catastrophe
 #   
 #   def post ist analog
 
-def Login(request):
-    if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        valid = bool(False)
-        user = authenticate(username=username, password=password)
-
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect("/")
-            else:
-                return HttpResponse("Inactive user.")
-        else:
-            return render(request, 'dcp/design/login.html', {'notVaild': valid})
-    return render(request, "dcp/design/login.html", {})
-
-
-
-def Logout(request):
-    logout(request)
-    return HttpResponseRedirect(settings.LOGIN_URL)
-
-def register(request):
-    if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        user = User.objects.create_user(username, email, password)
-        user.save()
-    return render(request, "dcp/design/login.html", {})
-
-
-
-@login_required
-def index(request):
-    return render(request, 'dcp/index.html', {})
-
-def imprint(request):
-    return render(request, 'dcp/content/imprint.html', {})
 
 class Login(View):
    template = 'dcp/content/spezial/login.html'

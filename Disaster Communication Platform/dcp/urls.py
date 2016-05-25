@@ -2,11 +2,6 @@ from django.conf.urls import url
 from dcp.views import *
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^imprint/$', views.imprint, name='imprint'),
-    url(r'^login/$', views.Login),
-    url(r'^logout/$', views.Logout),
-    url(r'^register/$', views.register),
     url(r'^$', Index.as_view()),
     
     # Spezialseiten
