@@ -19,6 +19,12 @@ from django.contrib.auth.models import User
 #   
 #   def post ist analog
 
+def getPageAuthenticated(request, template, params={}):
+    if request.user.is_authenticated():
+        return render(request, template, params)
+    else:
+        return HttpResponseRedirect("login/")
+
 class Register(View):
     def post(self, request):
         if not request.user.is_authenticated():
@@ -53,25 +59,17 @@ class Login(View):
                return render(request, self.template, {'notVaild': valid})
        return render(request, self.template, {})
 
-
-
-
 class Logout(View):
     def get(self, request):
         if request.user.is_authenticated():
             logout(request)
             return HttpResponseRedirect("../login/")
 
-
-
 class Index(View):
     template = 'dcp/index.html'
+
     def get(self, request):
-        if request.user.is_authenticated():
-            params = {}
-            return render(request, 'dcp/index.html', params)
-        else:
-            return HttpResponseRedirect("login/")
+        return getPageAuthenticated(request, self.template)
 
     def post(self, request):
         if request.user.is_authenticated():
@@ -83,36 +81,25 @@ class Index(View):
 class Suchen(View):
     template = 'dcp/content/suchen/suchen.html'
 
-
     def get(self, request):
-        if request.user.is_authenticated():
-            params = {}
-            return render(request, self.template, params)
+        return getPageAuthenticated(request, self.template)
    
    
 class Suchen_Materielles(View):
     template = 'dcp/content/suchen/materielles.html'
 
     def get(self, request):
-        if request.user.is_authenticated():
-            params = {}
-            return render(request, self.template, params)
-
+        return getPageAuthenticated(request, self.template)
 
 class Suchen_Immaterielles(View):
     template = 'dcp/content/suchen/immaterielles.html'
 
-
     def get(self, request):
-        if request.user.is_authenticated():
-            params = {}
-            return render(request, self.template, params)
+        return getPageAuthenticated(request, self.template)
 
 
 class Suchen_Personen(View):
     template = 'dcp/content/suchen/personen.html'
 
     def get(self, request):
-        if request.user.is_authenticated():
-            params = {}
-            return render(request, self.template, params)
+        return getPageAuthenticated(request, self.template)
