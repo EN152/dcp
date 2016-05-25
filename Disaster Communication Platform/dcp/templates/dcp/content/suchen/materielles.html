@@ -4,4 +4,110 @@
 
 {% block content %}
 
+<div class="panel panel-default">
+	<div class="panel-heading"><i class="fa fa-th-list"></i> Aktuelle Gesuche</div>
+	<div class="panel-body">
+		<ul class="timeline">
+			<li> <!--ODER  li class="timeline-inverted"-->
+				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
+				<div class="timeline-panel">
+
+					<img src="http://www.wasserfilter-hannover.de/wp-content/uploads/2015/04/Wasser-Zitrone-200x200.jpg" width="150em" style="float:right;" class="img-thumbnail">
+
+
+					<div class="timeline-heading">
+						<h4 class="timeline-title"><b>Suche sauberes Trinkwasser</b></h4>
+						<p><a href="#"><span class="glyphicon glyphicon-user"></span> Max Müller</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor 1 Minute </small></p>
+					</div>
+
+					<div class="timeline-body">
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
+					</div>
+					<p>
+						<div class="col-lg-12" margin="20px">
+							<div class="panel panel-primary">
+								<div class="panel-body">
+									<p><div><!--Abstand--></div>
+										<span class="glyphicon glyphicon-cutlery"></span> Lebensmittel<br>
+										<span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
+									</p>
+								</div>	
+
+								<!-- Karte hier einfügen -->
+								<img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
+
+								<p>
+									<center>
+										<button type="button" class="btn btn-success">
+											<span class="glyphicon glyphicon-arrow-up" ></span>
+											Bump! <span class="badge">4</span></button>
+
+											<button type="button" class="btn btn-primary">
+												<span class="glyphicon glyphicon-envelope"></span> 
+												Kontaktieren</button>
+
+												<button type="button" class="btn btn-danger">
+													<span class="glyphicon glyphicon-ban-circle"></span> 
+													Melden</button>
+												</center>
+											</p>
+										</div>
+									</p>
+
+									<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+									<script>
+										$(document).ready(function(){
+											$("#btnEinblenden").click(function(){
+												$("#kommentare").toggle();
+												$("#kommentareFooter").toggle();
+											});
+										});
+									</script>
+
+									<div class="chat-panel panel panel-default">
+										<div class="panel-heading">
+											<i class="fa fa-comments fa-fw"></i>
+											Öffentliche Kommentare <span class="badge">1</span>
+
+											<button id="btnEinblenden" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+												<i class="fa fa-chevron-down"></i>
+											</button>
+										</div>
+
+
+										<div class="panel-body" id="kommentare">
+											<ul class="chat">
+												<li class="left clearfix">
+
+													<div class="header">
+														<a href="#"><span class="glyphicon glyphicon-user"></span> Lea Meier</a>
+														<small class="pull-right text-muted">
+															<i class="fa fa-clock-o fa-fw"></i> 26.05.2016 <b>12:36 Uhr</b>
+														</small>
+													</div>
+													<p>
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+													</p>
+												</li>
+											</ul>
+										</div>
+
+										<div class="panel-footer" id="kommentareFooter">
+											<div class="input-group">
+												<input id="btn-input" type="text" class="form-control input-sm" placeholder="Stelle Fragen oder kommentiere..." />
+												<span class="input-group-btn">
+													<button class="btn btn-warning btn-sm" id="btn-chat">
+														Kommentieren
+													</button>
+												</span>
+											</div>
+										</div>
+										<!-- /.panel-footer -->
+									</div>
+								</li>
+
+
+							</ul> <!-- # -->
+						</div>
+					</div>
 {% endblock content %}
