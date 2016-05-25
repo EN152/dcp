@@ -4,9 +4,8 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from dcpcontainer import settings
-from .models import Catastrophe
+from django.contrib.auth.decorators import login_required
 
 
 # The authentification for the login of the user
@@ -30,14 +29,27 @@ class Login(View):
         return render(request, self.template, params)   
         
    def post(self, request):
-       params = {}
-       return render(request, self.template, params)  
-       #doSomething
+       if request.method == "POST":
+           username = request.POST['username']
+           password = request.POST['password']
+           valid = bool(False)
+           user = authenticate(username=username, password=password)
+
+           if user is not None:
+               if user.is_active:
+                   login(request, user)
+                   return HttpResponseRedirect("/")
+               else:
+                   return HttpResponse("Inactive user.")
+           else:
+               return render(request, 'dcp/design/login.html', {'notVaild': valid})
+       return render(request, "dcp/design/login.html", {})
 
 
 class Index(View):
     template = 'dcp/index.html'
-   
+
+    @login_required
     def get(self, request):
         params = {}
         return render(request, self.template, params)
@@ -45,7 +57,8 @@ class Index(View):
         
 class Suchen(View):
     template = 'dcp/content/suchen/suchen.html'
-   
+
+    @login_required
     def get(self, request):
         params = {}
         return render(request, self.template, params)        
@@ -53,7 +66,8 @@ class Suchen(View):
    
 class Suchen_Materielles(View):
     template = 'dcp/content/suchen/materielles.html'
-   
+
+    @login_required
     def get(self, request):
         params = {}
         return render(request, self.template, params)
@@ -61,7 +75,8 @@ class Suchen_Materielles(View):
 
 class Suchen_Immaterielles(View):
     template = 'dcp/content/suchen/immaterielles.html'
-   
+
+    @login_required
     def get(self, request):
         params = {}
         return render(request, self.template, params)
@@ -69,7 +84,8 @@ class Suchen_Immaterielles(View):
 
 class Suchen_Personen(View):
     template = 'dcp/content/suchen/personen.html'
-   
+
+    @login_required
     def get(self, request):
         params = {}
         return render(request, self.template, params)
