@@ -91,6 +91,10 @@ class Suchen_Materielles(View):
     def get(self, request):
         return getPageAuthenticated(request, self.template)
 
+    def post(self, request):
+        params = {}
+        return render(request, self.template, params)
+
 class Suchen_Immaterielles(View):
     template = 'dcp/content/suchen/immaterielles.html'
 
