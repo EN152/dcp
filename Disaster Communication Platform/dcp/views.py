@@ -1,14 +1,66 @@
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.utils import timezone
-from django.views import generic
-from django.shortcuts import redirect
+# -*- coding: utf-8 -*-
+from django.views.generic import View
+from django.shortcuts import render
 
-from .models import Catastrophe
+# Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
+#   
+#class Login(View):
+#    template = 'dcp/login.html'
+#   
+#    def get(self, request):
+#        params = {}
+#        return render(request, self.template, params)
+#   
+#   def post ist analog
 
-def index(request):
-    return render(request, 'dcp/index.html', {})
+class Login(View):
+   template = 'dcp/content/spezial/login.html'
+   
+   def get(self, request):
+        params = {}
+        return render(request, self.template, params)   
+        
+   def post(self, request):
+       params = {}
+       return render(request, self.template, params)  
+       #doSomething
 
-def imprint(request):
-    return render(request, 'dcp/content/imprint.html', {})
+
+class Index(View):
+    template = 'dcp/index.html'
+   
+    def get(self, request):
+        params = {}
+        return render(request, self.template, params)
+        
+        
+class Suchen(View):
+    template = 'dcp/content/suchen/suchen.html'
+   
+    def get(self, request):
+        params = {}
+        return render(request, self.template, params)        
+   
+   
+class Suchen_Materielles(View):
+    template = 'dcp/content/suchen/materielles.html'
+   
+    def get(self, request):
+        params = {}
+        return render(request, self.template, params)
+
+
+class Suchen_Immaterielles(View):
+    template = 'dcp/content/suchen/immaterielles.html'
+   
+    def get(self, request):
+        params = {}
+        return render(request, self.template, params)
+
+
+class Suchen_Personen(View):
+    template = 'dcp/content/suchen/personen.html'
+   
+    def get(self, request):
+        params = {}
+        return render(request, self.template, params)

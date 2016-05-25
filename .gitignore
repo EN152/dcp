@@ -10,10 +10,17 @@
 # Linux trash folder which might appear on any partition or disk
 .Trash-*
 
-
 # Eclipse Djangoproject import preferences
 .project
 .pydevproject
 
-#pycache temps
+# Pycache temps
 *.pyc
+
+# Visual Studio
+Disaster Communication Platform/Disaster Communication Platform.pyperf
+Disaster Communication Platform/.vs/
+Disaster Communication Platform/Disaster Communication Platform.pyproj
+Disaster Communication Platform/bin/
+Disaster Communication Platform/obj/
+Disaster Communication Platform/Disaster Communication Platform.sln
