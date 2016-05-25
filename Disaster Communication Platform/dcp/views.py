@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from dcpcontainer import settings
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.models import User
 # The authentification for the login of the user
 # Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
 #   
@@ -19,7 +19,16 @@ from django.contrib.auth.decorators import login_required
 #   
 #   def post ist analog
 
-
+class Register(View):
+    def post(self, request):
+        if not request.user.is_authenticated():
+            if request.method == "POST":
+                username = request.POST['username']
+                password = request.POST['password']
+                email = request.POST['email']
+                user = User.objects.create_user(username, email, password)
+                user.save()
+                return HttpResponseRedirect("/login/")
 
 class Login(View):
    template = 'dcp/content/spezial/login.html'
@@ -50,9 +59,9 @@ class Login(View):
 class Logout(View):
     def get(self, request):
         if request.user.is_authenticated():
-            params = {}
             logout(request)
-            return HttpResponseRedirect("login/")
+            return HttpResponseRedirect("../login/")
+
 
 
 class Index(View):

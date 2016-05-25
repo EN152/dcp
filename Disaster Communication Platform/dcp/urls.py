@@ -3,12 +3,13 @@ from dcp.views import *
 
 urlpatterns = [
     url(r'^$', Index.as_view()),
-    
+
     # Spezialseiten
     url(r'^login/$', Login.as_view()),
     url(r'^logout/$', Logout.as_view()),
-   # url(r'^administration/$', views.administration),
-   # url(r'^suchergebnisse/$', views.suchergebnisse),
+    url(r'^register/$', Register.as_view()),
+# url(r'^administration/$', views.administration),
+# url(r'^suchergebnisse/$', views.suchergebnisse),
 
     # Suchen
     url(r'^suchen/$', Suchen.as_view()),
