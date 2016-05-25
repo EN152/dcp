@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 from django.db import models
 from datetime import timezone
 from django.utils import timezone
-from enum import Enum
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Catastrophe(models.Model):
@@ -13,12 +12,6 @@ class Catastrophe(models.Model):
 	
 	def __unicode__(self):
 		return self.cat_title 
-
-class Categorys(Enum):
-	groceries = ('Groceries', 1)
-	infarstructure = ('Infrastructure', 2)
-	tools = ('Tools', 3)
-	drugs = ('Drugs', 4)
 	
 class Search(models.Model):
 	CATEGORY_TYPE = (
@@ -33,7 +26,8 @@ class Search(models.Model):
 	radius = models.PositiveSmallIntegerField(default=10, validators=[MinValueValidator(0), MaxValueValidator(1000)])
 	location_x = models.FloatField()
 	location_y = models.FloatField()
-	image = models.ImageField()
+	# Uploadpfad muss noch generiert werden... (Useranbindung + delete on cascade ? )
+	image = models.ImageField(upload_to="/upload/...")
 	created_date = models.DateTimeField(default=timezone.now)
 	visibility = models.BooleanField(default=True)
 	
@@ -49,7 +43,8 @@ class Offer(models.Model):
 	description = models.TextField(max_length=500)
 	location_x = models.FloatField()
 	location_y = models.FloatField()
-	image = models.ImageField()
+	# Uploadpfad muss noch generiert werden... (Useranbindung + delete on cascade ? )
+	image = models.ImageField(upload_to="/upload/...")
 	created_date = models.DateTimeField(default=timezone.now)
 	bump_date = models.DateTimeField(default=timezone.now)
 	report_cnt = models.PositiveSmallIntegerField(default=0)
