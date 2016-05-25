@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
-from enum import Enum
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 
@@ -38,7 +37,8 @@ class Material_Goods(Goods):
 				('4', 'Drugs'),
 				)
 	category = models.CharField(max_length=1, choices=CATEGORY_TYPE)
-	image = models.ImageField()
+	# Uploadpfad muss noch generiert werden... (Useranbindung + delete on cascade ? )
+	image = models.ImageField(upload_to="/upload/...")
 
 	class Meta:
 		abstract = True
