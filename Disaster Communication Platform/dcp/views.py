@@ -14,11 +14,16 @@ from django.shortcuts import render
 #   def post ist analog
 
 class Login(View):
-   template = 'dcp/login.html'
+   template = 'dcp/content/spezial/login.html'
    
    def get(self, request):
         params = {}
         return render(request, self.template, params)   
+        
+   def post(self, request):
+       params = {}
+       return render(request, self.template, params)  
+       #doSomething
 
 
 class Index(View):
