@@ -60,3 +60,24 @@ class Search_Immaterial(Immaterial_Goods):
 class Offer_Immaterial(Immaterial_Goods):
 	bump_date = models.DateTimeField(default=timezone.now)
 	report_cnt = models.PositiveSmallIntegerField(default=0)
+
+# Kommentare sind noch nicht ausgereift. Es ist nicht möglich ein ForeignKey von einer Abstract einzubinden (Goods)
+# Wenn jemand eine bessere Idee hat, dann bitte ändern
+class Comment(models.Model):
+	date_created = models.DateTimeField(default=timezone.now)
+	text = models.TextField(max_length=500, null=True)
+
+	class Meta:
+		abstract = True
+
+class Search_Material_Comment(Comment):
+	key = models.ForeignKey(Search_Material, on_delete=models.CASCADE, null=True)
+
+class Offer_Material_Comment(Comment):
+	key = models.ForeignKey(Offer_Material, on_delete=models.CASCADE, null=True)
+
+class Search_Immaterial_Comment(Comment):
+	key = models.ForeignKey(Search_Immaterial, on_delete=models.CASCADE, null=True)
+
+class Offer_Immaterial_Comment(Comment):
+	key = models.ForeignKey(Offer_Immaterial, on_delete=models.CASCADE, null=True)
