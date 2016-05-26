@@ -33,10 +33,11 @@ class Goods(models.Model):
 class Material_Goods(Goods):
 	
 	CATEGORY_TYPE = (
-				('1','Groceries',),
-				('2,', 'Infrastructure'),
+				('1','Groceries'),
+				('2','Infrastructure'),
 				('3', 'Tools'),
 				('4', 'Drugs'),
+				('5', 'Miscellaneous')
 				)
 	category = models.CharField(max_length=1, choices=CATEGORY_TYPE)
 	# Uploadpfad muss noch generiert werden... (Useranbindung + delete on cascade ? )
