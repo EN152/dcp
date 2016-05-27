@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from dcpcontainer import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 # The authentification for the login of the user
 # Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
 #   
@@ -32,6 +33,9 @@ class Register(View):
                 username = request.POST['username']
                 password = request.POST['password']
                 email = request.POST['email']
+                obj = User.objects.filter(username=username)
+                if obj:
+                    return HttpResponse('User already exists') # Wie kann man das schön darstellen?
                 user = User.objects.create_user(username, email, password)
                 user.save()
                 return HttpResponseRedirect("/login/")
