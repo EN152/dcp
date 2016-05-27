@@ -41,7 +41,7 @@ class Material_Goods(Goods):
 				)
 	category = models.CharField(max_length=1, choices=CATEGORY_TYPE)
 	# Uploadpfad muss noch generiert werden... (Useranbindung + delete on cascade ? )
-	image = models.ImageField(upload_to="/upload/...")
+	image = models.ImageField(upload_to="upload/")
 
 	class Meta:
 		abstract = True
