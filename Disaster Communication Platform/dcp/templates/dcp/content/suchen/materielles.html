@@ -78,6 +78,23 @@
 					<input name="location" type="text" class="form-control" id="inputlg" placeholder="Berlin">
 				</div>
 
+				<div class="form-inline">
+					<label for="priority">Suchradius (maximale Entfernung):</label><br />
+					<span class="label label-default">0km: kaum mobil</span>
+					<select name="priority" id="priority" class="form-control">
+						<option>0 km</option>
+						<option>1 km </option>
+						<option>2 km</option>
+						<option>5 km</option>
+						<option>10 km</option>
+						<option>20 km</option>
+						<option>50 km</option>
+						<option>100 km</option>
+						<option>1000 km</option>
+					</select>
+					<span class="label label-danger">1000km: keine Beschränkungen</span><br><br>
+				</div>
+
 
 				<div class="form-group">{% csrf_token %}
 					<button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-share"></span> Absenden</button>
