@@ -89,5 +89,7 @@ class Offer_Immaterial_Comment(Comment):
 class Message(models.Model):
 	# Zur delete Cascade: Ich bin mir nicht sicher, ob das wirklich so sinnvoll ist.
 	# Die Frage ist, was bringen Nachrichten an einen nicht existierenden User -> Verhalten muss noch definiert werden.
-	From  = models.ForeignKey(User,on_delete=models.CASCADE,null=False)
-	To = models.ForeignKey(User,on_delete=models.CASCADE,null=False)
+	From  = models.ForeignKey(User,on_delete=models.CASCADE,null=False,related_name='From')
+	To = models.ForeignKey(User,on_delete=models.CASCADE,null=False,related_name='To')
+	Text = models.TextField(max_length=5000,null=False)
+	SendTime = models.DateTimeField(default=timezone.now)
