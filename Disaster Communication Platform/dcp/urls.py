@@ -1,5 +1,7 @@
 from django.conf.urls import url
 from dcp.views import *
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.staticfiles.urls import static
 
 urlpatterns = [
     url(r'^$', Index.as_view()),
@@ -42,3 +44,7 @@ urlpatterns = [
 #    url(r'^profil/netzwerke/$', views.profil_netzwerke),
 
 ]
+
+# media url patters
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
