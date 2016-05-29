@@ -3,6 +3,7 @@ from django.views.generic import View
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
+from collections import defaultdict
 from django.utils.http import urlencode
 from django.contrib.auth.decorators import login_required
 from dcpcontainer import settings
@@ -130,7 +131,7 @@ class Chat(View):
         otherUser = User.objects.get(id=otherId) #TODO: Exception einbauen!!!!
         # Ok, fremdschlüssel sind da, nun die Liste holen:
         chats = (Message.objects.filter(From=otherUser.id,To=currentUser) | Message.objects.filter(From=currentUser,To=otherUser)).order_by('SendTime') # Filtern und Sortieren
-        form = self.form_class(initial=self.initial)
+        form = self.form_class()
         return render(request,self.template,context={'message_list':chats,'otherUser':otherUser,'currentUser':currentUser,'form':form})
     def post(self,request):
         form = self.form_class(request.POST)
@@ -145,3 +146,24 @@ class Chat(View):
             #Neuer Eintrag in der Datenbank:
 def url_with_querystring(path, **kwargs):
     return path + '?' + urlencode(kwargs)
+class Overview(View):
+    template = 'dcp/content/chat/chat_overview.html'
+    def get(self,request):
+        # Hole von allen Chats die der User hatte jeweils die letzte Nachricht
+        # Also From=currentUser oder To=currentUser -> Das sind alle Nachrichten
+        messageDict = defaultdict(list)
+        currentUser = request.user
+        all_chats = Message.objects.filter(From=currentUser) | Message.objects.filter(To=currentUser)
+        # Jetzt teile die Listen jeweils auf in Chat Gruppen
+        for m in all_chats:
+            chatPatner = m.To if m.From.id == currentUser.id else m.From
+            messageDict[chatPatner].append(m)
+        #tmpList = map[lambda mList: mList.sort(key=lambda message: message.SendTime), messageDict.items()]
+        tmpList = list()
+        for key,value in messageDict.items():
+            value.sort(key=lambda message: message.SendTime,reverse=True)
+            tmpList.append(value)
+        mList = list()
+        for x in tmpList:
+            mList.append(x[0])
+        return render(request,self.template,context={'last_message_list':mList})

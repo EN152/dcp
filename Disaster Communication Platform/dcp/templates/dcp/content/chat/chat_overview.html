@@ -1,6 +1,6 @@
 {% extends "dcp/design/base.html" %}
 
-{% block title %} Chat mit{{otherUser}} {% endblock %}
+{% block title %} Nachrichtenübersicht {% endblock %}
 
 {% block content %}
 <!-- /.panel -->
@@ -43,20 +43,15 @@
         </div>
     </div>
     <!-- /.panel-heading -->
-    {% if message_list %}
+    {% if last_message_list %}
     <div class="panel-body">
         <ul class="chat">
-            {% for message in message_list %}
-            {% if message.From_id == otherUser.id %}
+            {% for message in last_message_list %}
 
             <li class="right clearfix">
-
-                {% else %}
-                            <li class="left clearfix">
-                {% endif %}
                 <div class="chat-body clearfix">
                     <div class="header">
-                        <strong class="primary-font">{{message.From}}</strong>
+                        <strong class="primary-font">{{message.To}}</strong>
                         <small class="pull-right text-muted">
                             <i class="fa fa-clock-o fa-fw"></i> {{ message.SendTime }}
                         </small>
@@ -71,23 +66,6 @@
     </div>
     {% endif %}
     <!-- /.panel-body -->
-    <div class="panel-footer">
-
-
-            <form class="form-horizontal" role="form" id="message" action="#" method="post" >
-                                <div class="form-group">
-                                {% csrf_token %}
-                                {{ form.Text }}
-                                    </div>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-warning btn-sm" id="btn-chat" type="sumbit" >
-                                        Senden
-                                    </button>
-                                </span>
-            </form>
-    </div>
-    <!-- /.panel-footer -->
 </div>
 <!-- /.panel .chat-panel -->
-</div>
 {% endblock content %}
