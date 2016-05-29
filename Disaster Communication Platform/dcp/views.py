@@ -111,3 +111,11 @@ class Suchen_Personen(View):
 
     def get(self, request):
         return getPageAuthenticated(request, self.template)
+class Chat(View):
+    template = 'dcp/content/chat/chat.html'
+    def get(self,request):
+        # Hole die "andere" User Id
+        otherId = request.GET['userid']
+        currentUser = request.user
+
+        return render(request,self.template)
