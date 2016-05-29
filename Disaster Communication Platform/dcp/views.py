@@ -28,15 +28,18 @@ def getPageAuthenticated(request, template, params={}):
         return HttpResponseRedirect("login/")
 
 class Register(View):
+    template = 'dcp/content/spezial/login.html'
+
     def post(self, request):
         if not request.user.is_authenticated():
             if request.method == "POST":
                 username = request.POST['username']
                 password = request.POST['password']
                 email = request.POST['email']
+                valid = bool(False)
                 obj = User.objects.filter(username=username)
                 if obj:
-                    return HttpResponse('User already exists') # Wie kann man das schön darstellen?
+                    return render(request, self.template, {'registerNotValid': valid}) # Wie kann man das schön darstellen?
                 user = User.objects.create_user(username, email, password)
                 user.save()
                 return HttpResponseRedirect("/login/")
@@ -46,7 +49,7 @@ class Login(View):
    
    def get(self, request):
         params = {}
-        return render(request, self.template, params)   
+        return render(request, self.template, params)
         
    def post(self, request):
        if request.method == "POST":
