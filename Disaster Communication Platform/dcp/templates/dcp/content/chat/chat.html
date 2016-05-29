@@ -48,14 +48,15 @@
         <ul class="chat">
             {% for message in message_list %}
             {% if message.From_id == otherUser.id %}
-            <li class="left clearfix">
+
+            <li class="right clearfix">
 
                 {% else %}
-            <li class="right clearfix">
+                            <li class="left clearfix">
                 {% endif %}
                 <div class="chat-body clearfix">
                     <div class="header">
-                        <strong class="primary-font">{{message.To}}</strong>
+                        <strong class="primary-font">{{message.From}}</strong>
                         <small class="pull-right text-muted">
                             <i class="fa fa-clock-o fa-fw"></i> {{ message.SendTime }}
                         </small>
@@ -72,14 +73,15 @@
     <!-- /.panel-body -->
     <div class="panel-footer">
         <div class="input-group">
-            <input id="message" type="text"  class="form-control input-sm" placeholder="Nachricht hier eintippen"/>
+            <form id="message" action="#" method="post" >
                                 {% csrf_token %}
-                                {{ form.as_p }}
+                                {{ form.Text }}
                                 <span class="input-group-btn">
-                                    <button class="btn btn-warning btn-sm" id="btn-chat" action="#" method="post">
+                                    <button class="btn btn-warning btn-sm" id="btn-chat" type="sumbit" >
                                         Senden
                                     </button>
                                 </span>
+                </form>
         </div>
     </div>
     <!-- /.panel-footer -->
