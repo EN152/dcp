@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from dcpcontainer import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import Message
 from django.db import IntegrityError
 # The authentification for the login of the user
 # Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
@@ -117,5 +118,7 @@ class Chat(View):
         # Hole die "andere" User Id
         otherId = request.GET['userid']
         currentUser = request.user
-
-        return render(request,self.template)
+        otherUser = User.objects.get(id=otherId) #TODO: Exception einbauen!!!!
+        # Ok, fremdschlüssel sind da, nun die Liste holen:
+        chats = Message.objects.filter(From=otherUser.id,To=currentUser) | Message.objects.filter(From=currentUser,To=otherUser)
+        return render(request,self.template,context={'message_list':chats,'otherUser':otherUser,'currentUser':currentUser})
