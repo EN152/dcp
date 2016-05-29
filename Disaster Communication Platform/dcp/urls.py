@@ -19,11 +19,11 @@ urlpatterns = [
     url(r'^suchen/immaterielles/$', Suchen_Immaterielles.as_view()),
     url(r'^suchen/personen/$', Suchen_Personen.as_view()),
 
-#    # Bieten
-#    url(r'^bieten/$', views.bieten),
-#    url(r'^bieten/materielles/$', views.bieten_materielles),
-#    url(r'^bieten/immmaterielles/$', views.bieten_immaterielles),
-#
+    # Bieten
+    url(r'^bieten/$', Bieten.as_view()),
+    url(r'^bieten/materielles/$', Bieten_Materielles.as_view()),
+    url(r'^bieten/immaterielles/$', Bieten_Immaterielles.as_view()),
+
 #    # Wissen
 #    url(r'^wissen/$', views.wissen),
 #    url(r'^wissen/neuigkeiten/$', views.wissen_neuigkeiten),

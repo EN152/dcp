@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from dcp.models import *
 from django.template import loader
+from dcp.forms import *
 # The authentification for the login of the user
 # Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
 #   
@@ -121,3 +122,65 @@ class Suchen_Personen(View):
 
     def get(self, request):
         return getPageAuthenticated(request, self.template)
+
+class Bieten(View):
+    templatePath = 'dcp/content/bieten/bieten.html'
+
+    def get(self, request):
+        form = Offer_Form
+        return render(request, self.templatePath, {
+          'form' : form,
+        })
+
+    def post(self, request):
+      form = Offer_Form(request.POST)
+      if form.is_valid():
+          title = form.cleaned_data['title']
+          description = form.cleaned_data['description']
+          return render(request, self.templatePath, {
+          'form' : form,
+          })
+
+          '''
+    if request.method=='GET':
+            form = Offer_Form()
+    else:
+        form = Offer_Form(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            #TodoItem.objects.create(description=description,deadline=deadline,progress=progress)
+            #return django.http.HttpResponseRedirect(reverse_lazy('views.Bieten'))
+
+    return render(request, 'dcp/content/bieten/bieten.html', {
+        'form': form,
+    })
+  '''
+
+class Bieten_Materielles(View):
+    templatePath = 'dcp/content/bieten/materielles.html'
+
+    def get(self, request):
+        offer_materials_list = Offer_Material.objects.order_by('created_date')
+        template = loader.get_template(self.templatePath)
+        context = {
+            'offer_materials_list': offer_materials_list,
+        }
+
+        return HttpResponse(template.render(context,request))
+
+    def post(self, request):
+        params = {}
+        return render(request, self.template, params)
+
+class Bieten_Immaterielles(View):
+    templatePath = 'dcp/content/bieten/immaterielles.html'
+
+    def get(self, request):
+        offer_immaterials_list = Offer_Immaterial.objects.order_by('created_date')
+        template = loader.get_template(self.templatePath)
+        context = {
+            'offer_immaterials_list': offer_immaterials_list,
+        }
+
+        return HttpResponse(template.render(context,request))

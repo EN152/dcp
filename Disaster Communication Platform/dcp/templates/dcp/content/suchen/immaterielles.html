@@ -26,48 +26,6 @@
 					<input name="title" type="text" placeholder="Suche leistungsstarkes Stromaggregat" class="form-control">
 				</div>
 
-			
-				<label>Kategorie:</label><br />
-				
-				<div class="radio">
-					<label>
-				    <input type="radio" name="category" id="lebensmittel" value="lebensmittel">
-				    <span class="glyphicon glyphicon-cutlery"></span> Lebensmittel
-				  </label>
-				</div>
-
-				<div class="radio">
-				  <label>
-				    <input type="radio" name="category" id="infrastruktur" value="infrastruktur">
-				   <span class="glyphicon glyphicon-flash"></span> Infrastruktur
-				  </label>
-				</div>
-
-				<div class="radio">
-				  <label>
-				    <input type="radio" name="category" id="werkzeug" value="werkzeug">
-				   <span class="glyphicon glyphicon-wrench"></span> Werkzeug
-				  </label>
-				</div>
-
-				<div class="radio">
-				  <label>
-				    <input type="radio" name="category" id="medizin" value="medizin">
-				   <span class="glyphicon glyphicon-heart"></span> Medizin
-				  </label>
-				</div>
-
-				<div class="radio">
-				  <label>
-				    <input type="radio" name="category" id="sonstiges" value="sonstiges">
-				   <span class="glyphicon glyphicon-option-horizontal"></span> Sonstiges
-				  </label>
-				</div>
-
-				<div class="form-group">
-					<label>Bild:</label><input type="file">
-               </div>
-
 				<div class="form-group">
 					<label>Kurzbeschreibung:</label>
 					<textarea name="description" class="form-control" rows="5" id="description" placeholder="Nenne hier wichtige Details."></textarea>
@@ -114,7 +72,6 @@
 				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
 				<div class="timeline-panel">
 
-					<img src="http://www.wasserfilter-hannover.de/wp-content/uploads/2015/04/Wasser-Zitrone-200x200.jpg" width="150em" style="float:right;" class="img-thumbnail">
 
 					<div class="timeline-heading">
 						<h4 class="timeline-title"><b>Suche sauberes Trinkwasser</b></h4>
@@ -129,7 +86,6 @@
 							<div class="panel panel-primary">
 								<div class="panel-body">
 									<p><div><!--Abstand--></div>
-										<span class="glyphicon glyphicon-cutlery"></span> Lebensmittel<br>
 										<span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
 									</p>
 								</div>	
@@ -212,8 +168,6 @@
 				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
 				<div class="timeline-panel">
 
-					<img src="{{ search_material.image.url }}" width="150em" style="float:right;" class="img-thumbnail">
-
 					<div class="timeline-heading">
 						<h4 class="timeline-title"><b>{{ search_immaterial.title }}</b></h4>
 						<p><span class="glyphicon glyphicon-user"></span> <a href="#">{{ search_immaterial.user }}</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i>{{ search_immaterial.created_date }}</small></p>
@@ -225,15 +179,6 @@
 					<p>
 						<div class="col-lg-12" margin="20px">
 							<div class="panel panel-primary">
-								<div class="panel-body">
-									<p><div><!--Abstand--></div>
-										<span class="glyphicon glyphicon-cutlery"></span> Lebensmittel<br>
-										<span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
-									</p>
-								</div>	
-
-								<!-- Karte hier einfügen -->
-								<img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
 
 								<p>
 									<center>
