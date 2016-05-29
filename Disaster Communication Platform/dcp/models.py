@@ -14,15 +14,26 @@ class Catastrophe(models.Model):
 	def __unicode__(self):
 		return self.cat_title 
 
+# Kommentare sind noch nicht ausgereift. Es ist nicht möglich ein ForeignKey von einer Abstract einzubinden (Goods)
+# Wenn jemand eine bessere Idee hat, dann bitte ändern
+class Comment_Relation(models.Model):
+	date_created = models.DateTimeField(default=timezone.now) # Klassen ohne Variablen verursachen Probleme; "date_created" eine Art Platzhalter
+
+class Comment(models.Model):
+	comment_relation = models.ForeignKey(Comment_Relation, on_delete=models.CASCADE, null=False)
+	date_created = models.DateTimeField(default=timezone.now)
+	text = models.TextField(max_length=5000, null=True)
+
 class Goods(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True)
-	title = models.CharField(max_length=100, null=True)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
+	title = models.CharField(max_length=100, null=False)
 	description = models.TextField(max_length=500, null=True)
 	location_x = models.FloatField(null=True)
 	location_y = models.FloatField(null=True)
 	created_date = models.DateTimeField(default=timezone.now)
 	visibility = models.BooleanField(default=True)
+	comments= models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True)
 
 	def __unicode__(self):
 		return self.title
@@ -30,8 +41,7 @@ class Goods(models.Model):
 	class Meta:
 		abstract = True
 
-class Material_Goods(Goods):
-	
+class Material_Goods(Goods):	
 	CATEGORY_TYPE = (
 				('1', 'Groceries'),
 				('2', 'Infrastructure'),
@@ -73,28 +83,6 @@ class Offer_Immaterial(Immaterial_Goods):
 	report_cnt = models.PositiveSmallIntegerField(default=0)
 	lon = models.DecimalField(default=0, max_digits=9, decimal_places=6)
 	lat = models.DecimalField(default=0, max_digits=9, decimal_places=6)
-
-# Kommentare sind noch nicht ausgereift. Es ist nicht möglich ein ForeignKey von einer Abstract einzubinden (Goods)
-# Wenn jemand eine bessere Idee hat, dann bitte ändern
-class Comment(models.Model):
-	date_created = models.DateTimeField(default=timezone.now)
-	text = models.TextField(max_length=500, null=True)
-
-	class Meta:
-		abstract = True
-
-class Search_Material_Comment(Comment):
-	key = models.ForeignKey(Search_Material, on_delete=models.CASCADE, null=True)
-
-class Offer_Material_Comment(Comment):
-	key = models.ForeignKey(Offer_Material, on_delete=models.CASCADE, null=True)
-
-class Search_Immaterial_Comment(Comment):
-	key = models.ForeignKey(Search_Immaterial, on_delete=models.CASCADE, null=True)
-
-class Offer_Immaterial_Comment(Comment):
-	key = models.ForeignKey(Offer_Immaterial, on_delete=models.CASCADE, null=True)
-
 
 class Message(models.Model):
 	# Zur delete Cascade: Ich bin mir nicht sicher, ob das wirklich so sinnvoll ist.
