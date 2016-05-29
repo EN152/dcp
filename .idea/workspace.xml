@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25ec1f9c-c90b-4851-aa88-900ef5a45827" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Disaster Communication Platform/db.sqlite3" afterPath="$PROJECT_DIR$/Disaster Communication Platform/db.sqlite3" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="dcp.iws" />
@@ -637,7 +636,14 @@
       <option name="project" value="LOCAL" />
       <updated>1464536410879</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Chat schreiben implementiert">
+      <created>1464536420337</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1464536420337</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
