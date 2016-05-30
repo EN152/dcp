@@ -1,0 +1,37 @@
+language: python
+
+python:
+#  - 2.6
+#  - 2.7
+#  - 3.4
+
+services: postgresql
+
+env:
+  global:
+# - DJANGO="x.y.z"
+  - DJANGO_SETTINGS_MODULE="dcpcontainer.settings"
+  - PYTHONPATH="/home/travis/build/en152/dcp"
+  - PIP_USE_MIRRORS=true
+
+install:
+  - pip install -r requirements.txt
+# - pip install django==$DJANGO --quiet
+  - pip install coveralls radon
+# - pip install pip-tools --quiet
+
+before_script:
+  - psql -c "CREATE DATABASE travisdb;" -U postgres
+
+script:
+  - manage.py test
+
+after_success:
+- pip freeze
+- echo Uploading code coverage data ...; coveralls
+- echo Code complexity scores:; radon cc --min B ../pony-forum
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
