@@ -86,7 +86,7 @@ class EditProfile(View):
                 user.email = request.POST['email']
                 User.objects.get(User.get_username(self)).set
                 password = form.password
-                if User.check_password(password):
+                if User.check_password(password) and password == request.POST['scndpwd']:
                     User.set_password(self, password)
                     user.save()
                     return HttpResponseRedirect("/profil/")
