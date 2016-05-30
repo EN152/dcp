@@ -7,7 +7,7 @@
 <div class="panel panel-default">
 	 <div class="col-md-12">
 	 	<h4>Benutzername: {{ user.username }} <br> <br> </h4>
-	 	{% if user.email != 'Null' %}
+	 	{% if user.email != '' %}
 	 		<h4>EMail Adresse: {{ user.email }} <br> <br> </h4>
 	 	{% else %}
 	 		<h4>EMail Adresse: (nicht angegeben) <br> <br> </h4>

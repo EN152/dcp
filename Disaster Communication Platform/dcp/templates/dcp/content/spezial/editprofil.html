@@ -3,14 +3,13 @@
 {% block title %}Profil bearbeiten {% endblock %}
 
 {% block content %}
-
-<div class="panel panel-default">
-	 <div class="col-md-12">
-	 	<form action="" method="POST">{% csrf_token %}
-		{{ form.as_p }}
-		</form>
-	 </div>
-	 <a type="submit" class="btn btn-success"><span class="glyphicon glyphicon-upload"></span>Profil aktualisieren</a> 
-</div>
+<form action="/profil/edit/" method="POST">{% csrf_token %}
+	<div class="panel panel-default">
+		 <div class="col-md-12">
+			{{ form.as_p }}
+			<a type="submit" class="btn btn-success"><span class="glyphicon glyphicon-upload"></span>Profil aktualisieren</a> 
+	     </div>
+    </div>
+</form>
 
 {% endblock content %}

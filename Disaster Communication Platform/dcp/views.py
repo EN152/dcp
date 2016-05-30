@@ -82,15 +82,19 @@ class EditProfile(View):
         if request.method == "POST":
             form = UserForm(request.POST)
             if form.is_valid():
-                user = User.objects.get(User.get_username(self)).set
+                user = User.objects.get(User.get_username(self))
                 user.email = request.POST['email']
                 User.objects.get(User.get_username(self)).set
                 password = form.password
-                User.set_password(self, password)
-                user.save()
-                return render(request, self.template, {'form': form})
+                if User.check_password(password):
+                    User.set_password(self, password)
+                    user.save()
+                    return HttpResponseRedirect("/profil/")
+                else:
+                    return render(request, self.template, {'form': form})
         else:
-            form = UserForm
+            user = User.objects.get(User.get_username(self))
+            form = UserForm(initial={'email' : user.email})
             return render(request, self.template, {'form': form})
 
 class Logout(View):
