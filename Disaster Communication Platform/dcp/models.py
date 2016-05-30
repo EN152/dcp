@@ -19,8 +19,8 @@ class Goods(models.Model):
 	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True)
 	title = models.CharField(max_length=100, null=True)
 	description = models.TextField(max_length=500, null=True)
-	location_x = models.FloatField(null=True)
-	location_y = models.FloatField(null=True)
+	lon = models.DecimalField(default=0, max_digits=9, decimal_places=6)
+	lat = models.DecimalField(default=0, max_digits=9, decimal_places=6)
 	created_date = models.DateTimeField(default=timezone.now)
 	visibility = models.BooleanField(default=True)
 
@@ -54,25 +54,17 @@ class Search_Material(Material_Goods):
 	# lon = longitude, lat = latitude (coordinates)
 	# signed decimal degrees without compass direction, where negative indicates west/south (e.g. 40.7486, -73.9864)
 	radius = models.PositiveSmallIntegerField(default=10, validators=[MinValueValidator(0), MaxValueValidator(1000)])
-	lon = models.DecimalField(default=0, max_digits=9, decimal_places=6)
-	lat = models.DecimalField(default=0, max_digits=9, decimal_places=6)
 	
 class Offer_Material(Material_Goods):
 	bump_date = models.DateTimeField(default=timezone.now)
 	report_cnt = models.PositiveSmallIntegerField(default=0)
-	lon = models.DecimalField(default=0, max_digits=9, decimal_places=6)
-	lat = models.DecimalField(default=0, max_digits=9, decimal_places=6)
 
 class Search_Immaterial(Immaterial_Goods):
 	radius = models.PositiveSmallIntegerField(default=10, validators=[MinValueValidator(0), MaxValueValidator(1000)])
-	lon = models.DecimalField(default=0, max_digits=9, decimal_places=6)
-	lat = models.DecimalField(default=0, max_digits=9, decimal_places=6)
 	
 class Offer_Immaterial(Immaterial_Goods):
 	bump_date = models.DateTimeField(default=timezone.now)
 	report_cnt = models.PositiveSmallIntegerField(default=0)
-	lon = models.DecimalField(default=0, max_digits=9, decimal_places=6)
-	lat = models.DecimalField(default=0, max_digits=9, decimal_places=6)
 
 # Kommentare sind noch nicht ausgereift. Es ist nicht möglich ein ForeignKey von einer Abstract einzubinden (Goods)
 # Wenn jemand eine bessere Idee hat, dann bitte ändern
