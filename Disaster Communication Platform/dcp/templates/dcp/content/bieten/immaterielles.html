@@ -16,12 +16,12 @@
 </script>
 
 <div class="panel panel-default">
-	<div class="panel-heading" id="bietFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon glyphicon-search"></span> Neues Angebot</button></div>
+	<div class="panel-heading" id="bietFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon glyphicon-transfer"></span> Neues Angebot</button></div>
 	<div class="panel-body" id="bietFormular" style="display: none;">
 	 <div class="col-sm-6">
 		<form method="POST">
 			 
-				<h2><span class="glyphicon glyphicon-search"></span> Welchen Gegenstand bietest Du an?</h2>
+				<h2><span class="glyphicon glyphicon-transfer"></span> Welchen Gegenstand bietest Du an?</h2>
 				<div class="form-group">
 					<label>Titel:</label>
 					<input name="title" type="text" placeholder="Biete leistungsstarkes Stromaggregat an" class="form-control">
@@ -70,7 +70,7 @@
 	<div class="panel-body">
 		<ul class="timeline">
 			<li> <!--ODER  li class="timeline-inverted"-->
-				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
+				<div class="timeline-badge red"> <span class="glyphicon glyphicon-transfer"></span></div>
 				<div class="timeline-panel">
 
 
@@ -166,7 +166,7 @@
 								{% if offer_immaterials_list %}
 									{% for offer_immaterial in offer_immaterials_list %}
 									<li> <!--ODER  li class="timeline-inverted"-->
-				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
+				<div class="timeline-badge red"> <span class="glyphicon glyphicon-transfer"></span></div>
 				<div class="timeline-panel">
 
 					<div class="timeline-heading">

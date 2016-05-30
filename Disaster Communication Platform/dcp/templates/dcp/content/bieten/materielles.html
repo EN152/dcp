@@ -16,12 +16,12 @@
 </script>
 
 <div class="panel panel-default">
-	<div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon glyphicon-search"></span> Neues Angebot</button></div>
+	<div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon glyphicon-transfer"></span> Neues Angebot</button></div>
 	<div class="panel-body" id="suchFormular" style="display: none;">
 	 <div class="col-sm-6">
 		<form method="POST">
 			 
-				<h2><span class="glyphicon glyphicon-search"></span> Welchen Gegenstand bietest Du an?</h2>
+				<h2><span class="glyphicon glyphicon-transfer"></span> Welchen Gegenstand bietest Du an?</h2>
 				<div class="form-group">
 					<label>Titel:</label>
 					<input name="title" type="text" placeholder="Biete leistungsstarkes Stromaggregat an" class="form-control">
@@ -112,7 +112,7 @@
 	<div class="panel-body">
 		<ul class="timeline">
 			<li> <!--ODER  li class="timeline-inverted"-->
-				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
+				<div class="timeline-badge red"> <span class="glyphicon glyphicon-transfer"></span></div>
 				<div class="timeline-panel">
 
 					<img src="http://www.wasserfilter-hannover.de/wp-content/uploads/2015/04/Wasser-Zitrone-200x200.jpg" width="150em" style="float:right;" class="img-thumbnail">
@@ -210,7 +210,7 @@
 								{% if context_list %}
 									{% for offer_material, glyphicon_string, category_type_string in context_list %}
 									<li> <!--ODER  li class="timeline-inverted"-->
-				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
+				<div class="timeline-badge red"> <span class="glyphicon glyphicon-transfer"></span></div>
 				<div class="timeline-panel">
 
 					<img src="{{ offer_material.image.url }}" width="150em" style="float:right;" class="img-thumbnail">
