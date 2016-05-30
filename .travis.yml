@@ -24,12 +24,12 @@ before_script:
   - psql -c "CREATE DATABASE travisdb;" -U postgres
 
 script:
-  - python manage.py test
+  - python "Disaster Communication Platform/manage.py" test
 
 after_success:
 - pip freeze
 - echo Uploading code coverage data ...; coveralls
-- echo Code complexity scores:; radon cc --min B ../pony-forum
+- echo Code complexity scores:; radon cc --min B ../dcp
 
 notifications:
   email:
