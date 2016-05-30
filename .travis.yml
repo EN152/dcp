@@ -24,7 +24,7 @@ before_script:
   - psql -c "CREATE DATABASE travisdb;" -U postgres
 
 script:
-  - python "Disaster Communication Platform/manage.py" test
+  - python "Disaster Communication Platform/travis.sh"
 
 after_success:
 - pip freeze
