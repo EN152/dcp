@@ -93,9 +93,26 @@ class Suchen_Materielles(View):
 
     def get(self, request):
         search_materials_list = Search_Material.objects.order_by('created_date')
+        glyphicon_string_list = []
+        category_type_string_list = []
+        
+
+        
+        for s in search_materials_list:
+            g_string = s.getGlyphiconString()
+            c_string = s.getCategoryTypeAsString()
+            glyphicon_string_list.append(g_string)
+            category_type_string_list.append(c_string)
+
+        context_list = zip(search_materials_list, glyphicon_string_list, category_type_string_list)
+            
+
         template = loader.get_template(self.templatePath)
         context = {
+            'context_list': context_list,
             'search_materials_list': search_materials_list,
+            'glyphicon_string_list': glyphicon_string_list,
+            'category_type_string_list': category_type_string_list
         }
 
         return HttpResponse(template.render(context,request))
@@ -162,9 +179,23 @@ class Bieten_Materielles(View):
 
     def get(self, request):
         offer_materials_list = Offer_Material.objects.order_by('created_date')
+        glyphicon_string_list = []
+        category_type_string_list = []
+        
+
+        
+        for o in offer_materials_list:
+            g_string = o.getGlyphiconString()
+            c_string = o.getCategoryTypeAsString()
+            glyphicon_string_list.append(g_string)
+            category_type_string_list.append(c_string)
+
+        context_list = zip(offer_materials_list, glyphicon_string_list, category_type_string_list)
+            
+
         template = loader.get_template(self.templatePath)
         context = {
-            'offer_materials_list': offer_materials_list,
+            'context_list': context_list,
         }
 
         return HttpResponse(template.render(context,request))

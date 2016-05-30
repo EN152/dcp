@@ -207,8 +207,8 @@
 									</div>
 								</li>
 
-								{% if offer_materials_list %}
-									{% for offer_material in offer_materials_list %}
+								{% if context_list %}
+									{% for offer_material, glyphicon_string, category_type_string in context_list %}
 									<li> <!--ODER  li class="timeline-inverted"-->
 				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
 				<div class="timeline-panel">
@@ -228,7 +228,7 @@
 							<div class="panel panel-primary">
 								<div class="panel-body">
 									<p><div><!--Abstand--></div>
-										<span class="glyphicon glyphicon-cutlery"></span> Lebensmittel<br>
+										<span class="{{glyphicon_string}}"></span> {{category_type_string}}<br>
 										<span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
 									</p>
 								</div>	
