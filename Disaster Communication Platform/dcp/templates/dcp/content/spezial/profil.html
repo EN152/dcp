@@ -1,0 +1,21 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %}Mein Profil {% endblock %}
+
+{% block content %}
+
+<div class="panel panel-default">
+	 <div class="col-md-12">
+	 	<h4>Benutzername: {{ user.username }} <br> <br> </h4>
+	 	{% if user.email != 'Null' %}
+	 		<h4>EMail Adresse: {{ user.email }} <br> <br> </h4>
+	 	{% else %}
+	 		<h4>EMail Adresse: (nicht angegeben) <br> <br> </h4>
+	 	{% endif %}
+	 		<h4>Letzter Login: {{ user.last_login }} <br> <br> </h4>
+	 </div>
+	 <a href="/profil/edit/" class="btn btn-primary" type="submit" )><span class="glyphicon glyphicon-refresh"></span>Profil bearbeiten</a>
+
+</div>
+
+{% endblock content %}

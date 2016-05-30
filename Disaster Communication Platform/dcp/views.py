@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from dcpcontainer import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.template.context_processors import request
+from .forms import UserForm
 # The authentification for the login of the user
 # Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
 #   
@@ -58,6 +60,38 @@ class Login(View):
            else:
                return render(request, self.template, {'notVaild': valid})
        return render(request, self.template, {})
+   
+class MyProfile(View):
+    template = 'dcp/content/spezial/profil.html'
+    
+    def get(self, request):
+        return getPageAuthenticated(request, self.template)
+    
+    def post(self, request):
+        username = User.get_username(self)
+        user = User.objects.get(username=username)
+        return render(request, self.template, user)
+        
+class EditProfile(View):
+    template = 'dcp/content/spezial/editprofil.html'
+    
+    def get(self, request):
+        return getPageAuthenticated(request, self.template)
+    
+    def post(self,request):
+        if request.method == "POST":
+            form = UserForm(request.POST)
+            if form.is_valid():
+                user = User.objects.get(User.get_username(self)).set
+                user.email = request.POST['email']
+                User.objects.get(User.get_username(self)).set
+                password = form.password
+                User.set_password(self, password)
+                user.save()
+                return render(request, self.template, {'form': form})
+        else:
+            form = UserForm
+            return render(request, self.template, {'form': form})
 
 class Logout(View):
     def get(self, request):

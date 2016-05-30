@@ -36,8 +36,9 @@ urlpatterns = [
 #    url(r'^orte/karten/$', views.orte_karten),
 #    url(r'^orte/fotos/$', views.orte_fotos),
 #
-#    # Profil
-#    url(r'^profil/$', views.profil),
+    #Profil
+    url(r'^profil/$', MyProfile.as_view()),
+    url(r'^profil/edit/$', EditProfile.as_view())
 #    url(r'^profil/daten/$', views.profil_daten),
 #    url(r'^profil/netzwerke/$', views.profil_netzwerke),
 
