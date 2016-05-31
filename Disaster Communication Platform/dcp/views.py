@@ -12,6 +12,8 @@ from django.contrib.auth.models import User
 from .models import Message
 from .forms import sendMessage
 from django.core.urlresolvers import reverse,reverse_lazy
+from .models import *
+
 from django.db import IntegrityError
 # The authentification for the login of the user
 # Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
@@ -25,57 +27,73 @@ from django.db import IntegrityError
 #   
 #   def post ist analog
 
+
 def getPageAuthenticated(request, template, params={}):
     if request.user.is_authenticated():
         return render(request, template, params)
     else:
-        return HttpResponseRedirect("login/")
+        return HttpResponseRedirect("anmelden/")
+
 
 class Register(View):
-    template = 'dcp/content/spezial/login.html'
-
     def post(self, request):
         if not request.user.is_authenticated():
             if request.method == "POST":
                 username = request.POST['username']
                 password = request.POST['password']
                 email = request.POST['email']
-                valid = bool(False)
-                obj = User.objects.filter(username=username)
-                if obj:
-                    return render(request, self.template, {'registerNotValid': valid}) # Wie kann man das schön darstellen?
                 user = User.objects.create_user(username, email, password)
                 user.save()
-                return HttpResponseRedirect("/login/")
+                return HttpResponseRedirect("/anmelden/")
+
 
 class Login(View):
-   template = 'dcp/content/spezial/login.html'
-   
-   def get(self, request):
+    template = 'dcp/content/spezial/anmelden.html'
+
+    def get(self, request):
         params = {}
         return render(request, self.template, params)
-        
-   def post(self, request):
-       if request.method == "POST":
-           username = request.POST['username']
-           password = request.POST['password']
-           valid = bool(False)
-           user = authenticate(username=username, password=password)
-           if user is not None:
-               if user.is_active:
-                   login(request, user)
-                   return HttpResponseRedirect("/")
-               else:
-                   return HttpResponse("Inactive user.")
-           else:
-               return render(request, self.template, {'notVaild': valid})
-       return render(request, self.template, {})
+
+    def post(self, request):
+        if request.method == "POST":
+            username = request.POST['username']
+            password = request.POST['password']
+            valid = bool(False)
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect("/")
+                else:
+                    return HttpResponse("Inaktiver Benutzer")
+            else:
+                return render(request, self.template, {'notVaild': valid})
+        return render(request, self.template, {})
+
 
 class Logout(View):
     def get(self, request):
         if request.user.is_authenticated():
             logout(request)
-            return HttpResponseRedirect("../login/")
+            return HttpResponseRedirect("../anmelden/")
+
+
+class Karten(View):
+    template = 'dcp/content/orte/karten.html'
+
+    def get(self, request):
+        listOfGoods = []
+        for oneGood in Search_Material.objects.all():
+            listOfGoods.append((oneGood.location_x,oneGood.location_y))
+        for oneGood in Offer_Immaterial.objects.all():
+            listOfGoods.append((oneGood.location_x, oneGood.location_y))
+        for oneGood in Offer_Material.objects.all():
+            listOfGoods.append((oneGood.location_x, oneGood.location_y))
+        for oneGood in Search_Immaterial.objects.all():
+            listOfGoods.append((oneGood.location_x, oneGood.location_y))
+        if request.user.is_authenticated():
+            return render(request, self.template, {'goods': listOfGoods})
+
 
 class Index(View):
     template = 'dcp/index.html'
@@ -88,15 +106,16 @@ class Index(View):
             params = {}
             return render(request, 'dcp/index.html', params)
         else:
-            return HttpResponseRedirect("login/")
+            return HttpResponseRedirect("anmelden/")
+
 
 class Suchen(View):
     template = 'dcp/content/suchen/suchen.html'
 
     def get(self, request):
         return getPageAuthenticated(request, self.template)
-   
-   
+
+
 class Suchen_Materielles(View):
     template = 'dcp/content/suchen/materielles.html'
 

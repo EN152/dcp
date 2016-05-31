@@ -5,11 +5,12 @@ urlpatterns = [
     url(r'^$', Index.as_view()),
 
     # Spezialseiten
-    url(r'^login/$', Login.as_view()),
-    url(r'^logout/$', Logout.as_view()),
-    url(r'^register/$', Register.as_view()),
-# url(r'^administration/$', views.administration),
-# url(r'^suchergebnisse/$', views.suchergebnisse),
+    url(r'^anmelden/$', Login.as_view()),
+    url(r'^abmelden/$', Logout.as_view()),
+    url(r'^registrieren/$', Register.as_view()),
+
+    # Karten
+    url(r'^orte/karten/$', Karten.as_view()),
 
     # Suchen
     url(r'^suchen/$', Suchen.as_view()),
