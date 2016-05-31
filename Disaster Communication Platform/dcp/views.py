@@ -7,55 +7,43 @@ from collections import defaultdict
 from django.utils.http import urlencode
 from django.contrib.auth.decorators import login_required
 from dcpcontainer import settings
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from dcp.models import *
+from django.template import loader
+from dcp.forms import *
+from django.template.context_processors import request
+from .forms import UserForm
 from .models import Message
 from .forms import sendMessage
 from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
-# The authentification for the login of the user
-# Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
-#   
-#class Login(View):
-#    template = 'dcp/login.html'
-#   
-#    def get(self, request):
-#        params = {}
-#        return render(request, self.template, params)
-#   
-#   def post ist analog
+
 
 def getPageAuthenticated(request, template, params={}):
     if request.user.is_authenticated():
         return render(request, template, params)
     else:
-        return HttpResponseRedirect("login/")
+        return HttpResponseRedirect("anmelden/")
 
 class Register(View):
-    template = 'dcp/content/spezial/login.html'
-
     def post(self, request):
         if not request.user.is_authenticated():
             if request.method == "POST":
                 username = request.POST['username']
                 password = request.POST['password']
                 email = request.POST['email']
-                valid = bool(False)
-                obj = User.objects.filter(username=username)
-                if obj:
-                    return render(request, self.template, {'registerNotValid': valid}) # Wie kann man das schön darstellen?
                 user = User.objects.create_user(username, email, password)
                 user.save()
-                return HttpResponseRedirect("/login/")
+                return HttpResponseRedirect("/anmelden/")
 
 class Login(View):
-   template = 'dcp/content/spezial/login.html'
-   
-   def get(self, request):
+    template = 'dcp/content/spezial/anmelden.html'
+
+    def get(self, request):
         params = {}
-        return render(request, self.template, params)
+        return render(request, self.template, params)   
         
-   def post(self, request):
+    def post(self, request):
        if request.method == "POST":
            username = request.POST['username']
            password = request.POST['password']
@@ -70,12 +58,58 @@ class Login(View):
            else:
                return render(request, self.template, {'notVaild': valid})
        return render(request, self.template, {})
+   
+class MyProfile(View):
+    template = 'dcp/content/spezial/profil.html'
+    
+    def get(self, request):
+        return getPageAuthenticated(request, self.template)
+        
+class EditProfile(View):
+    template = 'dcp/content/spezial/profilBearbeiten.html'
+    
+    def get(self, request):
+        user = User.objects.get(username=request.user.username)
+        form = UserForm(initial={'email' : user.email})
+        return getPageAuthenticated(request, self.template, {'form': form})
+
+    # Bugfixing nötig!
+    def post(self,request):
+        if request.method == "POST":
+            form = UserForm(request.POST)
+            if form.is_valid():
+                user = User.objects.get(username=request.user.username)
+                if request.POST['email'] != None or request.POST['password'] != None:
+                    mail = request.POST['email']
+                    password = request.POST['password']
+                    User.set_password(request.user, password)
+                    user.save()
+                    return HttpResponseRedirect("/profil/")
+
 
 class Logout(View):
     def get(self, request):
         if request.user.is_authenticated():
             logout(request)
-            return HttpResponseRedirect("../login/")
+            return HttpResponseRedirect("../anmelden/")
+
+
+class Karten(View):
+    template = 'dcp/content/orte/karten.html'
+
+    def get(self, request):
+        listOfGoods = []
+        for oneGood in Search_Material.objects.all():
+            listOfGoods.append((oneGood.location_x,oneGood.location_y))
+        for oneGood in Offer_Immaterial.objects.all():
+            listOfGoods.append((oneGood.location_x, oneGood.location_y))
+        for oneGood in Offer_Material.objects.all():
+            listOfGoods.append((oneGood.location_x, oneGood.location_y))
+        for oneGood in Search_Immaterial.objects.all():
+            listOfGoods.append((oneGood.location_x, oneGood.location_y))
+        if request.user.is_authenticated():
+            return render(request, self.template, {'goods': listOfGoods})
+
 
 class Index(View):
     template = 'dcp/index.html'
@@ -88,30 +122,60 @@ class Index(View):
             params = {}
             return render(request, 'dcp/index.html', params)
         else:
-            return HttpResponseRedirect("login/")
+            return HttpResponseRedirect("anmelden/")
+
 
 class Suchen(View):
     template = 'dcp/content/suchen/suchen.html'
 
     def get(self, request):
         return getPageAuthenticated(request, self.template)
-   
-   
+
+
 class Suchen_Materielles(View):
-    template = 'dcp/content/suchen/materielles.html'
+    templatePath = 'dcp/content/suchen/materielles.html'
 
     def get(self, request):
-        return getPageAuthenticated(request, self.template)
+        search_materials_list = Search_Material.objects.order_by('created_date')
+        glyphicon_string_list = []
+        category_type_string_list = []
+        
+
+        
+        for s in search_materials_list:
+            g_string = s.getGlyphiconString()
+            c_string = s.getCategoryTypeAsString()
+            glyphicon_string_list.append(g_string)
+            category_type_string_list.append(c_string)
+
+        context_list = zip(search_materials_list, glyphicon_string_list, category_type_string_list)
+            
+
+        template = loader.get_template(self.templatePath)
+        context = {
+            'context_list': context_list,
+            'search_materials_list': search_materials_list,
+            'glyphicon_string_list': glyphicon_string_list,
+            'category_type_string_list': category_type_string_list
+        }
+
+        return HttpResponse(template.render(context,request))
 
     def post(self, request):
         params = {}
         return render(request, self.template, params)
 
 class Suchen_Immaterielles(View):
-    template = 'dcp/content/suchen/immaterielles.html'
+    templatePath = 'dcp/content/suchen/immaterielles.html'
 
     def get(self, request):
-        return getPageAuthenticated(request, self.template)
+        search_immaterials_list = Search_Immaterial.objects.order_by('created_date')
+        template = loader.get_template(self.templatePath)
+        context = {
+            'search_immaterials_list': search_immaterials_list,
+        }
+
+        return HttpResponse(template.render(context,request))
 
 
 class Suchen_Personen(View):
@@ -119,6 +183,83 @@ class Suchen_Personen(View):
 
     def get(self, request):
         return getPageAuthenticated(request, self.template)
+
+class Bieten(View):
+    templatePath = 'dcp/content/bieten/bieten.html'
+
+    def get(self, request):
+        form = Offer_Form
+        return render(request, self.templatePath, {
+          'form' : form,
+        })
+
+    def post(self, request):
+      form = Offer_Form(request.POST)
+      if form.is_valid():
+          title = form.cleaned_data['title']
+          description = form.cleaned_data['description']
+          return render(request, self.templatePath, {
+          'form' : form,
+          })
+
+          '''
+    if request.method=='GET':
+            form = Offer_Form()
+    else:
+        form = Offer_Form(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            #TodoItem.objects.create(description=description,deadline=deadline,progress=progress)
+            #return django.http.HttpResponseRedirect(reverse_lazy('views.Bieten'))
+
+    return render(request, 'dcp/content/bieten/bieten.html', {
+        'form': form,
+    })
+  '''
+
+class Bieten_Materielles(View):
+    templatePath = 'dcp/content/bieten/materielles.html'
+
+    def get(self, request):
+        offer_materials_list = Offer_Material.objects.order_by('created_date')
+        glyphicon_string_list = []
+        category_type_string_list = []
+        
+
+        
+        for o in offer_materials_list:
+            g_string = o.getGlyphiconString()
+            c_string = o.getCategoryTypeAsString()
+            glyphicon_string_list.append(g_string)
+            category_type_string_list.append(c_string)
+
+        context_list = zip(offer_materials_list, glyphicon_string_list, category_type_string_list)
+            
+
+        template = loader.get_template(self.templatePath)
+        context = {
+            'context_list': context_list,
+        }
+
+        return HttpResponse(template.render(context,request))
+
+    def post(self, request):
+        params = {}
+        return render(request, self.template, params)
+
+class Bieten_Immaterielles(View):
+    templatePath = 'dcp/content/bieten/immaterielles.html'
+
+    def get(self, request):
+        offer_immaterials_list = Offer_Immaterial.objects.order_by('created_date')
+        template = loader.get_template(self.templatePath)
+        context = {
+            'offer_immaterials_list': offer_immaterials_list,
+        }
+
+        return HttpResponse(template.render(context,request))
+
 
 class Chat(View):
     form_class = sendMessage
@@ -144,8 +285,10 @@ class Chat(View):
             url = url_with_querystring(reverse('dcp:Chat'),userid=otherUser.id)
             return HttpResponseRedirect(url)
             #Neuer Eintrag in der Datenbank:
+
 def url_with_querystring(path, **kwargs):
     return path + '?' + urlencode(kwargs)
+
 class Overview(View):
     template = 'dcp/content/chat/chat_overview.html'
     def get(self,request):

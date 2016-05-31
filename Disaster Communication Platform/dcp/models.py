@@ -41,7 +41,32 @@ class Material_Goods(Goods):
 				)
 	category = models.CharField(max_length=1, choices=CATEGORY_TYPE)
 	# Uploadpfad muss noch generiert werden... (Useranbindung + delete on cascade ? )
-	image = models.ImageField(upload_to="/upload/...")
+	image = models.ImageField(upload_to="upload/")
+
+	def getGlyphiconString(self):
+		if self.category == '1':
+			return "glyphicon glyphicon-cutlery"
+		elif self.category == '2':
+			return "glyphicon glyphicon-home"
+		elif self.category == '3':
+			return "glyphicon glyphicon-wrench"
+		elif self.category == '4':
+			return "glyphicon glyphicon-plus"
+		elif self.category == '5':
+			return "glyphicon glyphicon-question-sign"
+
+	def getCategoryTypeAsString(self):
+		if self.category == '1':
+			return "Lebensmittel"
+		elif self.category == '2':
+			return "Infrastruktur"
+		elif self.category == '3':
+			return "Werkzeuge"
+		elif self.category == '4':
+			return "Medikamenten"
+		elif self.category == '5':
+			return "Sonstiges"
+
 
 	class Meta:
 		abstract = True
