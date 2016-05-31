@@ -7,15 +7,17 @@ from collections import defaultdict
 from django.utils.http import urlencode
 from django.contrib.auth.decorators import login_required
 from dcpcontainer import settings
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from dcp.models import *
+from django.template import loader
+from dcp.forms import *
 from django.template.context_processors import request
 from .forms import UserForm
 from .models import Message
 from .forms import sendMessage
 from django.core.urlresolvers import reverse,reverse_lazy
-from .models import *
 from django.db import IntegrityError
+
 
 def getPageAuthenticated(request, template, params={}):
     if request.user.is_authenticated():
@@ -41,7 +43,7 @@ class Login(View):
         params = {}
         return render(request, self.template, params)   
         
-   def post(self, request):
+    def post(self, request):
        if request.method == "POST":
            username = request.POST['username']
            password = request.POST['password']
@@ -131,20 +133,49 @@ class Suchen(View):
 
 
 class Suchen_Materielles(View):
-    template = 'dcp/content/suchen/materielles.html'
+    templatePath = 'dcp/content/suchen/materielles.html'
 
     def get(self, request):
-        return getPageAuthenticated(request, self.template)
+        search_materials_list = Search_Material.objects.order_by('created_date')
+        glyphicon_string_list = []
+        category_type_string_list = []
+        
+
+        
+        for s in search_materials_list:
+            g_string = s.getGlyphiconString()
+            c_string = s.getCategoryTypeAsString()
+            glyphicon_string_list.append(g_string)
+            category_type_string_list.append(c_string)
+
+        context_list = zip(search_materials_list, glyphicon_string_list, category_type_string_list)
+            
+
+        template = loader.get_template(self.templatePath)
+        context = {
+            'context_list': context_list,
+            'search_materials_list': search_materials_list,
+            'glyphicon_string_list': glyphicon_string_list,
+            'category_type_string_list': category_type_string_list
+        }
+
+        return HttpResponse(template.render(context,request))
 
     def post(self, request):
         params = {}
         return render(request, self.template, params)
 
 class Suchen_Immaterielles(View):
-    template = 'dcp/content/suchen/immaterielles.html'
+    templatePath = 'dcp/content/suchen/immaterielles.html'
 
     def get(self, request):
-        return getPageAuthenticated(request, self.template)
+        search_immaterials_list = Search_Immaterial.objects.order_by('created_date')
+        template = loader.get_template(self.templatePath)
+        context = {
+            'search_immaterials_list': search_immaterials_list,
+        }
+
+        return HttpResponse(template.render(context,request))
 
 
 class Suchen_Personen(View):
@@ -152,6 +183,83 @@ class Suchen_Personen(View):
 
     def get(self, request):
         return getPageAuthenticated(request, self.template)
+
+class Bieten(View):
+    templatePath = 'dcp/content/bieten/bieten.html'
+
+    def get(self, request):
+        form = Offer_Form
+        return render(request, self.templatePath, {
+          'form' : form,
+        })
+
+    def post(self, request):
+      form = Offer_Form(request.POST)
+      if form.is_valid():
+          title = form.cleaned_data['title']
+          description = form.cleaned_data['description']
+          return render(request, self.templatePath, {
+          'form' : form,
+          })
+
+          '''
+    if request.method=='GET':
+            form = Offer_Form()
+    else:
+        form = Offer_Form(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            #TodoItem.objects.create(description=description,deadline=deadline,progress=progress)
+            #return django.http.HttpResponseRedirect(reverse_lazy('views.Bieten'))
+
+    return render(request, 'dcp/content/bieten/bieten.html', {
+        'form': form,
+    })
+  '''
+
+class Bieten_Materielles(View):
+    templatePath = 'dcp/content/bieten/materielles.html'
+
+    def get(self, request):
+        offer_materials_list = Offer_Material.objects.order_by('created_date')
+        glyphicon_string_list = []
+        category_type_string_list = []
+        
+
+        
+        for o in offer_materials_list:
+            g_string = o.getGlyphiconString()
+            c_string = o.getCategoryTypeAsString()
+            glyphicon_string_list.append(g_string)
+            category_type_string_list.append(c_string)
+
+        context_list = zip(offer_materials_list, glyphicon_string_list, category_type_string_list)
+            
+
+        template = loader.get_template(self.templatePath)
+        context = {
+            'context_list': context_list,
+        }
+
+        return HttpResponse(template.render(context,request))
+
+    def post(self, request):
+        params = {}
+        return render(request, self.template, params)
+
+class Bieten_Immaterielles(View):
+    templatePath = 'dcp/content/bieten/immaterielles.html'
+
+    def get(self, request):
+        offer_immaterials_list = Offer_Immaterial.objects.order_by('created_date')
+        template = loader.get_template(self.templatePath)
+        context = {
+            'offer_immaterials_list': offer_immaterials_list,
+        }
+
+        return HttpResponse(template.render(context,request))
+
 
 class Chat(View):
     form_class = sendMessage
@@ -177,8 +285,10 @@ class Chat(View):
             url = url_with_querystring(reverse('dcp:Chat'),userid=otherUser.id)
             return HttpResponseRedirect(url)
             #Neuer Eintrag in der Datenbank:
+
 def url_with_querystring(path, **kwargs):
     return path + '?' + urlencode(kwargs)
+
 class Overview(View):
     template = 'dcp/content/chat/chat_overview.html'
     def get(self,request):

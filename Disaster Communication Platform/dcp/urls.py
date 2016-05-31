@@ -1,5 +1,7 @@
 from django.conf.urls import url
 from dcp.views import *
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.staticfiles.urls import static
 
 urlpatterns = [
     url(r'^$', Index.as_view()),
@@ -17,14 +19,22 @@ urlpatterns = [
     url(r'^suchen/materielles/$', Suchen_Materielles.as_view()),
     url(r'^suchen/immaterielles/$', Suchen_Immaterielles.as_view()),
     url(r'^suchen/personen/$', Suchen_Personen.as_view()),
+
+    # Bieten
+    url(r'^bieten/$', Bieten.as_view()),
+    url(r'^bieten/materielles/$', Bieten_Materielles.as_view()),
+    url(r'^bieten/immaterielles/$', Bieten_Immaterielles.as_view()),
+
     # Chat
     url(r'^chat/$', Chat.as_view(), name='Chat'),
-    url(r'^profil/netzwerke',Overview.as_view(),name='ChatOverview')
+    url(r'^profil/netzwerke',Overview.as_view(),name='ChatOverview'),
+
 #    # Bieten
 #    url(r'^bieten/$', views.bieten),
 #    url(r'^bieten/materielles/$', views.bieten_materielles),
 #    url(r'^bieten/immmaterielles/$', views.bieten_immaterielles),
 #
+
 #    # Wissen
 #    url(r'^wissen/$', views.wissen),
 #    url(r'^wissen/neuigkeiten/$', views.wissen_neuigkeiten),
@@ -38,11 +48,12 @@ urlpatterns = [
 #    url(r'^orte/anlaufstellen/$', views.orte_anlaufstellen),
 #    url(r'^orte/karten/$', views.orte_karten),
 #    url(r'^orte/fotos/$', views.orte_fotos),
-#
     #Profil
     url(r'^profil/$', MyProfile.as_view()),
     url(r'^profil/bearbeiten/$', EditProfile.as_view())
-#    url(r'^profil/daten/$', views.profil_daten),
-#    url(r'^profil/netzwerke/$', views.profil_netzwerke),
 
 ]
+
+# media url patters
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
