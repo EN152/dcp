@@ -9,31 +9,19 @@ from django.contrib.auth.decorators import login_required
 from dcpcontainer import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.template.context_processors import request
+from .forms import UserForm
 from .models import Message
 from .forms import sendMessage
 from django.core.urlresolvers import reverse,reverse_lazy
 from .models import *
-
 from django.db import IntegrityError
-# The authentification for the login of the user
-# Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
-#   
-#class Login(View):
-#    template = 'dcp/login.html'
-#   
-#    def get(self, request):
-#        params = {}
-#        return render(request, self.template, params)
-#   
-#   def post ist analog
-
 
 def getPageAuthenticated(request, template, params={}):
     if request.user.is_authenticated():
         return render(request, template, params)
     else:
         return HttpResponseRedirect("anmelden/")
-
 
 class Register(View):
     def post(self, request):
@@ -46,29 +34,55 @@ class Register(View):
                 user.save()
                 return HttpResponseRedirect("/anmelden/")
 
-
 class Login(View):
     template = 'dcp/content/spezial/anmelden.html'
 
     def get(self, request):
         params = {}
-        return render(request, self.template, params)
+        return render(request, self.template, params)   
+        
+   def post(self, request):
+       if request.method == "POST":
+           username = request.POST['username']
+           password = request.POST['password']
+           valid = bool(False)
+           user = authenticate(username=username, password=password)
+           if user is not None:
+               if user.is_active:
+                   login(request, user)
+                   return HttpResponseRedirect("/")
+               else:
+                   return HttpResponse("Inactive user.")
+           else:
+               return render(request, self.template, {'notVaild': valid})
+       return render(request, self.template, {})
+   
+class MyProfile(View):
+    template = 'dcp/content/spezial/profil.html'
+    
+    def get(self, request):
+        return getPageAuthenticated(request, self.template)
+        
+class EditProfile(View):
+    template = 'dcp/content/spezial/profilBearbeiten.html'
+    
+    def get(self, request):
+        user = User.objects.get(username=request.user.username)
+        form = UserForm(initial={'email' : user.email})
+        return getPageAuthenticated(request, self.template, {'form': form})
 
-    def post(self, request):
+    # Bugfixing nötig!
+    def post(self,request):
         if request.method == "POST":
-            username = request.POST['username']
-            password = request.POST['password']
-            valid = bool(False)
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponseRedirect("/")
-                else:
-                    return HttpResponse("Inaktiver Benutzer")
-            else:
-                return render(request, self.template, {'notVaild': valid})
-        return render(request, self.template, {})
+            form = UserForm(request.POST)
+            if form.is_valid():
+                user = User.objects.get(username=request.user.username)
+                if request.POST['email'] != None or request.POST['password'] != None:
+                    mail = request.POST['email']
+                    password = request.POST['password']
+                    User.set_password(request.user, password)
+                    user.save()
+                    return HttpResponseRedirect("/profil/")
 
 
 class Logout(View):
