@@ -83,15 +83,23 @@ class EditProfile(View):
             form = UserForm(request.POST)
             if form.is_valid():
                 user = User.objects.get(User.get_username(self))
-                user.email = request.POST['email']
-                User.objects.get(User.get_username(self)).set
-                password = form.password
-                if User.check_password(password) and password == request.POST['scndpwd']:
-                    User.set_password(self, password)
+                if request.POST['email'] != None and request.POST['password'] != None:
+                    user.email = request.POST['email']
+                    password = request.POST['password']
+                    if User.check_password(password) and password == request.POST['scndpwd']:
+                        User.set_password(self, password)
+                        user.save()
+                        return HttpResponseRedirect("/profil/")
+                elif request.POST['email'] != None:
+                    user.email = request.POST['email']
                     user.save()
                     return HttpResponseRedirect("/profil/")
-                else:
-                    return render(request, self.template, {'form': form})
+                elif request.POST['password'] != None:
+                    password = request.POST['password']
+                    if User.check_password(password) and password == request.POST['scndpwd']:
+                        User.set_password(self, password)
+                        user.save()
+                        return HttpResponseRedirect("/profil/")
         else:
             user = User.objects.get(User.get_username(self))
             form = UserForm(initial={'email' : user.email})
