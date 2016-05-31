@@ -47,11 +47,16 @@
     <div class="panel-body">
         <ul class="chat">
             {% for message in last_message_list %}
-
             <li class="right clearfix">
                 <div class="chat-body clearfix">
                     <div class="header">
-                        <strong class="primary-font">{{message.To}}</strong>
+
+                        {% if message.From_id == currentUser.id %}
+                        <a href="{% url "dcp:Chat" %}?userid={{message.To_id}}">
+                           <strong class="primary-font">{{message.To}}</strong></a>
+                        {% else %}
+                        <a href="{% url "dcp:Chat" %}?userid={{message.From_id}}"><strong class="primary-font">{{message.From}}</strong></a>
+                        {% endif %}
                         <small class="pull-right text-muted">
                             <i class="fa fa-clock-o fa-fw"></i> {{ message.SendTime }}
                         </small>

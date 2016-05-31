@@ -166,4 +166,4 @@ class Overview(View):
         mList = list()
         for x in tmpList:
             mList.append(x[0])
-        return render(request,self.template,context={'last_message_list':mList})
+        return render(request,self.template,context={'last_message_list':mList,'currentUser':request.user})

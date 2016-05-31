@@ -1,6 +1,6 @@
 {% extends "dcp/design/base.html" %}
 
-{% block title %} Chat mit{{otherUser}} {% endblock %}
+{% block title %} Chat mit {{otherUser}} {% endblock %}
 
 {% block content %}
 <!-- /.panel -->
@@ -72,8 +72,6 @@
     {% endif %}
     <!-- /.panel-body -->
     <div class="panel-footer">
-
-
             <form class="form-horizontal" role="form" id="message" action="#" method="post" >
                                 <div class="form-group">
                                 {% csrf_token %}
