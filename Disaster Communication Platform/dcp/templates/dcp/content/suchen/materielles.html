@@ -3,6 +3,108 @@
 {% block title %} Suche: Materielles {% endblock %}
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<script>
+	$(document).ready(function(){
+		$("#newSearch").click(function(){
+			$("#suchFormular").toggle();
+			$("#suchFormularHeading").hide();
+		});
+	});
+</script>
+
+<div class="panel panel-default">
+	<div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon glyphicon-search"></span> Neues Gesuch</button></div>
+	<div class="panel-body" id="suchFormular" style="display: none;">
+	 <div class="col-sm-6">
+		<form method="POST">
+			 
+				<h2><span class="glyphicon glyphicon-search"></span> Nach welchem Gegenstand suchst Du?</h2>
+				<div class="form-group">
+					<label>Titel:</label>
+					<input name="title" type="text" placeholder="Suche leistungsstarkes Stromaggregat" class="form-control">
+				</div>
+
+			
+				<label>Kategorie:</label><br />
+				
+				<div class="radio">
+					<label>
+				    <input type="radio" name="category" id="lebensmittel" value="lebensmittel">
+				    <span class="glyphicon glyphicon-cutlery"></span> Lebensmittel
+				  </label>
+				</div>
+
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="category" id="infrastruktur" value="infrastruktur">
+				   <span class="glyphicon glyphicon-flash"></span> Infrastruktur
+				  </label>
+				</div>
+
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="category" id="werkzeug" value="werkzeug">
+				   <span class="glyphicon glyphicon-wrench"></span> Werkzeug
+				  </label>
+				</div>
+
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="category" id="medizin" value="medizin">
+				   <span class="glyphicon glyphicon-heart"></span> Medizin
+				  </label>
+				</div>
+
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="category" id="sonstiges" value="sonstiges">
+				   <span class="glyphicon glyphicon-option-horizontal"></span> Sonstiges
+				  </label>
+				</div>
+
+				<div class="form-group">
+					<label>Bild:</label><input type="file">
+               </div>
+
+				<div class="form-group">
+					<label>Kurzbeschreibung:</label>
+					<textarea name="description" class="form-control" rows="5" id="description" placeholder="Nenne hier wichtige Details."></textarea>
+				</div>
+
+				<div class="form-group">
+					<label>Standort:</label>
+					<input name="location" type="text" class="form-control" id="inputlg" placeholder="Berlin">
+				</div>
+
+				<div class="form-inline">
+					<label for="priority">Suchradius (maximale Entfernung):</label><br />
+					<span class="label label-default">0km: kaum mobil</span>
+					<select name="priority" id="priority" class="form-control">
+						<option>0 km</option>
+						<option>1 km </option>
+						<option>2 km</option>
+						<option>5 km</option>
+						<option>10 km</option>
+						<option>20 km</option>
+						<option>50 km</option>
+						<option>100 km</option>
+						<option>1000 km</option>
+					</select>
+					<span class="label label-danger">1000km: keine Beschränkungen</span><br><br>
+				</div>
+
+
+				<div class="form-group">{% csrf_token %}
+					<button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-share"></span> Absenden</button>
+				</div>
+			
+			</form>
+		</div>	
+		</div>
+	</div>
+
 
 <div class="panel panel-default">
 	<div class="panel-heading"><i class="fa fa-th-list"></i> Aktuelle Gesuche</div>
@@ -13,7 +115,6 @@
 				<div class="timeline-panel">
 
 					<img src="http://www.wasserfilter-hannover.de/wp-content/uploads/2015/04/Wasser-Zitrone-200x200.jpg" width="150em" style="float:right;" class="img-thumbnail">
-
 
 					<div class="timeline-heading">
 						<h4 class="timeline-title"><b>Suche sauberes Trinkwasser</b></h4>
@@ -54,7 +155,6 @@
 										</div>
 									</p>
 
-									<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 									<script>
 										$(document).ready(function(){
 											$("#btnEinblenden").click(function(){
@@ -75,14 +175,14 @@
 										</div>
 
 
-										<div class="panel-body" id="kommentare">
+										<div class="panel-body" id="kommentare" style="display: none;">
 											<ul class="chat">
 												<li class="left clearfix">
 
 													<div class="header">
 														<span class="glyphicon glyphicon-user"></span> <a href="#">Lea Meier</a>
 														<small class="pull-right text-muted">
-															<i class="fa fa-clock-o fa-fw"></i> 26.05.2016 <b>12:36 Uhr</b>
+															<i class="fa fa-clock-o fa-fw"></i> 26.05.2016: <b>12:36 Uhr</b>
 														</small>
 													</div>
 													<p>
@@ -92,7 +192,7 @@
 											</ul>
 										</div>
 
-										<div class="panel-footer" id="kommentareFooter">
+										<div class="panel-footer" id="kommentareFooter" style="display: none;">
 											<div class="input-group">
 												<input id="btn-input" type="text" class="form-control input-sm" placeholder="Stelle Fragen oder kommentiere..." />
 												<span class="input-group-btn">
@@ -110,4 +210,5 @@
 							</ul> <!-- # -->
 						</div>
 					</div>
+
 {% endblock content %}

@@ -1,4 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/EN152/dcp.png?label=ready&title=Ready)](https://waffle.io/EN152/dcp)
+[![Build Status](https://travis-ci.org/EN152/dcp.svg?branch=master)](https://travis-ci.org/EN152/dcp)
 # Disaster Communication Platform
 
 ## Installation
