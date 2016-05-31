@@ -1,0 +1,13 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %} Profil bearbeiten {% endblock %}
+
+{% block content %}
+
+<form action="/profil/bearbeiten/" method="POST">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<a type="submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-edit"></span> Profil aktualisieren</a> 
+</form>
+
+{% endblock content %}

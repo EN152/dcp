@@ -66,44 +66,27 @@ class MyProfile(View):
     
     def get(self, request):
         return getPageAuthenticated(request, self.template)
-    
-    def post(self, request):
-        username = User.get_username(self)
-        user = User.objects.get(username=username)
-        return render(request, self.template, user)
         
 class EditProfile(View):
-    template = 'dcp/content/spezial/editprofil.html'
+    template = 'dcp/content/spezial/profilBearbeiten.html'
     
     def get(self, request):
-        return getPageAuthenticated(request, self.template)
-    
+        user = User.objects.get(username=request.user.username)
+        form = UserForm(initial={'email' : user.email})
+        return getPageAuthenticated(request, self.template, {'form': form})
+
+    # Bugfixing nötig!
     def post(self,request):
         if request.method == "POST":
             form = UserForm(request.POST)
             if form.is_valid():
-                user = User.objects.get(User.get_username(self))
-                if request.POST['email'] != None and request.POST['password'] != None:
-                    user.email = request.POST['email']
+                user = User.objects.get(username=request.user.username)
+                if request.POST['email'] != None or request.POST['password'] != None:
+                    mail = request.POST['email']
                     password = request.POST['password']
-                    if User.check_password(password) and password == request.POST['scndpwd']:
-                        User.set_password(self, password)
-                        user.save()
-                        return HttpResponseRedirect("/profil/")
-                elif request.POST['email'] != None:
-                    user.email = request.POST['email']
+                    User.set_password(request.user, password)
                     user.save()
                     return HttpResponseRedirect("/profil/")
-                elif request.POST['password'] != None:
-                    password = request.POST['password']
-                    if User.check_password(password) and password == request.POST['scndpwd']:
-                        User.set_password(self, password)
-                        user.save()
-                        return HttpResponseRedirect("/profil/")
-        else:
-            user = User.objects.get(User.get_username(self))
-            form = UserForm(initial={'email' : user.email})
-            return render(request, self.template, {'form': form})
 
 class Logout(View):
     def get(self, request):

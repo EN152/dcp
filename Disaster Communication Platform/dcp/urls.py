@@ -38,7 +38,7 @@ urlpatterns = [
 #
     #Profil
     url(r'^profil/$', MyProfile.as_view()),
-    url(r'^profil/edit/$', EditProfile.as_view())
+    url(r'^profil/bearbeiten/$', EditProfile.as_view())
 #    url(r'^profil/daten/$', views.profil_daten),
 #    url(r'^profil/netzwerke/$', views.profil_netzwerke),
 
