@@ -16,7 +16,9 @@ urlpatterns = [
     url(r'^suchen/materielles/$', Suchen_Materielles.as_view()),
     url(r'^suchen/immaterielles/$', Suchen_Immaterielles.as_view()),
     url(r'^suchen/personen/$', Suchen_Personen.as_view()),
-
+    # Chat
+    url(r'^chat/$', Chat.as_view(), name='Chat'),
+    url(r'^profil/netzwerke',Overview.as_view(),name='ChatOverview')
 #    # Bieten
 #    url(r'^bieten/$', views.bieten),
 #    url(r'^bieten/materielles/$', views.bieten_materielles),

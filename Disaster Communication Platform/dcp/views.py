@@ -3,10 +3,15 @@ from django.views.generic import View
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
+from collections import defaultdict
+from django.utils.http import urlencode
 from django.contrib.auth.decorators import login_required
 from dcpcontainer import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import Message
+from .forms import sendMessage
+from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
 # The authentification for the login of the user
 # Beispiel-View. Bitte beim Erstellen einer Seite selbstständig hinzufügen!  
@@ -27,15 +32,18 @@ def getPageAuthenticated(request, template, params={}):
         return HttpResponseRedirect("login/")
 
 class Register(View):
+    template = 'dcp/content/spezial/login.html'
+
     def post(self, request):
         if not request.user.is_authenticated():
             if request.method == "POST":
                 username = request.POST['username']
                 password = request.POST['password']
                 email = request.POST['email']
+                valid = bool(False)
                 obj = User.objects.filter(username=username)
                 if obj:
-                    return HttpResponse('User already exists') # Wie kann man das schön darstellen?
+                    return render(request, self.template, {'registerNotValid': valid}) # Wie kann man das schön darstellen?
                 user = User.objects.create_user(username, email, password)
                 user.save()
                 return HttpResponseRedirect("/login/")
@@ -45,7 +53,7 @@ class Login(View):
    
    def get(self, request):
         params = {}
-        return render(request, self.template, params)   
+        return render(request, self.template, params)
         
    def post(self, request):
        if request.method == "POST":
@@ -111,3 +119,51 @@ class Suchen_Personen(View):
 
     def get(self, request):
         return getPageAuthenticated(request, self.template)
+
+class Chat(View):
+    form_class = sendMessage
+    template = 'dcp/content/chat/chat.html'
+    initial = {'Text': 'Bitte Nachricht eingeben'}
+    def get(self,request):
+        # Hole die "andere" User Id
+        otherId = request.GET['userid']
+        currentUser = request.user
+        otherUser = User.objects.get(id=otherId) #TODO: Exception einbauen!!!!
+        # Ok, fremdschlüssel sind da, nun die Liste holen:
+        chats = (Message.objects.filter(From=otherUser.id,To=currentUser) | Message.objects.filter(From=currentUser,To=otherUser)).order_by('SendTime') # Filtern und Sortieren
+        form = self.form_class()
+        return render(request,self.template,context={'message_list':chats,'otherUser':otherUser,'currentUser':currentUser,'form':form})
+    def post(self,request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            message = form.cleaned_data['Text']
+            otherId = request.GET['userid']
+            currentUser = request.user
+            otherUser = User.objects.get(id=otherId)  # TODO: Exception einbauen!!!!
+            Message.objects.create(Text=message,From=currentUser,To=otherUser)
+            url = url_with_querystring(reverse('dcp:Chat'),userid=otherUser.id)
+            return HttpResponseRedirect(url)
+            #Neuer Eintrag in der Datenbank:
+def url_with_querystring(path, **kwargs):
+    return path + '?' + urlencode(kwargs)
+class Overview(View):
+    template = 'dcp/content/chat/chat_overview.html'
+    def get(self,request):
+        # Hole von allen Chats die der User hatte jeweils die letzte Nachricht
+        # Also From=currentUser oder To=currentUser -> Das sind alle Nachrichten
+        messageDict = defaultdict(list)
+        currentUser = request.user
+        all_chats = Message.objects.filter(From=currentUser) | Message.objects.filter(To=currentUser)
+        # Jetzt teile die Listen jeweils auf in Chat Gruppen
+        for m in all_chats:
+            chatPatner = m.To if m.From.id == currentUser.id else m.From
+            messageDict[chatPatner].append(m)
+        #tmpList = map[lambda mList: mList.sort(key=lambda message: message.SendTime), messageDict.items()]
+        tmpList = list()
+        for key,value in messageDict.items():
+            value.sort(key=lambda message: message.SendTime,reverse=True)
+            tmpList.append(value)
+        mList = list()
+        for x in tmpList:
+            mList.append(x[0])
+        return render(request,self.template,context={'last_message_list':mList,'currentUser':request.user})
