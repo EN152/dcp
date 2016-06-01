@@ -18,9 +18,13 @@ class Comment_Relation(models.Model):
 	created_date = models.DateTimeField(default=timezone.now)
 
 class Comment(models.Model):
-	realtion = models.ForeignKey(Comment_Relation, on_delete=models.CASCADE, null=False)
+	relation = models.ForeignKey(Comment_Relation, on_delete=models.CASCADE, null=False)
+	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
 	created_date = models.DateTimeField(default=timezone.now)
 	text = models.TextField(max_length=500, null=True)
+
+	def __unicode__(self):
+		return self.text
 
 class Goods(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
@@ -35,6 +39,13 @@ class Goods(models.Model):
 
 	def __unicode__(self):
 		return self.title
+
+	def getComments(self):
+		list = []
+		for c in Comment.objects.all():
+			if c.relation== self.comments:
+				list.append(c)
+		return list
 
 	class Meta:
 		abstract = True
@@ -75,7 +86,6 @@ class Material_Goods(Goods):
 			return "Medikamenten"
 		elif self.category == '5':
 			return "Sonstiges"
-
 
 	class Meta:
 		abstract = True

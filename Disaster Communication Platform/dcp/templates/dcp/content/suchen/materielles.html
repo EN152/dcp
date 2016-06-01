@@ -207,7 +207,7 @@
 								</li>
 
 								{% if context_list %}
-									{% for search_material, glyphicon_string, category_type_string  in context_list %}
+									{% for search_material, glyphicon_string, category_type_string, comment_list  in context_list %}
 									<li> <!--ODER  li class="timeline-inverted"-->
 				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
 				<div class="timeline-panel">
@@ -287,6 +287,20 @@
 														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
 													</p>
 												</li>
+                                                {% for comment in comment_list %}
+                                                <li class="left clearfix">
+
+													<div class="header">
+														<span class="glyphicon glyphicon-user"></span> <a href="#">{{comment.user}}</a>
+														<small class="pull-right text-muted">
+															<i class="fa fa-clock-o fa-fw"></i> {{comment.created_date}}
+														</small>
+													</div>
+													<p>
+														{{comment}}
+													</p>
+												</li>
+                                                {% endfor %}
 											</ul>
 										</div>
 

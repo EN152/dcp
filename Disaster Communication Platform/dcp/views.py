@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import View
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from collections import defaultdict
@@ -10,11 +10,11 @@ from dcpcontainer import settings
 from django.contrib.auth.models import User
 from dcp.models import *
 from django.template import loader
-from dcp.forms import *
+from dcp.forms import * # in Benutzung?
 from django.template.context_processors import request
-from .forms import UserForm
+from .forms import UserForm # in Benutzung?
 from .models import Message
-from .forms import sendMessage
+from .forms import sendMessage # in Benutzung?
 from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
 
@@ -23,7 +23,7 @@ def getPageAuthenticated(request, template, params={}):
     if request.user.is_authenticated():
         return render(request, template, params)
     else:
-        return HttpResponseRedirect("anmelden/")
+        return HttpResponseRedirect("/anmelden/")
 
 class Register(View):
     def post(self, request):
@@ -139,6 +139,7 @@ class Suchen_Materielles(View):
         search_materials_list = Search_Material.objects.order_by('created_date')
         glyphicon_string_list = []
         category_type_string_list = []
+        comment_list = []
         
 
         
@@ -147,8 +148,9 @@ class Suchen_Materielles(View):
             c_string = s.getCategoryTypeAsString()
             glyphicon_string_list.append(g_string)
             category_type_string_list.append(c_string)
+            comment_list.append(s.getComments())
 
-        context_list = zip(search_materials_list, glyphicon_string_list, category_type_string_list)
+        context_list = zip(search_materials_list, glyphicon_string_list, category_type_string_list, comment_list)
             
 
         template = loader.get_template(self.templatePath)
@@ -156,7 +158,8 @@ class Suchen_Materielles(View):
             'context_list': context_list,
             'search_materials_list': search_materials_list,
             'glyphicon_string_list': glyphicon_string_list,
-            'category_type_string_list': category_type_string_list
+            'category_type_string_list': category_type_string_list,
+            'comment_list': comment_list
         }
 
         return HttpResponse(template.render(context,request))
@@ -269,7 +272,7 @@ class Chat(View):
         # Hole die "andere" User Id
         otherId = request.GET['userid']
         currentUser = request.user
-        otherUser = User.objects.get(id=otherId) #TODO: Exception einbauen!!!!
+        otherUser = get_object_or_404(User, id=otherId) # ist ein 404 ausreichend?
         # Ok, fremdschlüssel sind da, nun die Liste holen:
         chats = (Message.objects.filter(From=otherUser.id,To=currentUser) | Message.objects.filter(From=currentUser,To=otherUser)).order_by('SendTime') # Filtern und Sortieren
         form = self.form_class()
