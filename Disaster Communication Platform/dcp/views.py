@@ -172,7 +172,7 @@ class Suchen_Materielles(View):
                 search_material = Search_Material.objects.get(id=search_material_id)
                 relation = search_material.comments
                 Comment.objects.create(text=text,user=user,relation=relation)
-                return HttpResponseRedirect('/suchen/materielles/')
+                return HttpResponseRedirect('')
 
         else:
             return HttpResponse(status=403)
