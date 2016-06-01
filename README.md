@@ -19,8 +19,6 @@ Benutzername: `admin`<br />
 Emailadresse: `admin@dcp.org`<br />
 Passwort: `disaster2016`<br />
 
-<hr>
-
 # Programmierpraktikum: Soziale Netzwerke
 Sommersemester 2016<br />
 Fachgebiet CIT<br />
