@@ -17,11 +17,15 @@ class Catastrophe(models.Model):
 class Comment_Relation(models.Model):
 	created_date = models.DateTimeField(default=timezone.now)
 
+	@classmethod
+	def create(cls):
+		return cls
+
 class Comment(models.Model):
 	relation = models.ForeignKey(Comment_Relation, on_delete=models.CASCADE, null=False)
 	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
 	created_date = models.DateTimeField(default=timezone.now)
-	text = models.TextField(max_length=500, null=True)
+	text = models.TextField(max_length=500, null=False)
 
 	def __unicode__(self):
 		return self.text
@@ -30,11 +34,11 @@ class Goods(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
 	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
 	title = models.CharField(max_length=100, null=False)
-	description = models.TextField(max_length=500, null=False)
+	description = models.TextField(max_length=500, null=True)
 	location_x = models.FloatField(null=True)
 	location_y = models.FloatField(null=True)
 	created_date = models.DateTimeField(default=timezone.now)
-	comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True)
+	comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=False, default=Comment_Relation.create())
 	visibility = models.BooleanField(default=True)
 
 	def __unicode__(self):

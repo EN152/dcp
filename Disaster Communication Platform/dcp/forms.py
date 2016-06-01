@@ -22,3 +22,8 @@ class sendMessage(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['Text']
+
+class Comment_Form(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']

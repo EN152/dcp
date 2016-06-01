@@ -216,7 +216,7 @@
 
 					<div class="timeline-heading">
 						<h4 class="timeline-title"><b>{{ search_material.title }}</b></h4>
-						<p><span class="glyphicon glyphicon-user"></span> <a href="#">{{ search_material.user }}</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i>{{ search_material.created_date }}</small></p>
+						<p><span class="glyphicon glyphicon-user"></span> <a href="#">{{ search_material.user }}</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor {{ search_material.created_date|timesince }}</small></p>
 					</div>
 
 					<div class="timeline-body">
@@ -273,7 +273,7 @@
 										</div>
 
 
-										<div class="panel-body" id="kommentare" style="display: none;">
+										<div class="panel-body" id="kommentare" style="display: block;">
 											<ul class="chat">
 												<li class="left clearfix">
 
@@ -297,21 +297,27 @@
 														</small>
 													</div>
 													<p>
-														{{comment}}
+														{{comment.text}}
 													</p>
 												</li>
                                                 {% endfor %}
 											</ul>
 										</div>
 
-										<div class="panel-footer" id="kommentareFooter" style="display: none;">
+										<div class="panel-footer" id="kommentareFooter" style="display: block;">
 											<div class="input-group">
-												<input id="btn-input" type="text" class="form-control input-sm" placeholder="Stelle Fragen oder kommentiere..." />
-												<span class="input-group-btn">
-													<button class="btn btn-warning btn-sm" id="btn-chat">
-														Kommentieren
-													</button>
-												</span>
+                                                <form class="form-horizontal" role="form" id="comment" method="post">
+                                                    <div class="form-group">
+                                                     {% csrf_token %}
+                                                    <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
+                                                     {{ comment_form.text }}
+                                                    </div>
+                                                 <span class="input-group-btn">
+                                                    <button class="btn btn-warning btn-sm" id="btn-chat" type="submit">
+                                                         Kommentieren
+                                                     </button>
+                                                 </span>
+                                             </form>
 											</div>
 										</div>
 										<!-- /.panel-footer -->
