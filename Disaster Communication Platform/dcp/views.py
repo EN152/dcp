@@ -163,7 +163,7 @@ class Suchen_Materielles(View):
 
     def post(self, request):
         params = {}
-        return render(request, self.template, params)
+        return render(request, self.templatePath, params)
 
 class Suchen_Immaterielles(View):
     templatePath = 'dcp/content/suchen/immaterielles.html'
