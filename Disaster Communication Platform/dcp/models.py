@@ -14,14 +14,23 @@ class Catastrophe(models.Model):
 	def __unicode__(self):
 		return self.cat_title 
 
+class Comment_Relation(models.Model):
+	created_date = models.DateTimeField(default=timezone.now)
+
+class Comment(models.Model):
+	realtion = models.ForeignKey(Comment_Relation, on_delete=models.CASCADE, null=False)
+	created_date = models.DateTimeField(default=timezone.now)
+	text = models.TextField(max_length=500, null=True)
+
 class Goods(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True)
-	title = models.CharField(max_length=100, null=True)
-	description = models.TextField(max_length=500, null=True)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
+	title = models.CharField(max_length=100, null=False)
+	description = models.TextField(max_length=500, null=False)
 	location_x = models.FloatField(null=True)
 	location_y = models.FloatField(null=True)
 	created_date = models.DateTimeField(default=timezone.now)
+	comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True)
 	visibility = models.BooleanField(default=True)
 
 	def __unicode__(self):
@@ -76,39 +85,18 @@ class Immaterial_Goods(Goods):
 		abstract = True
 
 class Search_Material(Material_Goods):
-	radius = models.PositiveSmallIntegerField(default=10, validators=[MinValueValidator(0), MaxValueValidator(1000)])
+	radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
 	
 class Offer_Material(Material_Goods):
 	bump_date = models.DateTimeField(default=timezone.now)
 	report_cnt = models.PositiveSmallIntegerField(default=0)
 
 class Search_Immaterial(Immaterial_Goods):
-	radius = models.PositiveSmallIntegerField(default=10, validators=[MinValueValidator(0), MaxValueValidator(1000)])
+	radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
 	
 class Offer_Immaterial(Immaterial_Goods):
 	bump_date = models.DateTimeField(default=timezone.now)
 	report_cnt = models.PositiveSmallIntegerField(default=0)
-
-# Kommentare sind noch nicht ausgereift. Es ist nicht möglich ein ForeignKey von einer Abstract einzubinden (Goods)
-# Wenn jemand eine bessere Idee hat, dann bitte ändern
-class Comment(models.Model):
-	date_created = models.DateTimeField(default=timezone.now)
-	text = models.TextField(max_length=500, null=True)
-
-	class Meta:
-		abstract = True
-
-class Search_Material_Comment(Comment):
-	key = models.ForeignKey(Search_Material, on_delete=models.CASCADE, null=True)
-
-class Offer_Material_Comment(Comment):
-	key = models.ForeignKey(Offer_Material, on_delete=models.CASCADE, null=True)
-
-class Search_Immaterial_Comment(Comment):
-	key = models.ForeignKey(Search_Immaterial, on_delete=models.CASCADE, null=True)
-
-class Offer_Immaterial_Comment(Comment):
-	key = models.ForeignKey(Offer_Immaterial, on_delete=models.CASCADE, null=True)
 
 # Zur delete Cascade: Ich bin mir nicht sicher, ob das wirklich so sinnvoll ist.
 # Die Frage ist, was bringen Nachrichten an einen nicht existierenden User -> Verhalten muss noch definiert werden.
