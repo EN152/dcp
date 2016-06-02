@@ -139,15 +139,17 @@ class Suchen_Materielles(View):
         glyphicon_string_list = []
         category_type_string_list = []
         comment_list = []
+        bump_list = []
+        report_list = []
         
         for s in search_materials_list:
-            g_string = s.getGlyphiconString()
-            c_string = s.getCategoryTypeAsString()
-            glyphicon_string_list.append(g_string)
-            category_type_string_list.append(c_string)
+            glyphicon_string_list.append(s.getGlyphiconString())
+            category_type_string_list.append(s.getCategoryTypeAsString())
             comment_list.append(s.getComments())
+            bump_list.append(s.getBumps())
+            report_list.append(s.getReports())
 
-        context_list = zip(search_materials_list, glyphicon_string_list, category_type_string_list, comment_list)
+        context_list = zip(search_materials_list, glyphicon_string_list, category_type_string_list, comment_list, bump_list, report_list)
             
         template = loader.get_template(self.templatePath)
         context = {
@@ -156,7 +158,9 @@ class Suchen_Materielles(View):
             'glyphicon_string_list': glyphicon_string_list,
             'category_type_string_list': category_type_string_list,
             'comment_list': comment_list,
-            'comment_form': Comment_Form
+            'bump_list': bump_list,
+            'report_list': report_list
+
         }
 
         return HttpResponse(template.render(context,request))
@@ -201,6 +205,35 @@ class Suchen_Materielles(View):
                         search_material.comments.delete()
                     search_material.delete()
                     return HttpResponseRedirect('')
+
+            if request.POST['post_identifier'] == 'bump':
+                search_material = get_object_or_404(Search_Material, id=request.POST['search_material_id'])
+                if search_material.bumps is None:
+                    search_material.bumps = Bump_Relation.objects.create()
+                    search_material.save()
+                else:
+                    for bump in Bump.objects.all():
+                        if(bump.relation == search_material.bumps and bump.user == user):
+                            return HttpResponseRedirect('')
+                relation = search_material.bumps
+                Bump.objects.create(user=user,relation=relation)
+                return HttpResponseRedirect('')
+
+            if request.POST['post_identifier'] == 'report':
+                search_material = get_object_or_404(Search_Material, id=request.POST['search_material_id'])
+                if user == search_material.user:
+                    return HttpResponse(status=403)
+                relation = None
+                if search_material.reports is None:
+                    search_material.reports = Report_Relation.objects.create()
+                    search_material.save()
+                else:
+                    for report in Report.objects.all():
+                        if(report.relation == search_material.reports and report.user == user):
+                            return HttpResponseRedirect('')
+                relation = search_material.reports
+                Report.objects.create(user=user,relation=relation)
+                return HttpResponseRedirect('')
 
         return HttpResponse(status=403)
 

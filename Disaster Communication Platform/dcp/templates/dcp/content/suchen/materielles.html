@@ -221,7 +221,7 @@
             <!-- Ende des Beispielelemts-->
 
 			{% if context_list %}
-			{% for search_material, glyphicon_string, category_type_string, comment_list in context_list %}
+			{% for search_material, glyphicon_string, category_type_string, comment_list, bump_list, report_list in context_list %}
 
             <!-- Beginn eines Elements -->
 			<li> <!--ODER  li class="timeline-inverted"-->
@@ -230,7 +230,7 @@
 			    <div class="timeline-panel">
 
                     {% if search_material.image.url != None %}
-				    <img src="{{ search_material.image.url }}" width="150" style="float:right;" class="img-thumbnail">
+				        <img src="{{ search_material.image.url }}" width="150" style="float:right;" class="img-thumbnail">
                     {% endif %}
 
 				    <div class="timeline-heading">
@@ -257,10 +257,14 @@
                             {% if user.is_active %}
                             <!-- TODO Button werden nicht richtig angezeigt -->
 								<center>
-						            <button type="button" class="btn btn-success">
-							        	<span class="glyphicon glyphicon-arrow-up" ></span>
-							        	Bump! <span class="badge">4</span>
-                                    </button>
+                                    <form action="" role="form" id="bump_form" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
+						                <button type="submit" class="btn btn-success" name="post_identifier" value="bump">
+							            	<span class="glyphicon glyphicon-arrow-up" ></span>
+							            	Bump! <span class="badge">{{bump_list|length}}</span>
+                                        </button>
+                                    </form>
                                           
                                     {% if search_material.user != user %}
                                         <script>
@@ -276,10 +280,9 @@
                                     {% endif %}
 
                                     {% if user.is_superuser or search_material.user == user %}
-                                        <form action="" role="form" id="delete" method="post"> <!-- method="delete" funktioniert nicht -->
+                                        <form action="" role="form" id="delete_form" method="post"> <!-- method="delete" funktioniert nicht -->
                                             {% csrf_token %}
                                             <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
-   
                                             <button type="submit" class="btn btn-danger" name="post_identifier" value="delete">
 							                    <span class="glyphicon glyphicon-trash"></span> 
 							                    Löschen
@@ -287,10 +290,14 @@
                                         </form>
 
                                     {% else %}
-							            <button class="btn btn-danger" type="button">
-							               <span class="glyphicon glyphicon-ban-circle"></span> 
-							               Melden
-                                        </button>
+                                        <form action="" role="form" id="report_form" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
+							                <button class="btn btn-danger" type="submit" name="post_identifier" value="report">
+							                   <span class="glyphicon glyphicon-ban-circle"></span> 
+							                   Melden <span class="badge">{{report_list|length}}</span>
+                                            </button>
+                                        </form>
                                     {% endif %}
 							    </center>
                             {% endif %}

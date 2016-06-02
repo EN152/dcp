@@ -15,7 +15,8 @@ class Catastrophe(models.Model):
 		return self.cat_title 
 
 class Comment_Relation(models.Model):
-	created_date = models.DateTimeField(default=timezone.now)
+	class Meta:
+		abstract = False
 
 class Comment(models.Model):
 	relation = models.ForeignKey(Comment_Relation, on_delete=models.CASCADE, null=False)
@@ -26,6 +27,24 @@ class Comment(models.Model):
 	def __unicode__(self):
 		return self.text
 
+class Bump_Relation(models.Model):
+	class Meta:
+		abstract = False
+
+class Report_Relation(models.Model):
+	class Meta:
+		abstract = False
+
+class Bump(models.Model):
+	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
+	relation = models.ForeignKey(Bump_Relation, on_delete=models.CASCADE, null=False)
+	date_created = models.DateTimeField(default=timezone.now)
+
+class Report(models.Model):
+	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
+	relation = models.ForeignKey(Report_Relation, on_delete=models.CASCADE, null=False)
+	date_created = models.DateTimeField(default=timezone.now)
+
 class Goods(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
 	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
@@ -35,6 +54,8 @@ class Goods(models.Model):
 	location_y = models.FloatField(null=True)
 	created_date = models.DateTimeField(default=timezone.now)
 	comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True)
+	bumps = models.ForeignKey(Bump_Relation, on_delete=models.DO_NOTHING, null=True)
+	reports = models.ForeignKey(Report_Relation, on_delete=models.DO_NOTHING, null=True)
 	visibility = models.BooleanField(default=True)
 
 	def __unicode__(self):
@@ -42,9 +63,23 @@ class Goods(models.Model):
 
 	def getComments(self):
 		list = []
-		for c in Comment.objects.all():
-			if c.relation== self.comments:
-				list.append(c)
+		for comment in Comment.objects.all():
+			if comment.relation == self.comments:
+				list.append(comment)
+		return list
+
+	def getBumps(self):
+		list =[]
+		for bump in Bump.objects.all():
+			if bump.relation == self.bumps:
+				list.append(bump)
+		return list
+
+	def getReports(self):
+		list =[]
+		for report in Report.objects.all():
+			if report.relation == self.reports:
+				list.append(report)
 		return list
 
 	class Meta:
@@ -110,15 +145,15 @@ class Search_Material(Material_Goods):
 	radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
 	
 class Offer_Material(Material_Goods):
-	bump_date = models.DateTimeField(default=timezone.now)
-	report_cnt = models.PositiveSmallIntegerField(default=0)
+	class Meta:
+		abstract = False
 
 class Search_Immaterial(Immaterial_Goods):
 	radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
 	
 class Offer_Immaterial(Immaterial_Goods):
-	bump_date = models.DateTimeField(default=timezone.now)
-	report_cnt = models.PositiveSmallIntegerField(default=0)
+	class Meta:
+		abstract = False
 
 # Zur delete Cascade: Ich bin mir nicht sicher, ob das wirklich so sinnvoll ist.
 # Die Frage ist, was bringen Nachrichten an einen nicht existierenden User -> Verhalten muss noch definiert werden.
