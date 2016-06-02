@@ -170,10 +170,12 @@ class Suchen_Materielles(View):
                 text = request.POST['text']
                 search_material_id = request.POST['search_material_id']
                 search_material = Search_Material.objects.get(id=search_material_id)
+                if search_material.comments is None:
+                    search_material.comments = Comment_Relation.objects.create()
+                    search_material.save()
                 relation = search_material.comments
                 Comment.objects.create(text=text,user=user,relation=relation)
                 return HttpResponseRedirect('')
-
         else:
             return HttpResponse(status=403)
 

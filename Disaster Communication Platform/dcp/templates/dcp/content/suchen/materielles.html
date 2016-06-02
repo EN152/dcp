@@ -279,7 +279,7 @@
 						<div class="chat-panel panel panel-default">
 							<div class="panel-heading">
 								<i class="fa fa-comments fa-fw"></i>
-								Öffentliche Kommentare <span class="badge">1</span>
+								Öffentliche Kommentare <span class="badge">{{comment_list|length}}</span>
 
 								<button id="btnEinblenden" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
 									<i class="fa fa-chevron-down"></i>
@@ -289,6 +289,7 @@
 
 							<div class="panel-body" id="kommentare" style="display: block;">
 								<ul class="chat">
+                                    <!-- Anfang Beispiel Kommentar-->
 									<li class="left clearfix">
 										<div class="header">
 											<span class="glyphicon glyphicon-user"></span> <a href="#">Lea Meier</a>
@@ -300,6 +301,7 @@
 											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
 										</p>
 									</li>
+                                    <!-- Ende Beispiel Kommentar -->
 
                                        {% for comment in comment_list %}
 

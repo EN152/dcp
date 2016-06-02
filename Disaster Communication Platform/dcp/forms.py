@@ -31,4 +31,4 @@ class Comment_Form(ModelForm):
 class Search_Material_Form(ModelForm):
     class Meta:
         model = Search_Material
-        fields = ['tile', 'description', 'location_x', 'location_y', 'radius', 'catastrophe']
+        fields = ['title', 'description', 'location_x', 'location_y', 'radius', 'catastrophe']

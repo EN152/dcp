@@ -17,10 +17,6 @@ class Catastrophe(models.Model):
 class Comment_Relation(models.Model):
 	created_date = models.DateTimeField(default=timezone.now)
 
-	@classmethod
-	def create(cls):
-		return cls
-
 class Comment(models.Model):
 	relation = models.ForeignKey(Comment_Relation, on_delete=models.CASCADE, null=False)
 	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
@@ -38,7 +34,7 @@ class Goods(models.Model):
 	location_x = models.FloatField(null=True)
 	location_y = models.FloatField(null=True)
 	created_date = models.DateTimeField(default=timezone.now)
-	comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=False, default=Comment_Relation.create())
+	comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True)
 	visibility = models.BooleanField(default=True)
 
 	def __unicode__(self):
