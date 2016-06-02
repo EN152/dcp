@@ -164,19 +164,44 @@ class Suchen_Materielles(View):
     def post(self, request):
         user = request.user
         if user.is_authenticated() and user.is_active:
-            form = Comment_Form(request.POST)
-            if form.is_valid():
-                text = request.POST['text']
-                search_material_id = request.POST['search_material_id']
-                search_material = Search_Material.objects.get(id=search_material_id)
-                if search_material.comments is None:
-                    search_material.comments = Comment_Relation.objects.create()
-                    search_material.save()
-                relation = search_material.comments
-                Comment.objects.create(text=text,user=user,relation=relation)
+            if request.POST['post_identifier'] == 'comment':
+                form = Comment_Form(request.POST)
+                if form.is_valid():
+                    text = request.POST['text']
+                    search_material = get_object_or_404(Search_Material, id=request.POST['search_material_id'])
+                    if search_material.comments is None:
+                        search_material.comments = Comment_Relation.objects.create()
+                        search_material.save()
+                    relation = search_material.comments
+                    Comment.objects.create(text=text,user=user,relation=relation)
+                    return HttpResponseRedirect('')
+
+            if request.POST['post_identifier'] == 'create':
+                form = Search_Material_Form(request.POST)
+                if form.is_valid():
+                    radiusSplit = request.POST['radius'].split(' ')
+                    radius = radiusSplit[0]
+                    title = request.POST['title']
+                    description = request.POST['description']
+                    catastrophe = get_object_or_404(Catastrophe, id=request.POST['catastrophe'])
+                    location_x = request.POST['location_x']
+                    location_y = request.POST['location_y']
+                    categoryString = request.POST['category']
+                    category = Material_Goods.stringToCategoryType(categoryString)
+                    Search_Material.objects.create(title=title, description=description, radius=radius, catastrophe = catastrophe, location_x=location_x, location_y=location_y, category=category, user=user)
                 return HttpResponseRedirect('')
-        else:
-            return HttpResponse(status=403)
+                # else:
+                    # return HttpResponse(status=500)
+
+            if request.POST['post_identifier'] == 'delete':
+                search_material = get_object_or_404(Search_Material, id=request.POST['search_material_id'])
+                if user.is_superuser or user == search_material.user:
+                    if search_material.comments is not None:
+                        search_material.comments.delete()
+                    search_material.delete()
+                    return HttpResponseRedirect('')
+
+        return HttpResponse(status=403)
 
 class Suchen_Immaterielles(View):
     templatePath = 'dcp/content/suchen/immaterielles.html'

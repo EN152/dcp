@@ -33,35 +33,35 @@
 				
 			<div class="radio">
 				<label>
-			    <input type="radio" name="category" id="lebensmittel" value="lebensmittel">
+			    <input type="radio" name="category" id="lebensmittel" value="Groceries">
 			    <span class="glyphicon glyphicon-cutlery"></span> Lebensmittel
 			  </label>
 			</div>
 
 			<div class="radio">
 			  <label>
-			    <input type="radio" name="category" id="infrastruktur" value="infrastruktur">
+			    <input type="radio" name="category" id="infrastruktur" value="Infrastructure">
 			   <span class="glyphicon glyphicon-flash"></span> Infrastruktur
 			  </label>
 			</div>
 
 			<div class="radio">
 			  <label>
-			    <input type="radio" name="category" id="werkzeug" value="werkzeug">
+			    <input type="radio" name="category" id="werkzeug" value="Tools">
 			   <span class="glyphicon glyphicon-wrench"></span> Werkzeug
 			  </label>
 			</div>
 
 			<div class="radio">
 			  <label>
-			    <input type="radio" name="category" id="medizin" value="medizin">
+			    <input type="radio" name="category" id="medizin" value="Drugs">
 			   <span class="glyphicon glyphicon-heart"></span> Medizin
 			  </label>
 			</div>
 
 			<div class="radio">
 			  <label>
-			    <input type="radio" name="category" id="sonstiges" value="sonstiges">
+			    <input type="radio" name="category" id="sonstiges" value="Miscellaneous">
 			   <span class="glyphicon glyphicon-option-horizontal"></span> Sonstiges
 			  </label>
 			</div>
@@ -83,7 +83,7 @@
 			<div class="form-inline">
 				<label for="priority">Suchradius (maximale Entfernung):</label><br />
 				<span class="label label-default">0km: kaum mobil</span>
-				<select name="priority" id="priority" class="form-control">
+				<select name="radius" id="radius" class="form-control">
 					<option>0 km</option>
 					<option>1 km </option>
 					<option>2 km</option>
@@ -97,8 +97,12 @@
 				<span class="label label-danger">1000km: keine Beschränkungen</span><br><br>
 			</div>
 
-			<div class="form-group">{% csrf_token %}
-				<button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-share"></span> Absenden</button>
+			<div class="form-group">
+                {% csrf_token %}
+                <input type="hidden" name="catastrophe" value="1" /> <!-- Replace with real implentation !!!! -->
+                <input type="hidden" name="location_x" value="50" /> <!-- Replace with real implentation !!!! -->
+                <input type="hidden" name="location_y" value="50" /> <!-- Replace with real implentation !!!! -->
+				<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
 			</div>			
         </form>
 	  </div>	
@@ -225,7 +229,9 @@
 
 			    <div class="timeline-panel">
 
+                    {% if search_material.image.url != None %}
 				    <img src="{{ search_material.image.url }}" width="150" style="float:right;" class="img-thumbnail">
+                    {% endif %}
 
 				    <div class="timeline-heading">
 				    	<h4 class="timeline-title"><b>{{ search_material.title }}</b></h4>
@@ -249,24 +255,43 @@
 							<img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
 
                             {% if user.is_active %}
-                            <p>
 								<center>
-									<button type="button" class="btn btn-success">
-										<span class="glyphicon glyphicon-arrow-up" ></span>
-										Bump! <span class="badge">4</span>
-                                       </button>
+						            <button type="button" class="btn btn-success">
+							        	<span class="glyphicon glyphicon-arrow-up" ></span>
+							        	Bump! <span class="badge">4</span>
+                                    </button>
+                                          
+                                    {% if search_material.user != user %}
+                                        <script>
+                                            function goToChat(){
+                                                 parent.location='/chat?userid={{search_material.user.id}}'
+                                            }
+                                        </script>
 
-									<button type="button" class="btn btn-primary">
-										<span class="glyphicon glyphicon-envelope"></span> 
-										Kontaktieren
-                                       </button>
+					                    <button type="submit" class="btn btn-primary" onclick="goToChat();">
+							               	<span class="glyphicon glyphicon-envelope"></span> 
+							               	Kontaktieren
+                                        </button>
+                                    {% endif %}
 
-									<button type="button" class="btn btn-danger">
-										<span class="glyphicon glyphicon-ban-circle"></span> 
-										Melden
-                                       </button>
-								</center>
-							</p>
+                                    {% if user.is_superuser or search_material.user == user %}
+                                        <form action="" role="form" id="delete" method="post"> <!-- method="delete" funktioniert nicht -->
+                                            {% csrf_token %}
+                                            <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
+   
+                                            <button type="submit" class="btn btn-danger" name="post_identifier" value="delete">
+							                    <span class="glyphicon glyphicon-trash"></span> 
+							                    Löschen
+                                             </button>
+                                        </form>
+
+                                    {% else %}
+							            <button class="btn btn-danger" type="button">
+							               <span class="glyphicon glyphicon-ban-circle"></span> 
+							               Melden
+                                        </button>
+                                    {% endif %}
+							    </center>
                             {% endif %}
 						</div>
 
@@ -331,12 +356,12 @@
                                 <form class="form-horizontal" role="form" id="comment" method="post">
 								    <div class="input-group">  
                                         
-                                            {% csrf_token %}
-                                            <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
-                                            <input name="text" id="id_text" type="text" class="form-control input-sm" maxlength="500" placeholder="Schreibe ein Kommentar..." />
+                                        {% csrf_token %}
+                                        <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
+                                        <input name="text" id="id_text" type="text" class="form-control input-sm" maxlength="500" placeholder="Schreibe ein Kommentar..." />
                                         
                                         <span class="input-group-btn">
-                                            <button class="btn btn-warning btn-sm" id="btn-chat" type="submit">
+                                            <button class="btn btn-warning btn-sm" id="btn-chat" type="submit" name="post_identifier" value="comment">
                                                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Kommentieren
                                             </button>
                                         </span>

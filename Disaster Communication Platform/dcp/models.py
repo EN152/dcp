@@ -75,6 +75,18 @@ class Material_Goods(Goods):
 		elif self.category == '5':
 			return "glyphicon glyphicon-question-sign"
 
+	def stringToCategoryType(category):
+		if category == 'Groceries':
+			return 1
+		if category == 'Infrastructure':
+			return 2
+		if category == 'Tools':
+			return 3
+		if category == 'Drugs':
+			return 4
+		if category == 'Miscellaneous':
+			return 5
+
 	def getCategoryTypeAsString(self):
 		if self.category == '1':
 			return "Lebensmittel"
