@@ -21,7 +21,7 @@ class Comment(models.Model):
 	relation = models.ForeignKey(Comment_Relation, on_delete=models.CASCADE, null=False)
 	user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
 	created_date = models.DateTimeField(default=timezone.now)
-	text = models.TextField(max_length=500, null=True)
+	text = models.TextField(max_length=500, null=False)
 
 	def __unicode__(self):
 		return self.text
@@ -30,7 +30,7 @@ class Goods(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
 	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
 	title = models.CharField(max_length=100, null=False)
-	description = models.TextField(max_length=500, null=False)
+	description = models.TextField(max_length=500, null=True)
 	location_x = models.FloatField(null=True)
 	location_y = models.FloatField(null=True)
 	created_date = models.DateTimeField(default=timezone.now)
@@ -74,6 +74,18 @@ class Material_Goods(Goods):
 			return "glyphicon glyphicon-plus"
 		elif self.category == '5':
 			return "glyphicon glyphicon-question-sign"
+
+	def stringToCategoryType(category):
+		if category == 'Groceries':
+			return 1
+		if category == 'Infrastructure':
+			return 2
+		if category == 'Tools':
+			return 3
+		if category == 'Drugs':
+			return 4
+		if category == 'Miscellaneous':
+			return 5
 
 	def getCategoryTypeAsString(self):
 		if self.category == '1':

@@ -5,6 +5,7 @@
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 
+<!-- Script: Aufklappen des Bereiches für eine neue Erstellung-->
 <script>
 	$(document).ready(function(){
 		$("#newSearch").click(function(){
@@ -14,107 +15,115 @@
 	});
 </script>
 
+<!-- Anfang des Bereich für die Neuerstellung -->
+{% if user.is_active %}
 <div class="panel panel-default">
-	<div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon glyphicon-search"></span> Neues Gesuch</button></div>
+   <div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon glyphicon-search"></span> Neues Gesuch</button></div>
 	<div class="panel-body" id="suchFormular" style="display: none;">
 	 <div class="col-sm-6">
 		<form method="POST">
-			 
-				<h2><span class="glyphicon glyphicon-search"></span> Nach welchem Gegenstand suchst Du?</h2>
-				<div class="form-group">
-					<label>Titel:</label>
-					<input name="title" type="text" placeholder="Suche leistungsstarkes Stromaggregat" class="form-control">
-				</div>
+		    <h2><span class="glyphicon glyphicon-search"></span> Nach welchem Gegenstand suchst Du?</h2>
 
-			
-				<label>Kategorie:</label><br />
+			<div class="form-group">
+				<label>Titel:</label>
+				<input name="title" type="text" placeholder="Suche leistungsstarkes Stromaggregat" class="form-control">
+			</div>
+
+			<label>Kategorie:</label><br />
 				
-				<div class="radio">
-					<label>
-				    <input type="radio" name="category" id="lebensmittel" value="lebensmittel">
-				    <span class="glyphicon glyphicon-cutlery"></span> Lebensmittel
-				  </label>
-				</div>
+			<div class="radio">
+				<label>
+			    <input type="radio" name="category" id="lebensmittel" value="Groceries">
+			    <span class="glyphicon glyphicon-cutlery"></span> Lebensmittel
+			  </label>
+			</div>
 
-				<div class="radio">
-				  <label>
-				    <input type="radio" name="category" id="infrastruktur" value="infrastruktur">
-				   <span class="glyphicon glyphicon-flash"></span> Infrastruktur
-				  </label>
-				</div>
+			<div class="radio">
+			  <label>
+			    <input type="radio" name="category" id="infrastruktur" value="Infrastructure">
+			   <span class="glyphicon glyphicon-flash"></span> Infrastruktur
+			  </label>
+			</div>
 
-				<div class="radio">
-				  <label>
-				    <input type="radio" name="category" id="werkzeug" value="werkzeug">
-				   <span class="glyphicon glyphicon-wrench"></span> Werkzeug
-				  </label>
-				</div>
+			<div class="radio">
+			  <label>
+			    <input type="radio" name="category" id="werkzeug" value="Tools">
+			   <span class="glyphicon glyphicon-wrench"></span> Werkzeug
+			  </label>
+			</div>
 
-				<div class="radio">
-				  <label>
-				    <input type="radio" name="category" id="medizin" value="medizin">
-				   <span class="glyphicon glyphicon-heart"></span> Medizin
-				  </label>
-				</div>
+			<div class="radio">
+			  <label>
+			    <input type="radio" name="category" id="medizin" value="Drugs">
+			   <span class="glyphicon glyphicon-heart"></span> Medizin
+			  </label>
+			</div>
 
-				<div class="radio">
-				  <label>
-				    <input type="radio" name="category" id="sonstiges" value="sonstiges">
-				   <span class="glyphicon glyphicon-option-horizontal"></span> Sonstiges
-				  </label>
-				</div>
+			<div class="radio">
+			  <label>
+			    <input type="radio" name="category" id="sonstiges" value="Miscellaneous">
+			   <span class="glyphicon glyphicon-option-horizontal"></span> Sonstiges
+			  </label>
+			</div>
 
-				<div class="form-group">
-					<label>Bild:</label><input type="file">
-               </div>
+			<div class="form-group">
+				<label>Bild:</label><input type="file">
+              </div>
 
-				<div class="form-group">
-					<label>Kurzbeschreibung:</label>
-					<textarea name="description" class="form-control" rows="5" id="description" placeholder="Nenne hier wichtige Details."></textarea>
-				</div>
+			<div class="form-group">
+				<label>Kurzbeschreibung:</label>
+				<textarea name="description" class="form-control" rows="5" id="description" placeholder="Nenne hier wichtige Details."></textarea>
+			</div>
 
-				<div class="form-group">
-					<label>Standort:</label>
-					<input name="location" type="text" class="form-control" id="inputlg" placeholder="Berlin">
-				</div>
+			<div class="form-group">
+				<label>Standort:</label>
+				<input name="location" type="text" class="form-control" id="inputlg" placeholder="Berlin"> <!-- TODO ort über javascript finden -->
+			</div>
 
-				<div class="form-inline">
-					<label for="priority">Suchradius (maximale Entfernung):</label><br />
-					<span class="label label-default">0km: kaum mobil</span>
-					<select name="priority" id="priority" class="form-control">
-						<option>0 km</option>
-						<option>1 km </option>
-						<option>2 km</option>
-						<option>5 km</option>
-						<option>10 km</option>
-						<option>20 km</option>
-						<option>50 km</option>
-						<option>100 km</option>
-						<option>1000 km</option>
-					</select>
-					<span class="label label-danger">1000km: keine Beschränkungen</span><br><br>
-				</div>
+			<div class="form-inline">
+				<label for="priority">Suchradius (maximale Entfernung):</label><br />
+				<span class="label label-default">0km: kaum mobil</span>
+				<select name="radius" id="radius" class="form-control">
+					<option>0 km</option>
+					<option>1 km </option>
+					<option>2 km</option>
+					<option>5 km</option>
+					<option>10 km</option>
+					<option>20 km</option>
+					<option>50 km</option>
+					<option>100 km</option>
+					<option>1000 km</option>
+				</select>
+				<span class="label label-danger">1000km: keine Beschränkungen</span><br><br>
+			</div>
 
+			<div class="form-group">
+                {% csrf_token %}
+                <input type="hidden" id="catastrophe "name="catastrophe" value="1" /> <!-- TODO Replace with real implentation !!!! -->
+                <input type="hidden" id="locaton_x" name="location_x" value="50" /> <!-- TODO Replace with real implentation !!!! -->
+                <input type="hidden" name="location_y" value="50" /> <!-- TODO Replace with real implentation !!!! -->
+				<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
+			</div>			
+        </form>
+	  </div>	
+    </div>
+</div>
+{% endif %}
+<!-- Ende des Bereiches für die Neuerstellung -->
 
-				<div class="form-group">{% csrf_token %}
-					<button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-share"></span> Absenden</button>
-				</div>
-			
-			</form>
-		</div>	
-		</div>
-	</div>
-
-
+<!-- Anfang der Timeline -->
 <div class="panel panel-default">
 	<div class="panel-heading"><i class="fa fa-th-list"></i> Aktuelle Gesuche</div>
+
 	<div class="panel-body">
 		<ul class="timeline">
+            <!-- Anfang des Beispiel Elements -->
 			<li> <!--ODER  li class="timeline-inverted"-->
-				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
-				<div class="timeline-panel">
 
-					<img src="http://www.wasserfilter-hannover.de/wp-content/uploads/2015/04/Wasser-Zitrone-200x200.jpg" width="150em" style="float:right;" class="img-thumbnail">
+				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
+
+				<div class="timeline-panel">
+					<img src="http://www.wasserfilter-hannover.de/wp-content/uploads/2015/04/Wasser-Zitrone-200x200.jpg" width="150" style="float:right;" class="img-thumbnail">
 
 					<div class="timeline-heading">
 						<h4 class="timeline-title"><b>Suche sauberes Trinkwasser</b></h4>
@@ -124,205 +133,258 @@
 					<div class="timeline-body">
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
 					</div>
-					<p>
-						<div class="col-lg-12" margin="20px">
-							<div class="panel panel-primary">
-								<div class="panel-body">
-									<p><div><!--Abstand--></div>
-										<span class="glyphicon glyphicon-cutlery"></span> Lebensmittel<br>
-										<span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
-									</p>
-								</div>	
 
-								<!-- Karte hier einfügen -->
-								<img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
+					<div class="col-lg-12" margin="20px">
+						<div class="panel panel-primary">
+							<div class="panel-body">
+								<p><div><!--Abstand--></div>
+									<span class="glyphicon glyphicon-cutlery"></span> Lebensmittel<br>
+									<span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
+								</p>
+							</div>	
 
-								<p>
-									<center>
-										<button type="button" class="btn btn-success">
-											<span class="glyphicon glyphicon-arrow-up" ></span>
-											Bump! <span class="badge">4</span></button>
+							<!-- Karte hier einfügen -->
+							<img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
 
-											<button type="button" class="btn btn-primary">
-												<span class="glyphicon glyphicon-envelope"></span> 
-												Kontaktieren</button>
+							<p>
+								<center>
+									<button type="button" class="btn btn-success">
+										<span class="glyphicon glyphicon-arrow-up" ></span>
+										Bump! <span class="badge">4</span>
+                                       </button>
 
-												<button type="button" class="btn btn-danger">
-													<span class="glyphicon glyphicon-ban-circle"></span> 
-													Melden</button>
-												</center>
-											</p>
-										</div>
-									</p>
+									<button type="button" class="btn btn-primary">
+											<span class="glyphicon glyphicon-envelope"></span> 
+											Kontaktieren
+                                       </button>
 
-									<script>
-										$(document).ready(function(){
-											$("#btnEinblenden").click(function(){
-												$("#kommentare").toggle();
-												$("#kommentareFooter").toggle();
-											});
-										});
-									</script>
-
-									<div class="chat-panel panel panel-default">
-										<div class="panel-heading">
-											<i class="fa fa-comments fa-fw"></i>
-											Öffentliche Kommentare <span class="badge">1</span>
-
-											<button id="btnEinblenden" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-												<i class="fa fa-chevron-down"></i>
-											</button>
-										</div>
-
-
-										<div class="panel-body" id="kommentare" style="display: none;">
-											<ul class="chat">
-												<li class="left clearfix">
-
-													<div class="header">
-														<span class="glyphicon glyphicon-user"></span> <a href="#">Lea Meier</a>
-														<small class="pull-right text-muted">
-															<i class="fa fa-clock-o fa-fw"></i> 26.05.2016: <b>12:36 Uhr</b>
-														</small>
-													</div>
-													<p>
-														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-													</p>
-												</li>
-											</ul>
-										</div>
-
-										<div class="panel-footer" id="kommentareFooter" style="display: none;">
-											<div class="input-group">
-												<input id="btn-input" type="text" class="form-control input-sm" placeholder="Stelle Fragen oder kommentiere..." />
-												<span class="input-group-btn">
-													<button class="btn btn-warning btn-sm" id="btn-chat">
-														Kommentieren
-													</button>
-												</span>
-											</div>
-										</div>
-										<!-- /.panel-footer -->
-									</div>
-								</li>
-
-								{% if context_list %}
-									{% for search_material, glyphicon_string, category_type_string, comment_list  in context_list %}
-									<li> <!--ODER  li class="timeline-inverted"-->
-				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
-				<div class="timeline-panel">
-
-					<img src="{{ search_material.image.url }}" width="150em" style="float:right;" class="img-thumbnail">
-
-					<div class="timeline-heading">
-						<h4 class="timeline-title"><b>{{ search_material.title }}</b></h4>
-						<p><span class="glyphicon glyphicon-user"></span> <a href="#">{{ search_material.user }}</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i>{{ search_material.created_date }}</small></p>
-					</div>
-
-					<div class="timeline-body">
-						<p>{{ search_material.description }}</p>
-					</div>
-					<p>
-						<div class="col-lg-12" margin="20px">
-							<div class="panel panel-primary">
-								<div class="panel-body">
-									<p><div><!--Abstand--></div>
-										<span class="{{glyphicon_string}}"></span> {{category_type_string}}<br>
-										<span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
-									</p>
-								</div>	
-
-								<!-- Karte hier einfügen -->
-								<img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
-
-								<p>
-									<center>
-										<button type="button" class="btn btn-success">
-											<span class="glyphicon glyphicon-arrow-up" ></span>
-											Bump! <span class="badge">4</span></button>
-
-											<button type="button" class="btn btn-primary">
-												<span class="glyphicon glyphicon-envelope"></span> 
-												Kontaktieren</button>
-
-												<button type="button" class="btn btn-danger">
-													<span class="glyphicon glyphicon-ban-circle"></span> 
-													Melden</button>
-												</center>
-											</p>
-										</div>
-									</p>
-
-									<script>
-										$(document).ready(function(){
-											$("#btnEinblenden").click(function(){
-												$("#kommentare").toggle();
-												$("#kommentareFooter").toggle();
-											});
-										});
-									</script>
-
-									<div class="chat-panel panel panel-default">
-										<div class="panel-heading">
-											<i class="fa fa-comments fa-fw"></i>
-											Öffentliche Kommentare <span class="badge">1</span>
-
-											<button id="btnEinblenden" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-												<i class="fa fa-chevron-down"></i>
-											</button>
-										</div>
-
-
-										<div class="panel-body" id="kommentare" style="display: none;">
-											<ul class="chat">
-												<li class="left clearfix">
-
-													<div class="header">
-														<span class="glyphicon glyphicon-user"></span> <a href="#">Lea Meier</a>
-														<small class="pull-right text-muted">
-															<i class="fa fa-clock-o fa-fw"></i> 26.05.2016: <b>12:36 Uhr</b>
-														</small>
-													</div>
-													<p>
-														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-													</p>
-												</li>
-                                                {% for comment in comment_list %}
-                                                <li class="left clearfix">
-
-													<div class="header">
-														<span class="glyphicon glyphicon-user"></span> <a href="#">{{comment.user}}</a>
-														<small class="pull-right text-muted">
-															<i class="fa fa-clock-o fa-fw"></i> {{comment.created_date}}
-														</small>
-													</div>
-													<p>
-														{{comment}}
-													</p>
-												</li>
-                                                {% endfor %}
-											</ul>
-										</div>
-
-										<div class="panel-footer" id="kommentareFooter" style="display: none;">
-											<div class="input-group">
-												<input id="btn-input" type="text" class="form-control input-sm" placeholder="Stelle Fragen oder kommentiere..." />
-												<span class="input-group-btn">
-													<button class="btn btn-warning btn-sm" id="btn-chat">
-														Kommentieren
-													</button>
-												</span>
-											</div>
-										</div>
-										<!-- /.panel-footer -->
-									</div>
-								</li>
-									{% endfor %}
-								{% endif %}
-
-							</ul> <!-- # -->
+									<button type="button" class="btn btn-danger">
+												<span class="glyphicon glyphicon-ban-circle"></span> 
+												Melden
+                                       </button>
+								</center>
+							</p>
 						</div>
-					</div>
+
+						<script>
+							$(document).ready(function(){
+								$("#btnEinblenden").click(function(){
+									$("#kommentare").toggle();
+									$("#kommentareFooter").toggle();
+								});
+							});
+						</script>
+                           
+                           <!-- Kommenterblock Anfang -->
+						<div class="chat-panel panel panel-default">
+							<div class="panel-heading">
+								<i class="fa fa-comments fa-fw"></i>
+								Öffentliche Kommentare <span class="badge">1</span>
+
+								<button id="btnEinblenden" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+									<i class="fa fa-chevron-down"></i>
+								</button>
+							</div>
+
+							<div class="panel-body" id="kommentare" style="display: none;">
+								<ul class="chat">
+									<li class="left clearfix">
+
+										<div class="header">
+											<span class="glyphicon glyphicon-user"></span> <a href="#">Lea Meier</a>
+											<small class="pull-right text-muted">
+												<i class="fa fa-clock-o fa-fw"></i> 26.05.2016: <b>12:36 Uhr</b>
+											</small>
+										</div>
+										<p>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+										</p>
+									</li>
+								</ul>
+							</div>
+
+							<div class="panel-footer" id="kommentareFooter" style="display: none;">
+								<div class="input-group">
+									<input id="btn-input" type="text" class="form-control input-sm" placeholder="Stelle Fragen oder kommentiere..." />
+									<span class="input-group-btn">
+										<button class="btn btn-warning btn-sm" id="btn-chat">
+											Kommentieren
+										</button>
+									</span>
+								</div>
+							</div>
+						</div>
+                           <!-- Ende des Kommentarblocks-->
+                      </div>
+                    </div>
+				</li>
+            <!-- Ende des Beispielelemts-->
+
+			{% if context_list %}
+			{% for search_material, glyphicon_string, category_type_string, comment_list in context_list %}
+
+            <!-- Beginn eines Elements -->
+			<li> <!--ODER  li class="timeline-inverted"-->
+			    <div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
+
+			    <div class="timeline-panel">
+
+                    {% if search_material.image.url != None %}
+				    <img src="{{ search_material.image.url }}" width="150" style="float:right;" class="img-thumbnail">
+                    {% endif %}
+
+				    <div class="timeline-heading">
+				    	<h4 class="timeline-title"><b>{{ search_material.title }}</b></h4>
+				    	<p><span class="glyphicon glyphicon-user"></span> <a href="#">{{ search_material.user }}</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor {{ search_material.created_date|timesince }}</small></p>
+				    </div>
+
+				    <div class="timeline-body">
+				    	<p>{{ search_material.description }}</p>
+				    </div>
+
+					<div class="col-lg-12" margin="20px">
+						<div class="panel panel-primary">
+							<div class="panel-body">
+								<p><div><!--Abstand--></div>
+									<span class="{{glyphicon_string}}"></span> {{category_type_string}}<br>
+									<span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
+								</p>
+							</div>	
+
+							<!-- Karte hier einfügen -->
+							<img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
+
+                            {% if user.is_active %}
+                            <!-- TODO Button werden nicht richtig angezeigt -->
+								<center>
+						            <button type="button" class="btn btn-success">
+							        	<span class="glyphicon glyphicon-arrow-up" ></span>
+							        	Bump! <span class="badge">4</span>
+                                    </button>
+                                          
+                                    {% if search_material.user != user %}
+                                        <script>
+                                            function goToChat(){
+                                                 parent.location='/chat?userid={{search_material.user.id}}'
+                                            }
+                                        </script>
+
+					                    <button type="submit" class="btn btn-primary" onclick="goToChat();">
+							               	<span class="glyphicon glyphicon-envelope"></span> 
+							               	Kontaktieren
+                                        </button>
+                                    {% endif %}
+
+                                    {% if user.is_superuser or search_material.user == user %}
+                                        <form action="" role="form" id="delete" method="post"> <!-- method="delete" funktioniert nicht -->
+                                            {% csrf_token %}
+                                            <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
+   
+                                            <button type="submit" class="btn btn-danger" name="post_identifier" value="delete">
+							                    <span class="glyphicon glyphicon-trash"></span> 
+							                    Löschen
+                                             </button>
+                                        </form>
+
+                                    {% else %}
+							            <button class="btn btn-danger" type="button">
+							               <span class="glyphicon glyphicon-ban-circle"></span> 
+							               Melden
+                                        </button>
+                                    {% endif %}
+							    </center>
+                            {% endif %}
+						</div>
+
+						<script>
+								$(document).ready(function(){
+									$("#btnEinblenden").click(function(){
+										$("#kommentare").toggle();
+										$("#kommentareFooter").toggle();
+									});
+								});
+						</script>
+
+                        <!-- Anfang Kommentarblock -->
+						<div class="chat-panel panel panel-default">
+							<div class="panel-heading">
+								<i class="fa fa-comments fa-fw"></i>
+								Öffentliche Kommentare <span class="badge">{{comment_list|length}}</span>
+
+								<button id="btnEinblenden" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+									<i class="fa fa-chevron-down"></i>
+								</button>
+
+							</div>
+
+							<div class="panel-body" id="kommentare" style="display: block;">
+								<ul class="chat">
+                                    <!-- Anfang Beispiel Kommentar-->
+									<li class="left clearfix">
+										<div class="header">
+											<span class="glyphicon glyphicon-user"></span> <a href="#">Lea Meier</a>
+											<small class="pull-right text-muted">
+												<i class="fa fa-clock-o fa-fw"></i> 26.05.2016: <b>12:36 Uhr</b>
+											</small>
+										</div>
+										<p>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+										</p>
+									</li>
+                                    <!-- Ende Beispiel Kommentar -->
+
+                                       {% for comment in comment_list %}
+
+                                       <li class="left clearfix">
+										<div class="header">
+											<span class="glyphicon glyphicon-user"></span> <a href="#">{{comment.user}}</a>
+											<small class="pull-right text-muted">
+												<i class="fa fa-clock-o fa-fw"></i> vor {{comment.created_date|timesince}}
+											</small>
+										</div>
+										<p>
+											{{comment.text}}
+										</p>
+									</li>
+
+                                       {% endfor %}
+
+								</ul>
+							</div>
+
+                            {% if user.is_active %}
+							<div class="panel-footer" id="kommentareFooter" style="display: block;">
+                                <form class="form-horizontal" role="form" id="comment" method="post">
+								    <div class="input-group">  
+                                        
+                                        {% csrf_token %}
+                                        <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
+                                        <input name="text" id="id_text" type="text" class="form-control input-sm" maxlength="500" placeholder="Schreibe ein Kommentar..." />
+                                        
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-warning btn-sm" id="btn-chat" type="submit" name="post_identifier" value="comment">
+                                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Kommentieren
+                                            </button>
+                                        </span>
+								    </div>
+                                </form>
+							</div>
+                            {% endif %}
+
+						</div>
+                           <!-- Ende des Kommtarblocks-->
+                       </div>
+                   </div>
+               </li>
+            <!-- Ende eines Elements -->
+
+			{% endfor %}
+			{% endif %}
+
+		</ul>
+	</div>
+</div>
+<!-- Ende der Timeline-->
 
 {% endblock content %}
 

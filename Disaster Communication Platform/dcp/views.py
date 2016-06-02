@@ -89,9 +89,8 @@ class EditProfile(View):
 
 class Logout(View):
     def get(self, request):
-        if request.user.is_authenticated():
-            logout(request)
-            return HttpResponseRedirect("../anmelden/")
+        logout(request)
+        return HttpResponseRedirect("../anmelden/")
 
 
 class Karten(View):
@@ -136,12 +135,10 @@ class Suchen_Materielles(View):
     templatePath = 'dcp/content/suchen/materielles.html'
 
     def get(self, request):
-        search_materials_list = Search_Material.objects.order_by('created_date')
+        search_materials_list = Search_Material.objects.order_by('created_date').reverse()
         glyphicon_string_list = []
         category_type_string_list = []
         comment_list = []
-        
-
         
         for s in search_materials_list:
             g_string = s.getGlyphiconString()
@@ -152,21 +149,59 @@ class Suchen_Materielles(View):
 
         context_list = zip(search_materials_list, glyphicon_string_list, category_type_string_list, comment_list)
             
-
         template = loader.get_template(self.templatePath)
         context = {
             'context_list': context_list,
             'search_materials_list': search_materials_list,
             'glyphicon_string_list': glyphicon_string_list,
             'category_type_string_list': category_type_string_list,
-            'comment_list': comment_list
+            'comment_list': comment_list,
+            'comment_form': Comment_Form
         }
 
         return HttpResponse(template.render(context,request))
 
     def post(self, request):
-        params = {}
-        return render(request, self.templatePath, params)
+        user = request.user
+        if user.is_authenticated() and user.is_active:
+            if request.POST['post_identifier'] == 'comment':
+                form = Comment_Form(request.POST)
+                if form.is_valid():
+                    text = request.POST['text']
+                    search_material = get_object_or_404(Search_Material, id=request.POST['search_material_id'])
+                    if search_material.comments is None:
+                        search_material.comments = Comment_Relation.objects.create()
+                        search_material.save()
+                    relation = search_material.comments
+                    Comment.objects.create(text=text,user=user,relation=relation)
+                    return HttpResponseRedirect('')
+
+            if request.POST['post_identifier'] == 'create':
+                form = Search_Material_Form(request.POST)
+                if form.is_valid():
+                    radiusSplit = request.POST['radius'].split(' ')
+                    radius = radiusSplit[0]
+                    title = request.POST['title']
+                    description = request.POST['description']
+                    catastrophe = get_object_or_404(Catastrophe, id=request.POST['catastrophe'])
+                    location_x = request.POST['location_x']
+                    location_y = request.POST['location_y']
+                    categoryString = request.POST['category']
+                    category = Material_Goods.stringToCategoryType(categoryString)
+                    Search_Material.objects.create(title=title, description=description, radius=radius, catastrophe = catastrophe, location_x=location_x, location_y=location_y, category=category, user=user)
+                return HttpResponseRedirect('')
+                # else:
+                    # return HttpResponse(status=500)
+
+            if request.POST['post_identifier'] == 'delete':
+                search_material = get_object_or_404(Search_Material, id=request.POST['search_material_id'])
+                if user.is_superuser or user == search_material.user:
+                    if search_material.comments is not None:
+                        search_material.comments.delete()
+                    search_material.delete()
+                    return HttpResponseRedirect('')
+
+        return HttpResponse(status=403)
 
 class Suchen_Immaterielles(View):
     templatePath = 'dcp/content/suchen/immaterielles.html'
@@ -272,7 +307,7 @@ class Chat(View):
         # Hole die "andere" User Id
         otherId = request.GET['userid']
         currentUser = request.user
-        otherUser = get_object_or_404(User, id=otherId) # ist ein 404 ausreichend?
+        otherUser = get_object_or_404(User, id=otherId) # TODO Exception
         # Ok, fremdschlüssel sind da, nun die Liste holen:
         chats = (Message.objects.filter(From=otherUser.id,To=currentUser) | Message.objects.filter(From=currentUser,To=otherUser)).order_by('SendTime') # Filtern und Sortieren
         form = self.form_class()
@@ -283,7 +318,7 @@ class Chat(View):
             message = form.cleaned_data['Text']
             otherId = request.GET['userid']
             currentUser = request.user
-            otherUser = User.objects.get(id=otherId)  # TODO: Exception einbauen!!!!
+            otherUser = get_object_or_404(User, id=otherId)  # TODO Exception
             Message.objects.create(Text=message,From=currentUser,To=otherUser)
             url = url_with_querystring(reverse('dcp:Chat'),userid=otherUser.id)
             return HttpResponseRedirect(url)

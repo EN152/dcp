@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Fehler beim import in Travis und ich weiﬂ nicht warum
+# Fehler beim import in Travis und ich wei? nicht warum
 from django.contrib.auth.models import User
 
 u, created = User.objects.get_or_create(username='admin')
