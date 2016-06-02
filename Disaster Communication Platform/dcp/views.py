@@ -10,13 +10,14 @@ from dcpcontainer import settings
 from django.contrib.auth.models import User
 from dcp.models import *
 from django.template import loader
-from dcp.forms import * # in Benutzung?
+from dcp.forms import * 
 from django.template.context_processors import request
-from .forms import UserForm # in Benutzung?
+from .forms import UserForm
 from .models import Message
-from .forms import sendMessage # in Benutzung?
+from .forms import sendMessage
 from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
+from dcp.customclasses.categorys import *
 
 
 def getPageAuthenticated(request, template, params={}):
@@ -141,8 +142,8 @@ class Suchen_Materielles(View):
         comment_list = []
         bump_list = []
         report_list = []
-        category_glyphicon_list = Material_Goods.getCategoryListAsGlyphiconString()
-        category_name_list = Material_Goods.getCategoryListAsNameString()
+        category_glyphicon_list = Categorys.getCategoryListAsGlyphiconString()
+        category_name_list = Categorys.getCategoryListAsNameString()
         
         for s in search_materials_list:
             glyphicon_goods_string_list.append(s.getGlyphiconCategoryTypeString())
@@ -189,7 +190,7 @@ class Suchen_Materielles(View):
                 categoryString = request.POST['category']
                 if categoryString == '':
                     return HttpResponse(code=400) # TODO Einen Fehler zurueckgeben, der makiert, dass eine Option gewählt werden muss
-                category = Material_Goods.stringToCategoryType(categoryString)
+                category = Categorys.stringToCategoryTypeAsNumber(categoryString)
                 Search_Material.objects.create(title=title, description=description, radius=radius, catastrophe = catastrophe, location_x=location_x, location_y=location_y, category=category, user=user)
                 return HttpResponseRedirect('')
                 # else:
@@ -200,6 +201,10 @@ class Suchen_Materielles(View):
                 if user.is_superuser or user == search_material.user:
                     if search_material.comments is not None:
                         search_material.comments.delete()
+                    if search_material.bumps is not None:
+                        search_material.bumps.delete()
+                    if search_material.reports is not None:
+                        search_material.reports.delete()
                     search_material.delete()
                     return HttpResponseRedirect('')
 

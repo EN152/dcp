@@ -5,6 +5,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
+from dcp.customclasses.categorys import *
 
 class Catastrophe(models.Model):
 	cat_title = models.CharField(max_length=200)
@@ -86,71 +87,15 @@ class Goods(models.Model):
 		abstract = True
 
 class Material_Goods(Goods):
-	
-	CATEGORY_TYPE = (
-				('1', 'Groceries'),
-				('2', 'Infrastructure'),
-				('3', 'Tools'),
-				('4', 'Drugs'),
-				('5', 'Miscellaneous')
-				)
-	category = models.CharField(max_length=1, choices=CATEGORY_TYPE)
+	category = models.CharField(max_length=1, choices=Categorys.CATEGORY_TYPES)
 	# Uploadpfad muss noch generiert werden... (Useranbindung + delete on cascade ? )
 	image = models.ImageField(upload_to="upload/")
 
 	def getGlyphiconCategoryTypeString(self):
-		if self.category == '1':
-			return "glyphicon glyphicon-cutlery"
-		elif self.category == '2':
-			return "glyphicon glyphicon-home"
-		elif self.category == '3':
-			return "glyphicon glyphicon-wrench"
-		elif self.category == '4':
-			return "glyphicon glyphicon-plus"
-		elif self.category == '5':
-			return "glyphicon glyphicon-question-sign"
-
-	def stringToCategoryType(category):
-		if category == 'Lebensmittel':
-			return 1
-		if category == 'Infrastruktur':
-			return 2
-		if category == 'Werkzeug':
-			return 3
-		if category == 'Medizin':
-			return 4
-		# Default
-		return 5
+		Categorys.getCategoryGlyphiconTypeString(self.category)
 
 	def getCategoryTypeAsString(self):
-		if self.category == '1':
-			return "Lebensmittel"
-		elif self.category == '2':
-			return "Infrastruktur"
-		elif self.category == '3':
-			return "Werkzeuge"
-		elif self.category == '4':
-			return "Medikamente"
-		elif self.category == '5':
-			return "Sonstiges"
-
-	def getCategoryListAsGlyphiconString():
-		list = []
-		list.append("glyphicon glyphicon-cutlery")
-		list.append("glyphicon glyphicon-home")
-		list.append("glyphicon glyphicon-wrench")
-		list.append("glyphicon glyphicon-plus")
-		list.append("glyphicon glyphicon-question-sign")
-		return list
-
-	def getCategoryListAsNameString():
-		list = []
-		list.append("Lebensmittel")
-		list.append("Infrastruktur")
-		list.append("Werkzeuge")
-		list.append("Medikamente")
-		list.append("Sonstige")
-		return list
+		Categorys.getCategoryNameTypeAsString(self.category)
 
 	class Meta:
 		abstract = True
