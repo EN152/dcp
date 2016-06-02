@@ -177,18 +177,19 @@ class Suchen_Materielles(View):
                     return HttpResponseRedirect('')
 
             if request.POST['post_identifier'] == 'create':
-                form = Search_Material_Form(request.POST)
-                if form.is_valid():
-                    radiusSplit = request.POST['radius'].split(' ')
-                    radius = radiusSplit[0]
-                    title = request.POST['title']
-                    description = request.POST['description']
-                    catastrophe = get_object_or_404(Catastrophe, id=request.POST['catastrophe'])
-                    location_x = request.POST['location_x']
-                    location_y = request.POST['location_y']
-                    categoryString = request.POST['category']
-                    category = Material_Goods.stringToCategoryType(categoryString)
-                    Search_Material.objects.create(title=title, description=description, radius=radius, catastrophe = catastrophe, location_x=location_x, location_y=location_y, category=category, user=user)
+                # TODO form.vaild oder eine art der Sicherung, dass die Daten korrekt sind
+                radiusSplit = request.POST['radius'].split(' ')
+                radius = radiusSplit[0]
+                title = request.POST['title']
+                description = request.POST['description']
+                catastrophe = get_object_or_404(Catastrophe, id=request.POST['catastrophe'])
+                location_x = request.POST['location_x']
+                location_y = request.POST['location_y']
+                categoryString = request.POST['category']
+                if categoryString == '':
+                    return HttpResponse(code=400) # TODO Einen Fehler zurueckgeben, der makiert, dass eine Option gewählt werden muss
+                category = Material_Goods.stringToCategoryType(categoryString)
+                Search_Material.objects.create(title=title, description=description, radius=radius, catastrophe = catastrophe, location_x=location_x, location_y=location_y, category=category, user=user)
                 return HttpResponseRedirect('')
                 # else:
                     # return HttpResponse(status=500)
