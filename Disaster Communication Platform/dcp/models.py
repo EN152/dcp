@@ -63,25 +63,13 @@ class Goods(models.Model):
 		return self.title
 
 	def getComments(self):
-		list = []
-		for comment in Comment.objects.all():
-			if comment.relation == self.comments:
-				list.append(comment)
-		return list
+		return Comment.objects.filter(relation = self.comments)
 
 	def getBumps(self):
-		list =[]
-		for bump in Bump.objects.all():
-			if bump.relation == self.bumps:
-				list.append(bump)
-		return list
+		return Bump.objects.filter(relation = self.bumps)
 
 	def getReports(self):
-		list =[]
-		for report in Report.objects.all():
-			if report.relation == self.reports:
-				list.append(report)
-		return list
+		return Report.objects.filter(relation = self.reports)
 
 	class Meta:
 		abstract = True

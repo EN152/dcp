@@ -214,9 +214,9 @@ class Suchen_Materielles(View):
                     search_material.bumps = Bump_Relation.objects.create()
                     search_material.save()
                 else:
-                    for bump in Bump.objects.all():
-                        if(bump.relation == search_material.bumps and bump.user == user):
-                            return HttpResponseRedirect('')
+                    already_exists = Bump.objects.filter(relation = search_material.bumps, user = user)
+                    if already_exists:
+                        return HttpResponseRedirect('')
                 relation = search_material.bumps
                 Bump.objects.create(user=user,relation=relation)
                 return HttpResponseRedirect('')
@@ -230,9 +230,9 @@ class Suchen_Materielles(View):
                     search_material.reports = Report_Relation.objects.create()
                     search_material.save()
                 else:
-                    for report in Report.objects.all():
-                        if(report.relation == search_material.reports and report.user == user):
-                            return HttpResponseRedirect('')
+                    already_exists = Report.objects.filter(relation = search_material.reports, user = user)
+                    if already_exists:
+                        return HttpResponseRedirect('')
                 relation = search_material.reports
                 Report.objects.create(user=user,relation=relation)
                 return HttpResponseRedirect('')
