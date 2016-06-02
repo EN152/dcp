@@ -28,43 +28,18 @@
 				<label>Titel:</label>
 				<input name="title" type="text" placeholder="Suche leistungsstarkes Stromaggregat" class="form-control">
 			</div>
+            {% if category_list %}
+			    <label>Kategorie:</label><br />
 
-			<label>Kategorie:</label><br />
-				
-			<div class="radio">
-				<label>
-			    <input type="radio" name="category" id="lebensmittel" value="Groceries">
-			    <span class="glyphicon glyphicon-cutlery"></span> Lebensmittel
-			  </label>
-			</div>
-
-			<div class="radio">
-			  <label>
-			    <input type="radio" name="category" id="infrastruktur" value="Infrastructure">
-			   <span class="glyphicon glyphicon-flash"></span> Infrastruktur
-			  </label>
-			</div>
-
-			<div class="radio">
-			  <label>
-			    <input type="radio" name="category" id="werkzeug" value="Tools">
-			   <span class="glyphicon glyphicon-wrench"></span> Werkzeug
-			  </label>
-			</div>
-
-			<div class="radio">
-			  <label>
-			    <input type="radio" name="category" id="medizin" value="Drugs">
-			   <span class="glyphicon glyphicon-heart"></span> Medizin
-			  </label>
-			</div>
-
-			<div class="radio">
-			  <label>
-			    <input type="radio" name="category" id="sonstiges" value="Miscellaneous">
-			   <span class="glyphicon glyphicon-option-horizontal"></span> Sonstiges
-			  </label>
-			</div>
+			    {% for category_glyphicon, category_name in category_list%}
+			        <div class="radio">
+			        	<label>
+			                <input type="radio" id="radio_{{category_name}}" name="category"  value="{{category_name}}">
+			                <span class="{{category_glyphicon}}"></span> {{category_name}}
+			            </label>
+			        </div>
+                {% endfor %}
+            {% endif %}
 
 			<div class="form-group">
 				<label>Bild:</label><input type="file">

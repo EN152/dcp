@@ -98,7 +98,7 @@ class Material_Goods(Goods):
 	# Uploadpfad muss noch generiert werden... (Useranbindung + delete on cascade ? )
 	image = models.ImageField(upload_to="upload/")
 
-	def getGlyphiconString(self):
+	def getGlyphiconCategoryTypeString(self):
 		if self.category == '1':
 			return "glyphicon glyphicon-cutlery"
 		elif self.category == '2':
@@ -111,16 +111,16 @@ class Material_Goods(Goods):
 			return "glyphicon glyphicon-question-sign"
 
 	def stringToCategoryType(category):
-		if category == 'Groceries':
+		if category == 'Lebensmittel':
 			return 1
-		if category == 'Infrastructure':
+		if category == 'Infrastruktur':
 			return 2
-		if category == 'Tools':
+		if category == 'Werkzeug':
 			return 3
-		if category == 'Drugs':
+		if category == 'Medizin':
 			return 4
-		if category == 'Miscellaneous':
-			return 5
+		# Default
+		return 5
 
 	def getCategoryTypeAsString(self):
 		if self.category == '1':
@@ -130,9 +130,27 @@ class Material_Goods(Goods):
 		elif self.category == '3':
 			return "Werkzeuge"
 		elif self.category == '4':
-			return "Medikamenten"
+			return "Medikamente"
 		elif self.category == '5':
 			return "Sonstiges"
+
+	def getCategoryListAsGlyphiconString():
+		list = []
+		list.append("glyphicon glyphicon-cutlery")
+		list.append("glyphicon glyphicon-home")
+		list.append("glyphicon glyphicon-wrench")
+		list.append("glyphicon glyphicon-plus")
+		list.append("glyphicon glyphicon-question-sign")
+		return list
+
+	def getCategoryListAsNameString():
+		list = []
+		list.append("Lebensmittel")
+		list.append("Infrastruktur")
+		list.append("Werkzeuge")
+		list.append("Medikamente")
+		list.append("Sonstige")
+		return list
 
 	class Meta:
 		abstract = True

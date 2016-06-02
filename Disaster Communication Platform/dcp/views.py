@@ -136,31 +136,28 @@ class Suchen_Materielles(View):
 
     def get(self, request):
         search_materials_list = Search_Material.objects.order_by('created_date').reverse()
-        glyphicon_string_list = []
+        glyphicon_goods_string_list = []
         category_type_string_list = []
         comment_list = []
         bump_list = []
         report_list = []
+        category_glyphicon_list = Material_Goods.getCategoryListAsGlyphiconString()
+        category_name_list = Material_Goods.getCategoryListAsNameString()
         
         for s in search_materials_list:
-            glyphicon_string_list.append(s.getGlyphiconString())
+            glyphicon_goods_string_list.append(s.getGlyphiconCategoryTypeString())
             category_type_string_list.append(s.getCategoryTypeAsString())
             comment_list.append(s.getComments())
             bump_list.append(s.getBumps())
             report_list.append(s.getReports())
 
-        context_list = zip(search_materials_list, glyphicon_string_list, category_type_string_list, comment_list, bump_list, report_list)
+        context_list = zip(search_materials_list, glyphicon_goods_string_list, category_type_string_list, comment_list, bump_list, report_list)
+        category_list = zip(category_glyphicon_list, category_name_list)
             
         template = loader.get_template(self.templatePath)
         context = {
             'context_list': context_list,
-            'search_materials_list': search_materials_list,
-            'glyphicon_string_list': glyphicon_string_list,
-            'category_type_string_list': category_type_string_list,
-            'comment_list': comment_list,
-            'bump_list': bump_list,
-            'report_list': report_list
-
+            'category_list' : category_list,
         }
 
         return HttpResponse(template.render(context,request))
