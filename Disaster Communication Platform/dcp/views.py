@@ -89,9 +89,8 @@ class EditProfile(View):
 
 class Logout(View):
     def get(self, request):
-        if request.user.is_authenticated():
-            logout(request)
-            return HttpResponseRedirect("../anmelden/")
+        logout(request)
+        return HttpResponseRedirect("../anmelden/")
 
 
 class Karten(View):
@@ -164,7 +163,7 @@ class Suchen_Materielles(View):
 
     def post(self, request):
         user = request.user
-        if user.is_authenticated():
+        if user.is_authenticated() and user.is_active:
             form = Comment_Form(request.POST)
             if form.is_valid():
                 text = request.POST['text']

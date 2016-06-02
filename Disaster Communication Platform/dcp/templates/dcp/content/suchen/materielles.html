@@ -16,6 +16,7 @@
 </script>
 
 <!-- Anfang des Bereich für die Neuerstellung -->
+{% if user.is_active %}
 <div class="panel panel-default">
    <div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon glyphicon-search"></span> Neues Gesuch</button></div>
 	<div class="panel-body" id="suchFormular" style="display: none;">
@@ -103,6 +104,7 @@
 	  </div>	
     </div>
 </div>
+{% endif %}
 <!-- Ende des Bereiches für die Neuerstellung -->
 
 <!-- Anfang der Timeline -->
@@ -215,7 +217,7 @@
             <!-- Ende des Beispielelemts-->
 
 			{% if context_list %}
-			{% for search_material, glyphicon_string, category_type_string, comment_list  in context_list %}
+			{% for search_material, glyphicon_string, category_type_string, comment_list in context_list %}
 
             <!-- Beginn eines Elements -->
 			<li> <!--ODER  li class="timeline-inverted"-->
@@ -246,6 +248,7 @@
 							<!-- Karte hier einfügen -->
 							<img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
 
+                            {% if user.is_active %}
                             <p>
 								<center>
 									<button type="button" class="btn btn-success">
@@ -264,6 +267,7 @@
                                        </button>
 								</center>
 							</p>
+                            {% endif %}
 						</div>
 
 						<script>
@@ -309,7 +313,7 @@
 										<div class="header">
 											<span class="glyphicon glyphicon-user"></span> <a href="#">{{comment.user}}</a>
 											<small class="pull-right text-muted">
-												<i class="fa fa-clock-o fa-fw"></i> {{comment.created_date}}
+												<i class="fa fa-clock-o fa-fw"></i> vor {{comment.created_date|timesince}}
 											</small>
 										</div>
 										<p>
@@ -322,22 +326,25 @@
 								</ul>
 							</div>
 
+                            {% if user.is_active %}
 							<div class="panel-footer" id="kommentareFooter" style="display: block;">
-								<div class="input-group">
-                                       <form class="form-horizontal" role="form" id="comment" method="post">
-                                           <div class="form-group">
-                                               {% csrf_token %}
-                                               <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
-                                               {{ comment_form.text }}
-                                           </div>
-                                           <span class="input-group-btn">
-                                               <button class="btn btn-warning btn-sm" id="btn-chat" type="submit">
-                                                      Kommentieren
-                                               </button>
-                                           </span>
-                                       </form>
-								</div>
+                                <form class="form-horizontal" role="form" id="comment" method="post">
+								    <div class="input-group">  
+                                        
+                                            {% csrf_token %}
+                                            <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
+                                            <input name="text" id="id_text" type="text" class="form-control input-sm" maxlength="500" placeholder="Schreibe ein Kommentar..." />
+                                        
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-warning btn-sm" id="btn-chat" type="submit">
+                                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Kommentieren
+                                            </button>
+                                        </span>
+								    </div>
+                                </form>
 							</div>
+                            {% endif %}
+
 						</div>
                            <!-- Ende des Kommtarblocks-->
                        </div>
