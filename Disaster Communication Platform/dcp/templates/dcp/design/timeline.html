@@ -1,0 +1,286 @@
+﻿<div class="timeline">
+    <div class="panel panel-default">
+    	<div class="panel-heading"><i class="fa fa-th-list"></i> Aktuelle Gesuche</div>
+    
+    	<div class="panel-body">
+    		<ul class="timeline">
+                <!-- Anfang des Beispiel Elements -->
+    			<li> <!--ODER  li class="timeline-inverted"-->
+    
+    				<div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span></div>
+    
+    				<div class="timeline-panel">
+    					<img src="http://www.wasserfilter-hannover.de/wp-content/uploads/2015/04/Wasser-Zitrone-200x200.jpg" width="150" style="float:right;" class="img-thumbnail">
+    
+    					<div class="timeline-heading">
+    						<h4 class="timeline-title"><b>Suche sauberes Trinkwasser</b></h4>
+    						<p><span class="glyphicon glyphicon-user"></span> <a href="#">Max Müller</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor 1 Minute </small></p>
+    					</div>
+    
+    					<div class="timeline-body">
+    						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
+    					</div>
+    
+    					<div class="col-lg-12" margin="20px">
+    						<div class="panel panel-primary">
+    							<div class="panel-body">
+    								<p><div><!--Abstand--></div>
+    									<span class="glyphicon glyphicon-cutlery"></span> Lebensmittel<br>
+    									<span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
+    								</p>
+    							</div>	
+    
+    							<!-- Karte hier einfügen -->
+    							<img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
+    
+    							<p>
+    								<center>
+    									<button type="button" class="btn btn-success">
+    										<span class="glyphicon glyphicon-arrow-up" ></span>
+    										Bump! <span class="badge">4</span>
+                                           </button>
+    
+    									<button type="button" class="btn btn-primary">
+    											<span class="glyphicon glyphicon-envelope"></span> 
+    											Kontaktieren
+                                           </button>
+    
+    									<button type="button" class="btn btn-danger">
+    												<span class="glyphicon glyphicon-ban-circle"></span> 
+    												Melden
+                                           </button>
+    								</center>
+    							</p>
+    						</div>
+    
+    						<script>
+    							$(document).ready(function(){
+    								$("#btnEinblenden").click(function(){
+    									$("#kommentare").toggle();
+    									$("#kommentareFooter").toggle();
+    								});
+    							});
+    						</script>
+                               
+                               <!-- Kommenterblock Anfang -->
+    						<div class="chat-panel panel panel-default">
+    							<div class="panel-heading">
+    								<i class="fa fa-comments fa-fw"></i>
+    								Öffentliche Kommentare <span class="badge">1</span>
+    
+    								<button id="btnEinblenden" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+    									<i class="fa fa-chevron-down"></i>
+    								</button>
+    							</div>
+    
+    							<div class="panel-body" id="kommentare" style="display: none;">
+    								<ul class="chat">
+    									<li class="left clearfix">
+    
+    										<div class="header">
+    											<span class="glyphicon glyphicon-user"></span> <a href="#">Lea Meier</a>
+    											<small class="pull-right text-muted">
+    												<i class="fa fa-clock-o fa-fw"></i> 26.05.2016: <b>12:36 Uhr</b>
+    											</small>
+    										</div>
+    										<p>
+    											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+    										</p>
+    									</li>
+    								</ul>
+    							</div>
+    
+    							<div class="panel-footer" id="kommentareFooter" style="display: none;">
+    								<div class="input-group">
+    									<input id="btn-input" type="text" class="form-control input-sm" placeholder="Stelle Fragen oder kommentiere..." />
+    									<span class="input-group-btn">
+    										<button class="btn btn-warning btn-sm" id="btn-chat">
+    											Kommentieren
+    										</button>
+    									</span>
+    								</div>
+    							</div>
+    						</div>
+                               <!-- Ende des Kommentarblocks-->
+                          </div>
+                        </div>
+    				</li>
+                <!-- Ende des Beispielelemts-->
+    
+    			{% if goods_list %}
+    			{% for good in goods_list %}
+    
+                <!-- Beginn eines Elements -->
+                {% load mathfilters %}
+    			<li {% if forloop.counter|mod:2 == 0 %}class="timeline-inverted"{% endif %}>
+    			    <div class="timeline-badge {{good.timeline_badge_color}}"> <span class="glyphicon {{good.timeline_glyphicon}}"></span></div>
+    
+    			    <div class="timeline-panel">
+    
+                        {% if good.image.url != None %}
+    				        <img src="{{ good.image.url }}" width="150" style="float:right;" class="img-thumbnail">
+                        {% endif %}
+    
+    				    <div class="timeline-heading">
+    				    	<h4 class="timeline-title"><b>{{ good.title }}</b></h4>
+    				    	<p><span class="glyphicon glyphicon-user"></span> <a href="#">{{ good.user }}</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor {{ good.created_date|timesince }}</small></p>
+    				    </div>
+    
+    				    <div class="timeline-body">
+    				    	<p>{{ good.description }}</p>
+    				    </div>
+    
+    					<div class="col-lg-12" margin="20px">
+    						<div class="panel panel-primary">
+    							<div class="panel-body">
+    								<p><div><!--Abstand--></div>
+    									<span class="{{good.getCategoryGlyphiconAsString}}"></span> {{good.getCategoryNameAsString}}<br>
+    									<span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
+    								</p>
+    							</div>	
+    
+    							<!-- Karte hier einfügen -->
+    							<img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
+    
+                                {% if user.is_active %}
+                                <!-- TODO Button werden nicht richtig angezeigt -->
+    								<center>
+                                        <form action="" role="form" id="bump_form" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+                                            <input type="hidden" name="good_id" value="{{good.id}}" />
+    						                <button type="submit" class="btn btn-success" name="post_identifier" value="bump">
+    							            	<span class="glyphicon glyphicon-arrow-up" ></span>
+    							            	Bump! <span class="badge">{{good.getBumps|length}}</span>
+                                            </button>
+                                        </form>
+                                              
+                                        {% if good.user != user %}
+                                            <script>
+                                                function goToChat(){
+                                                     parent.location='/chat?userid={{good.user.id}}'
+                                                }
+                                            </script>
+    
+    					                    <button type="submit" class="btn btn-primary" onclick="goToChat();">
+    							               	<span class="glyphicon glyphicon-envelope"></span> 
+    							               	Kontaktieren
+                                            </button>
+                                        {% endif %}
+    
+                                        {% if user.is_superuser or good.user == user %}
+                                            <form action="" role="form" id="delete_form" method="post"> <!-- method="delete" funktioniert nicht -->
+                                                {% csrf_token %}
+                                                <input type="hidden" name="good_id" value="{{good.id}}" />
+                                                <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+                                                <button type="submit" class="btn btn-danger" name="post_identifier" value="delete">
+    							                    <span class="glyphicon glyphicon-trash"></span> 
+    							                    Löschen
+                                                 </button>
+                                            </form>
+    
+                                        {% else %}
+                                            <form action="" role="form" id="report_form" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="good_id" value="{{good.id}}" />
+                                                <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+    							                <button class="btn btn-danger" type="submit" name="post_identifier" value="report">
+    							                   <span class="glyphicon glyphicon-ban-circle"></span> 
+    							                   Melden <span class="badge">{{good.getReports|length}}</span>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+    							    </center>
+                                {% endif %}
+    						</div>
+    
+    						<script>
+    								$(document).ready(function(){
+    									$("#btnEinblenden").click(function(){
+    										$("#kommentare").toggle();
+    										$("#kommentareFooter").toggle();
+    									});
+    								});
+    						</script>
+    
+                            <!-- Anfang Kommentarblock -->
+    						<div class="chat-panel panel panel-default">
+    							<div class="panel-heading">
+    								<i class="fa fa-comments fa-fw"></i>
+    								Öffentliche Kommentare <span class="badge">{{good.getComments|length}}</span>
+    
+    								<button id="btnEinblenden" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+    									<i class="fa fa-chevron-down"></i>
+    								</button>
+    
+    							</div>
+    
+    							<div class="panel-body" id="kommentare" style="display: block;">
+    								<ul class="chat">
+                                        <!-- Anfang Beispiel Kommentar-->
+    									<li class="left clearfix">
+    										<div class="header">
+    											<span class="glyphicon glyphicon-user"></span> <a href="#">Lea Meier</a>
+    											<small class="pull-right text-muted">
+    												<i class="fa fa-clock-o fa-fw"></i> 26.05.2016: <b>12:36 Uhr</b>
+    											</small>
+    										</div>
+    										<p>
+    											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+    										</p>
+    									</li>
+                                        <!-- Ende Beispiel Kommentar -->
+    
+                                           {% for comment in good.getComments %}
+    
+                                           <li class="left clearfix">
+    										<div class="header">
+    											<span class="glyphicon glyphicon-user"></span> <a href="#">{{comment.user}}</a>
+    											<small class="pull-right text-muted">
+    												<i class="fa fa-clock-o fa-fw"></i> vor {{comment.created_date|timesince}}
+    											</small>
+    										</div>
+    										<p>
+    											{{comment.text}}
+    										</p>
+    									</li>
+    
+                                           {% endfor %}
+    
+    								</ul>
+    							</div>
+    
+                                {% if user.is_active %}
+    							<div class="panel-footer" id="kommentareFooter" style="display: block;">
+                                    <form class="form-horizontal" role="form" id="comment" method="post">
+    								    <div class="input-group">  
+                                            
+                                            {% csrf_token %}
+                                            <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+                                            <input type="hidden" name="good_id" value="{{good.id}}" />
+                                            <input name="text" id="id_text" type="text" class="form-control input-sm" maxlength="500" placeholder="Schreibe ein Kommentar..." />
+                                            
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-warning btn-sm" id="btn-chat" type="submit" name="post_identifier" value="comment">
+                                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Kommentieren
+                                                </button>
+                                            </span>
+    								    </div>
+                                    </form>
+    							</div>
+                                {% endif %}
+    
+    						</div>
+                               <!-- Ende des Kommtarblocks-->
+                           </div>
+                       </div>
+                   </li>
+                <!-- Ende eines Elements -->
+    
+    			{% endfor %}
+    			{% endif %}
+    
+    		</ul>
+    	</div>
+    </div>
+</div>

@@ -16,18 +16,18 @@ urlpatterns = [
 
     # Suchen
     url(r'^suchen/$', Suchen.as_view()),
-    url(r'^suchen/materielles/$', Suchen_Materielles.as_view()),
-    url(r'^suchen/immaterielles/$', Suchen_Immaterielles.as_view()),
+    url(r'^suchen/materielles/$', SearchMaterialView.as_view()),
+    url(r'^suchen/immaterielles/$', SearchImmaterialView.as_view()),
     url(r'^suchen/personen/$', Suchen_Personen.as_view()),
 
     # Bieten
     url(r'^bieten/$', Bieten.as_view()),
-    url(r'^bieten/materielles/$', Bieten_Materielles.as_view()),
-    url(r'^bieten/immaterielles/$', Bieten_Immaterielles.as_view()),
+    url(r'^bieten/materielles/$', OfferMaterialView.as_view()),
+    url(r'^bieten/immaterielles/$', OfferImmaterialView.as_view()),
 
     # Chat
     url(r'^chat/$', Chat.as_view(), name='Chat'),
-    url(r'^profil/netzwerke',Overview.as_view(),name='ChatOverview'),
+    url(r'^profil/netzwerke',ChatOverview.as_view(),name='ChatOverview'),
 
 #    # Bieten
 #    url(r'^bieten/$', views.bieten),

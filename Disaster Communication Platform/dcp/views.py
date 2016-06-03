@@ -2,7 +2,7 @@
 from django.views.generic import View
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from collections import defaultdict
 from django.utils.http import urlencode
 from django.contrib.auth.decorators import login_required
@@ -136,36 +136,32 @@ class Suchen(View):
         return getPageAuthenticated(request, self.template)
 
 
-class Suchen_Materielles(View):
-    templatePath = 'dcp/content/suchen/materielles.html'
-
-    def get(self, request):
-        search_materials_list = Search_Material.objects.order_by('created_date').reverse()
-        glyphicon_goods_string_list = []
-        category_type_string_list = []
-        comment_list = []
-        bump_list = []
-        report_list = []
+class TimelineView(View):
+    def getCreateNew(self, request, good_typ, show_radius, create_new_glyphicon, page_title):
+        templatePath = 'dcp/content/createNewGood.html'
+        goods_list = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
         category_glyphicon_list = Categorys.getCategoryListAsGlyphiconString()
         category_name_list = Categorys.getCategoryListAsNameString()
-        
-        for s in search_materials_list:
-            glyphicon_goods_string_list.append(s.getGlyphiconCategoryTypeString())
-            category_type_string_list.append(s.getCategoryTypeAsString())
-            comment_list.append(s.getComments())
-            bump_list.append(s.getBumps())
-            report_list.append(s.getReports())
 
-        context_list = zip(search_materials_list, glyphicon_goods_string_list, category_type_string_list, comment_list, bump_list, report_list)
         category_list = zip(category_glyphicon_list, category_name_list)
             
-        template = loader.get_template(self.templatePath)
+        template = loader.get_template(templatePath)
         context = {
-            'context_list': context_list,
+            'goods_list': goods_list,
             'category_list' : category_list,
+            'show_radius' : show_radius,
+            'create_new_good_typ' : good_typ,
+            'create_new_glyphicon': create_new_glyphicon,
+            'page_title': page_title
         }
 
         return HttpResponse(template.render(context,request))
+
+    def get_good_or_404(self, request):
+        good = Goods.getGood(request.POST['good_type'], request.POST['good_id'])
+        if good is None:
+            raise Http404
+        return good
 
     def post(self, request):
         user = request.user
@@ -174,18 +170,23 @@ class Suchen_Materielles(View):
                 form = Comment_Form(request.POST)
                 if form.is_valid():
                     text = request.POST['text']
-                    search_material = get_object_or_404(Search_Material, id=request.POST['search_material_id'])
-                    if search_material.comments is None:
-                        search_material.comments = Comment_Relation.objects.create()
-                        search_material.save()
-                    relation = search_material.comments
+                    good = self.get_good_or_404(request)
+                    if good.comments is None:
+                        good.comments = Comment_Relation.objects.create()
+                        good.save()
+                    relation = good.comments
                     Comment.objects.create(text=text,user=user,relation=relation)
                     return HttpResponseRedirect('')
 
             if request.POST['post_identifier'] == 'create':
                 # TODO form.vaild oder eine art der Sicherung, dass die Daten korrekt sind
-                radiusSplit = request.POST['radius'].split(' ')
-                radius = radiusSplit[0]
+                radius = None
+                if radius in request.POST:
+                    radiusSplit = request.POST['radius'].split(' ')
+                    radius = radiusSplit[0]
+                good_type = Goods.stringToGoodClass(request.POST.get('good_typ', None))
+                if good_type is None :
+                    return HttpResponse(status=404)
                 title = request.POST['title']
                 description = request.POST['description']
                 catastrophe = get_object_or_404(Catastrophe, id=request.POST['catastrophe'])
@@ -195,66 +196,80 @@ class Suchen_Materielles(View):
                 if categoryString == '':
                     return HttpResponse(code=400) # TODO Einen Fehler zurueckgeben, der makiert, dass eine Option gewählt werden muss
                 category = Categorys.stringToCategoryTypeAsNumber(categoryString)
-                Search_Material.objects.create(title=title, description=description, radius=radius, catastrophe = catastrophe, location_x=location_x, location_y=location_y, category=category, user=user)
+                if radius is not None:
+                    good_type.objects.create(title=title, description=description, radius=radius, catastrophe = catastrophe, location_x=location_x, location_y=location_y, category=category, user=user)
+                else:
+                    good_type.objects.create(title=title, description=description, catastrophe = catastrophe, location_x=location_x, location_y=location_y, category=category, user=user)
                 return HttpResponseRedirect('')
                 # else:
                     # return HttpResponse(status=500)
 
             if request.POST['post_identifier'] == 'delete':
-                search_material = get_object_or_404(Search_Material, id=request.POST['search_material_id'])
-                if user.is_superuser or user == search_material.user:
-                    if search_material.comments is not None:
-                        search_material.comments.delete()
-                    if search_material.bumps is not None:
-                        search_material.bumps.delete()
-                    if search_material.reports is not None:
-                        search_material.reports.delete()
-                    search_material.delete()
+                good = self.get_good_or_404(request)
+                if user.is_superuser or user == good.user:
+                    if good.comments is not None:
+                        good.comments.delete()
+                    if good.bumps is not None:
+                        good.bumps.delete()
+                    if good.reports is not None:
+                        good.reports.delete()
+                    good.delete()
                     return HttpResponseRedirect('')
 
             if request.POST['post_identifier'] == 'bump':
-                search_material = get_object_or_404(Search_Material, id=request.POST['search_material_id'])
-                if search_material.bumps is None:
-                    search_material.bumps = Bump_Relation.objects.create()
-                    search_material.save()
+                good = self.get_good_or_404(request)
+                if good.bumps is None:
+                    good.bumps = Bump_Relation.objects.create()
+                    good.save()
                 else:
-                    already_exists = Bump.objects.filter(relation = search_material.bumps, user = user)
+                    already_exists = Bump.objects.filter(relation = good.bumps, user = user)
                     if already_exists:
                         return HttpResponseRedirect('')
-                relation = search_material.bumps
+                relation = good.bumps
                 Bump.objects.create(user=user,relation=relation)
                 return HttpResponseRedirect('')
 
             if request.POST['post_identifier'] == 'report':
-                search_material = get_object_or_404(Search_Material, id=request.POST['search_material_id'])
-                if user == search_material.user:
+                good = self.get_good_or_404(request)
+                if user == good.user:
                     return HttpResponse(status=403)
                 relation = None
-                if search_material.reports is None:
-                    search_material.reports = Report_Relation.objects.create()
-                    search_material.save()
+                if good.reports is None:
+                    good.reports = Report_Relation.objects.create()
+                    good.save()
                 else:
-                    already_exists = Report.objects.filter(relation = search_material.reports, user = user)
+                    already_exists = Report.objects.filter(relation = good.reports, user = user)
                     if already_exists:
                         return HttpResponseRedirect('')
-                relation = search_material.reports
+                relation = good.reports
                 Report.objects.create(user=user,relation=relation)
                 return HttpResponseRedirect('')
 
         return HttpResponse(status=403)
 
-class Suchen_Immaterielles(View):
-    templatePath = 'dcp/content/suchen/immaterielles.html'
-
+class SearchMaterialView(TimelineView):
     def get(self, request):
-        search_immaterials_list = Search_Immaterial.objects.order_by('created_date')
-        template = loader.get_template(self.templatePath)
-        context = {
-            'search_immaterials_list': search_immaterials_list,
-        }
+        return super().getCreateNew(request, 'Search_Material', True, 'glyphicon-search', 'Suchen: Materielles')
+    def post(self, request):
+        return super().post(request)
 
-        return HttpResponse(template.render(context,request))
+class SearchImmaterialView(TimelineView):
+    def get(self, request):
+        return super().getCreateNew(request, 'Search_Immaterial', True, 'glyphicon-search', 'Suchen: Immaterielles')
+    def post(self, request):
+        return super().post(request)
 
+class OfferMaterialView(TimelineView):
+    def get(self, request):
+        return super().getCreateNew(request, 'Offer_Material', False, 'glyphicon-transfer', 'Bieten: Materielles')
+    def post(self, request):
+        return super().post(request)
+
+class OfferImmaterialView(TimelineView):
+    def get(self, request):
+        return super().getCreateNew(request, 'Offer_Immaterial', False, 'glyphicon-transfer', 'Bieten: Immaterielles')
+    def post(self, request):
+        return super().post(request)
 
 class Suchen_Personen(View):
     template = 'dcp/content/suchen/personen.html'
@@ -267,77 +282,7 @@ class Bieten(View):
 
     def get(self, request):
         form = Offer_Form
-        return render(request, self.templatePath, {
-          'form' : form,
-        })
-
-    def post(self, request):
-      form = Offer_Form(request.POST)
-      if form.is_valid():
-          title = form.cleaned_data['title']
-          description = form.cleaned_data['description']
-          return render(request, self.templatePath, {
-          'form' : form,
-          })
-
-          '''
-    if request.method=='GET':
-            form = Offer_Form()
-    else:
-        form = Offer_Form(request.POST)
-        if form.is_valid():
-            title = form.cleaned_data['title']
-            description = form.cleaned_data['description']
-            #TodoItem.objects.create(description=description,deadline=deadline,progress=progress)
-            #return django.http.HttpResponseRedirect(reverse_lazy('views.Bieten'))
-
-    return render(request, 'dcp/content/bieten/bieten.html', {
-        'form': form,
-    })
-  '''
-
-class Bieten_Materielles(View):
-    templatePath = 'dcp/content/bieten/materielles.html'
-
-    def get(self, request):
-        offer_materials_list = Offer_Material.objects.order_by('created_date')
-        glyphicon_string_list = []
-        category_type_string_list = []
-        
-
-        
-        for o in offer_materials_list:
-            g_string = o.getGlyphiconString()
-            c_string = o.getCategoryTypeAsString()
-            glyphicon_string_list.append(g_string)
-            category_type_string_list.append(c_string)
-
-        context_list = zip(offer_materials_list, glyphicon_string_list, category_type_string_list)
-            
-
-        template = loader.get_template(self.templatePath)
-        context = {
-            'context_list': context_list,
-        }
-
-        return HttpResponse(template.render(context,request))
-
-    def post(self, request):
-        params = {}
-        return render(request, self.template, params)
-
-class Bieten_Immaterielles(View):
-    templatePath = 'dcp/content/bieten/immaterielles.html'
-
-    def get(self, request):
-        offer_immaterials_list = Offer_Immaterial.objects.order_by('created_date')
-        template = loader.get_template(self.templatePath)
-        context = {
-            'offer_immaterials_list': offer_immaterials_list,
-        }
-
-        return HttpResponse(template.render(context,request))
-
+        return render(request, self.templatePath)
 
 class Chat(View):
     form_class = sendMessage
@@ -367,7 +312,7 @@ class Chat(View):
 def url_with_querystring(path, **kwargs):
     return path + '?' + urlencode(kwargs)
 
-class Overview(View):
+class ChatOverview(View):
     template = 'dcp/content/chat/chat_overview.html'
     def get(self,request):
         # Hole von allen Chats die der User hatte jeweils die letzte Nachricht

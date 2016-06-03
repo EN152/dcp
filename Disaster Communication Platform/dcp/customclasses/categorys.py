@@ -17,19 +17,19 @@ class Categorys(object):
         # Default
         return 5
     
-    def getCategoryGlyphiconTypeString(category):
-    	if category == '1':
-    		return "glyphicon glyphicon-cutlery"
-    	if category == '2':
-    		return "glyphicon glyphicon-home"
-    	if category == '3':
-    		return "glyphicon glyphicon-wrench"
-    	if category == '4':
-    		return "glyphicon glyphicon-plus"
-    	if category == '5':
-    		return "glyphicon glyphicon-question-sign"
+    def getCategoryGlyphiconAsString(category):
+        if category == '1':
+        	return "glyphicon glyphicon-cutlery"
+        if category == '2':
+        	return "glyphicon glyphicon-home"
+        if category == '3':
+        	return "glyphicon glyphicon-wrench"
+        if category == '4':
+        	return "glyphicon glyphicon-plus"
+           # Default
+        return "glyphicon glyphicon-question-sign"
     
-    def getCategoryNameTypeAsString(category):
+    def getCategoryNameAsString(category):
     	if category == '1':
     		return "Lebensmittel"
     	if category == '2':
@@ -38,8 +38,8 @@ class Categorys(object):
     		return "Werkzeuge"
     	if category == '4':
     		return "Medikamente"
-    	if category == '5':
-    		return "Sonstiges"
+    	# Default
+    	return "Sonstiges"
     
     def getCategoryListAsGlyphiconString():
     	list = []
