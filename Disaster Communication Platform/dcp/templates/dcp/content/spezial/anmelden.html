@@ -143,7 +143,7 @@
 		{% if catastrophes %}
 		{% for catastrophe  in catastrophes %} 
 				<div class="radio">
-			  		<label><input type="radio" name="optradio">{{ catastrophe.cat_title }} in {{ catastrophe.cat_location }}</label>
+			  		<label><input type="radio" name="optradio"><span class="label label-primary">{{ catastrophe.cat_title }} in {{ catastrophe.cat_location }}</span></label>
 				</div>
 		{% endfor %}
 		{% endif %}

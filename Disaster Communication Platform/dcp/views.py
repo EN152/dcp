@@ -41,7 +41,7 @@ class Login(View):
     template = 'dcp/content/spezial/anmelden.html'
 
     def get(self, request):
-        catastrophes = Catastrophe.objects
+        catastrophes = Catastrophe.objects.all()
         params = {'catastrophes': catastrophes}
         return render(request, self.template, params)   
         
