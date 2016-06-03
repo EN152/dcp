@@ -139,11 +139,11 @@
 
 		<div class="col-md-6 col-md-offset-3">
 		<h2 align="center">Welche Katastrophe betrifft dich?</h2>
-		<div name="catastrophe" style="font-size:1.5em;">
+		<div name="catastropheStyle" style="font-size:1.5em;">
 		{% if catastrophes %}
 		{% for catastrophe  in catastrophes %} 
 				<div class="radio">
-			  		<label><input type="radio" name="optradio"><span class="label label-primary">{{ catastrophe.cat_title }} in {{ catastrophe.cat_location }}</span></label>
+			  		<label><input type="radio" name="catastrophe" id="{{ catastrophe.cat_title }}"><span class="label label-primary">{{ catastrophe.cat_title }} in {{ catastrophe.cat_location }}</span></label>
 				</div>
 		{% endfor %}
 		{% endif %}

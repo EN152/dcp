@@ -50,6 +50,8 @@ class Login(View):
        if request.method == "POST":
            username = request.POST['username']
            password = request.POST['password']
+           #catastrophe = request.POST['catastrophe'] 
+
            valid = bool(False)
            user = authenticate(username=username, password=password)
            if user is not None:
