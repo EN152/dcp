@@ -14,7 +14,8 @@ from dcp.forms import *
 from django.template.context_processors import request
 from .forms import UserForm
 from .models import Message
-from .forms import sendMessage
+from .models import Catastrophe
+from .forms import sendMessage # in Benutzung?
 from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
 from dcp.customclasses.categorys import *
@@ -41,7 +42,8 @@ class Login(View):
     template = 'dcp/content/spezial/anmelden.html'
 
     def get(self, request):
-        params = {}
+        catastrophes = Catastrophe.objects.all()
+        params = {'catastrophes': catastrophes}
         return render(request, self.template, params)   
         
     def post(self, request):
