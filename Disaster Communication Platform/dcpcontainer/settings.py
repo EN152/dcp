@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -39,8 +40,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-LOGIN_URL = '/login/'
-
+LOGIN_URL = '/anmelden/'
+"""
+Die Urls, die nicht Login geschützt sein sollen:
+"""
+LOGIN_EXEMPT_URLS = (
+  r'^registrieren/',
+ #r'^about\.html$',
+ #r'^legal/', # allow any URL under /legal/*
+)
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -50,6 +58,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'dcpcontainer.middleware.LoginRequiredMiddleware.LoginRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'dcpcontainer.urls'

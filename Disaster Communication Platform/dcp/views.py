@@ -2,6 +2,8 @@
 from django.views.generic import View
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.views.generic.base import ContextMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from collections import defaultdict
 from django.utils.http import urlencode
@@ -19,6 +21,8 @@ from .forms import sendMessage # in Benutzung?
 from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
 from dcp.customclasses.categorys import *
+import dcp.customclasses.Helpers
+import numbers
 
 
 def getPageAuthenticated(request, template, params={}):
@@ -57,13 +61,17 @@ class Login(View):
            if user is not None:
                if user.is_active:
                    login(request, user)
-                   return HttpResponseRedirect("/")
+                   next = request.GET.get('next')
+                   if next==None:
+                       return HttpResponseRedirect("/")
+                   else:
+                       return HttpResponseRedirect(next)
                else:
                    return HttpResponse("Inactive user.")
            else:
                return render(request, self.template, {'notVaild': valid})
        return render(request, self.template, {})
-   
+
 class MyProfile(View):
     template = 'dcp/content/spezial/profil.html'
     
@@ -181,6 +189,17 @@ class Suchen_Materielles(View):
                     relation = search_material.comments
                     Comment.objects.create(text=text,user=user,relation=relation)
                     return HttpResponseRedirect('')
+            if request.POST['post_identifier'] == 'contact_form':
+                search_material =get_object_or_404(Search_Material,id=request.POST['search_material_id'])
+                CreatingUser =  search_material.user
+                RequestingUser = request.user
+                Conversation.objects.create(Starter=CreatingUser,Receiver=RequestingUser)
+                # Jetzt: Redirect
+                url = url_with_querystring(reverse('dcp:Chat'), userid=CreatingUser.id)
+                return HttpResponseRedirect(url)
+
+
+
 
             if request.POST['post_identifier'] == 'create':
                 # TODO form.vaild oder eine art der Sicherung, dass die Daten korrekt sind
@@ -262,8 +281,9 @@ class Suchen_Personen(View):
     def get(self, request):
         return getPageAuthenticated(request, self.template)
 
-class Bieten(View):
+class Bieten(LoginRequiredMixin,View):
     templatePath = 'dcp/content/bieten/bieten.html'
+
 
     def get(self, request):
         form = Offer_Form
@@ -296,7 +316,8 @@ class Bieten(View):
     })
   '''
 
-class Bieten_Materielles(View):
+class Bieten_Materielles(LoginRequiredMixin,View):
+    login_url = dcp.customclasses.Helpers.LOGIN_URL
     templatePath = 'dcp/content/bieten/materielles.html'
 
     def get(self, request):
@@ -325,7 +346,6 @@ class Bieten_Materielles(View):
     def post(self, request):
         params = {}
         return render(request, self.template, params)
-
 class Bieten_Immaterielles(View):
     templatePath = 'dcp/content/bieten/immaterielles.html'
 
@@ -335,51 +355,83 @@ class Bieten_Immaterielles(View):
         context = {
             'offer_immaterials_list': offer_immaterials_list,
         }
-
         return HttpResponse(template.render(context,request))
-
-
 class Chat(View):
     form_class = sendMessage
     template = 'dcp/content/chat/chat.html'
-    initial = {'Text': 'Bitte Nachricht eingeben'}
-    def get(self,request):
+    initial = {'Text': dcp.customclasses.Helpers.PleaseEnterMessageString}
+    otherUser = None
+    otherId = None
+    currentUser = None
+    conversation = None
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Überschreibe die dispatch Methode um direkt zur
+        Chat-Überseite zu redirecten, falls der Chat bisher nicht existiert
+
+        """
+        self.otherId = request.GET.get('userid')
+        # Checke ob userid wirklich Integer ist
+        try:
+            int(self.otherId)
+        except ValueError: # Der get Parameter war gar kein int..
+            return HttpResponseRedirect(reverse('dcp:ChatOverview'))
+        if self.otherId==None:
+            return HttpResponseRedirect(reverse('dcp:ChatOverview'))
+        self.otherUser = dcp.customclasses.Helpers.get_object_or_none(User,id=self.otherId)
+        if self.otherUser == None: # User existiert nicht -> redirect
+            return HttpResponseRedirect(reverse('dcp:ChatOverview'))
+        self.currentUser = request.user
         # Hole die "andere" User Id
-        otherId = request.GET['userid']
-        currentUser = request.user
-        otherUser = get_object_or_404(User, id=otherId) # TODO Exception
-        # Ok, fremdschlüssel sind da, nun die Liste holen:
-        chats = (Message.objects.filter(From=otherUser.id,To=currentUser) | Message.objects.filter(From=currentUser,To=otherUser)).order_by('SendTime') # Filtern und Sortieren
+        # Existiert schon eine Conversation:
+        self.conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation,
+                        Starter=self.otherUser, Receiver=self.currentUser)
+        if self.conversation == None:
+            self.conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation, Starter=self.currentUser,
+                                                                        Receiver=self.currentUser)
+            if self.conversation == None:
+                return HttpResponseRedirect(reverse('dcp:ChatOverview'))  # Bisher keine Konversation
+        return super(Chat, self).dispatch(request, *args, **kwargs)
+    def get(self,request):
+        """
+        Zeigt entweder den bisherigen Nachrichtenverlauf an oder aber
+        geht zurück zur Nachrichtenüberseite, falls bisher kein mit der bisherigen Person existiert
+        :param request:
+        :return: Gerendertes Template
+        """
+        messages = Message.objects.filter(Conversation=self.conversation)
         form = self.form_class()
-        return render(request,self.template,context={'message_list':chats,'otherUser':otherUser,'currentUser':currentUser,'form':form})
+        return render(request,self.template,context={'message_list':messages,'otherUser':self.otherUser,'currentUser':self.currentUser,'form':form})
     def post(self,request):
         form = self.form_class(request.POST)
         if form.is_valid():
             message = form.cleaned_data['Text']
-            otherId = request.GET['userid']
-            currentUser = request.user
-            otherUser = get_object_or_404(User, id=otherId)  # TODO Exception
-            Message.objects.create(Text=message,From=currentUser,To=otherUser)
-            url = url_with_querystring(reverse('dcp:Chat'),userid=otherUser.id)
+            # Neuer Eintrag in der Datenbank:
+            Message.objects.create(Text=message,From=self.currentUser,To=self.otherUser,Conversation=self.conversation)
+            url = url_with_querystring(reverse('dcp:Chat'),userid=self.otherUser.id)
             return HttpResponseRedirect(url)
-            #Neuer Eintrag in der Datenbank:
 
-def url_with_querystring(path, **kwargs):
+def url_with_querystring(path, **kwargs): #TODO: Refactor nach Helpers.
     return path + '?' + urlencode(kwargs)
-
 class Overview(View):
     template = 'dcp/content/chat/chat_overview.html'
     def get(self,request):
-        # Hole von allen Chats die der User hatte jeweils die letzte Nachricht
-        # Also From=currentUser oder To=currentUser -> Das sind alle Nachrichten
+        """
+        :author: Vincent
+        Hole von allen Chats die der User hatte jeweils die letzte Nachricht
+        Also From=currentUser oder To=currentUser -> Das sind alle Nachrichten
+        TODO: Folgendes Verhalten klären? Was ist wenn ein User einen anderen
+        kontaktiert, aber dann doch keine Nachricht schreibt? Soll er diesen Chat dann sehen oder nicht?
+        Falls ja -> noch zu implementieren
+        """
         messageDict = defaultdict(list)
         currentUser = request.user
-        all_chats = Message.objects.filter(From=currentUser) | Message.objects.filter(To=currentUser)
+        allConversations = Conversation.objects.filter(Starter=currentUser) | Conversation.objects.filter(Receiver=currentUser)
+        all_chats = Message.objects.filter(Conversation__in = allConversations)
         # Jetzt teile die Listen jeweils auf in Chat Gruppen
         for m in all_chats:
             chatPatner = m.To if m.From.id == currentUser.id else m.From
             messageDict[chatPatner].append(m)
-        #tmpList = map[lambda mList: mList.sort(key=lambda message: message.SendTime), messageDict.items()]
         tmpList = list()
         for key,value in messageDict.items():
             value.sort(key=lambda message: message.SendTime,reverse=True)

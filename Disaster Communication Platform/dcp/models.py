@@ -106,6 +106,10 @@ class Offer_Immaterial(Immaterial_Goods):
 	class Meta:
 		abstract = False
 
+class Conversation(models.Model):
+	Starter  = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='Starter')
+	Receiver = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='Receiver')
+
 # Zur delete Cascade: Ich bin mir nicht sicher, ob das wirklich so sinnvoll ist.
 # Die Frage ist, was bringen Nachrichten an einen nicht existierenden User -> Verhalten muss noch definiert werden.
 class Message(models.Model):
@@ -113,3 +117,4 @@ class Message(models.Model):
 	To = models.ForeignKey(User,on_delete=models.CASCADE,null=False,related_name='To')
 	Text = models.TextField(max_length=5000,null=False)
 	SendTime = models.DateTimeField(default=timezone.now)
+	Conversation = models.ForeignKey(Conversation, null=False, related_name='Conversation')
