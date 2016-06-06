@@ -1,0 +1,96 @@
+﻿{% extends "dcp/design/base.html" %}}
+
+{% block title %} {{page_title}} {% endblock %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<!-- Script: Aufklappen des Bereiches für eine neue Erstellung-->
+<script>
+	$(document).ready(function(){
+		$("#newSearch").click(function(){
+			$("#suchFormular").toggle();
+			$("#suchFormularHeading").hide();
+		});
+	});
+</script>
+
+<!-- Anfang des Bereich für die Neuerstellung -->
+{% if user.is_active %}
+<div class="panel panel-default">
+   <div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon {{create_new_glyphicon}}"></span> Neu</button></div>
+	<div class="panel-body" id="suchFormular" style="display: none;">
+	 <div class="col-sm-6">
+		<form method="POST">
+		    <h2><span class="glyphicon {{create_new_glyphicon}}"></span> Was möchtest du erstellen? </h2>
+
+			<div class="form-group">
+				<label>Titel:</label>
+				<input name="title" type="text" placeholder="Leistungsstarkes Stromaggregat..." class="form-control">
+			</div>
+            {% if category_list %}
+			    <label>Kategorie:</label><br />
+
+			    {% for category_glyphicon, category_name in category_list%}
+			        <div class="radio">
+			        	<label>
+			                <input type="radio" id="radio_{{category_name}}" name="category"  value="{{category_name}}">
+			                <span class="{{category_glyphicon}}"></span> {{category_name}}
+			            </label>
+			        </div>
+                {% endfor %}
+            {% endif %}
+
+			<div class="form-group">
+				<label>Bild:</label><input type="file">
+            </div>
+
+			<div class="form-group">
+				<label>Kurzbeschreibung:</label>
+				<textarea name="description" class="form-control" rows="5" id="description" placeholder="Nenne hier wichtige Details."></textarea>
+			</div>
+
+			<div class="form-group">
+				<label>Standort:</label>
+				<input name="location" type="text" class="form-control" id="inputlg" placeholder="Berlin"> <!-- TODO ort über javascript finden -->
+			</div>
+
+            {% if show_radius %}
+			    <div class="form-inline">
+			    	<label for="priority">Suchradius (maximale Entfernung):</label><br />
+			    	<span class="label label-default">0km: kaum mobil</span>
+			    	<select name="radius" id="radius" class="form-control">
+			    		<option>0 km</option>
+			    		<option>1 km </option>
+			    		<option>2 km</option>
+			    		<option>5 km</option>
+			    		<option>10 km</option>
+			    		<option>20 km</option>
+			    		<option>50 km</option>
+			    		<option>100 km</option>
+			    		<option>1000 km</option>
+			    	</select>
+			    	<span class="label label-danger">1000km: keine Beschränkungen</span><br><br>
+			    </div>
+            {% endif %}
+
+			<div class="form-group">
+                {% csrf_token %}
+                <input type="hidden" id="catastrophe" name="good_typ" value="{{create_new_good_typ}}" />
+                <input type="hidden" id="catastrophe" name="catastrophe" value="1" /> <!-- TODO Replace with real implentation !!!! -->
+                <input type="hidden" id="locaton_x" name="location_x" value="50" /> <!-- TODO Replace with real implentation !!!! -->
+                <input type="hidden" name="location_y" value="50" /> <!-- TODO Replace with real implentation !!!! -->
+				<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
+			</div>			
+        </form>
+	  </div>	
+    </div>
+</div>
+{% endif %}
+<!-- Ende des Bereiches für die Neuerstellung -->
+
+<!-- Anfang der Timeline -->
+{% include "dcp/design/timeline.html" %}
+<!-- Ende der Timeline-->
+
+{% endblock content %}
