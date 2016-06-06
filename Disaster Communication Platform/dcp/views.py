@@ -92,10 +92,13 @@ class EditProfile(View):
             form = UserForm(request.POST)
             if form.is_valid():
                 user = User.objects.get(username=request.user.username)
-                if request.POST['email'] != None or request.POST['password'] != None:
-                    mail = request.POST['email']
-                    password = request.POST['password']
-                    User.set_password(request.user, password)
+                email = request.POST.get('email')
+                password = request.POST.get('password')
+                if email != None: # Der Nutzer will die Email ändern
+                    user.email = email
+                    user.save()
+                if password != None:
+                    User.set_password(request.user,password)
                     user.save()
                     return HttpResponseRedirect("/profil/")
 
