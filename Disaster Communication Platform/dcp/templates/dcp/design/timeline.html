@@ -156,16 +156,15 @@
                                         </form>
                                               
                                         {% if good.user != user %}
-                                            <script>
-                                                function goToChat(){
-                                                     parent.location='/chat?userid={{good.user.id}}'
-                                                }
-                                            </script>
-    
-    					                    <button type="submit" class="btn btn-primary" onclick="goToChat();">
-    							               	<span class="glyphicon glyphicon-envelope"></span> 
-    							               	Kontaktieren
-                                            </button>
+
+                                            <form action="" role="form" id="contact_form" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="search_material_id" value="{{search_material.id}}" />
+						                             <button type="submit" class="btn btn-primary" value="contact_form" name="post_identifier">
+							                       	    <span class="glyphicon glyphicon-envelope"></span>
+							                       	    Kontaktieren
+                                                    </button>
+                                            </form>
                                         {% endif %}
     
                                         {% if user.is_superuser or good.user == user %}
