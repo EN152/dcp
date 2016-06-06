@@ -106,6 +106,14 @@ class Goods(models.Model):
 	        listOfGoods.append(oneGood)
 	    return listOfGoods
 
+	def isSearchedForByString(self, searchString):
+		if searchString in self.description or searchString in self.title:
+			return True
+		else:
+			return False
+
+
+
 	class Meta:
 		abstract = True
 
@@ -148,7 +156,7 @@ class Search_Immaterial(Immaterial_Goods):
 	timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-search')
 
 	def getGoodType(self):
-		return 'Search_immaterial'
+		return 'Search_Immaterial'
 	
 class Offer_Immaterial(Immaterial_Goods):
 	timeline_badge_color = models.CharField(max_length=100, null=False, default='red')

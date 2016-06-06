@@ -19,6 +19,8 @@ urlpatterns = [
     url(r'^suchen/materielles/$', SearchMaterialView.as_view()),
     url(r'^suchen/immaterielles/$', SearchImmaterialView.as_view()),
     url(r'^suchen/personen/$', Suchen_Personen.as_view()),
+    # delete this later and make single view with Suchen.as_View()
+    url(r'^suchen/wortsuche/$', WordSearch.as_view(), name='WordSearch'),
 
     # Bieten
     url(r'^bieten/$', Bieten.as_view()),

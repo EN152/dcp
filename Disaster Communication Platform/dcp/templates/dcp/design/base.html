@@ -42,10 +42,9 @@
 
 
         <div class="navbar-form navbar-right">
-         <form role="search" method="POST">
-          {% csrf_token %}
+         <form role="search" method="GET" action="{% url "dcp:WordSearch" %}">
           <div class="form-group">
-           <input type="text" name="search" class="form-control" placeholder="Was brauchst du?">
+           <input type="text" name="searchText" class="form-control" placeholder="Was brauchst du?">
          </div>
          <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Suchen</button>
        </form>
