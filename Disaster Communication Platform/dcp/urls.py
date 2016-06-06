@@ -27,8 +27,9 @@ urlpatterns = [
 
     # Chat
     url(r'^chat/$', Chat.as_view(), name='Chat'),
-    url(r'^profil/netzwerke',ChatOverview.as_view(),name='ChatOverview'),
-
+    url(r'^profil/netzwerke/$',ChatOverview.as_view(),name='ChatOverview'),
+    # AdminPanel
+    url(r'^administator/$',userAdminOverview.as_view(),name='UserAdminOverview'),
 #    # Bieten
 #    url(r'^bieten/$', views.bieten),
 #    url(r'^bieten/materielles/$', views.bieten_materielles),

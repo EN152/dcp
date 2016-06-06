@@ -6,12 +6,13 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 from dcp.customclasses.categorys import Categorys
+import dcp.customclasses
 # from abc import abstractmethod
 
 class Catastrophe(models.Model):
 	cat_title = models.CharField(max_length=200)
-	cat_location = models.CharField(max_length=100)
-	cat_pub_date = models.DateTimeField('date published')
+	cat_location = models.CharField(max_length=100) # Soll das so? Nicht per Map Anzeigen?r
+	cat_pub_date = models.DateTimeField('date published',default=timezone.now)
 	
 	def __unicode__(self):
 		return self.cat_title 
@@ -160,6 +161,27 @@ class Offer_Immaterial(Immaterial_Goods):
 class Conversation(models.Model):
 	Starter  = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='Starter')
 	Receiver = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='Receiver')
+	class Meta:
+		unique_together = ('Starter','Receiver')
+	def getConversationOrNone(userOne: User,userTwo: User):
+		"""
+		Schaut nach, ob bereits eine Konversation zwischen zwei Nutzern
+		in der Datenbank gespeichert ist. Falls ja wird die Konversation zurückgegeben,
+		sonst None. Auf die Reihenfolge der Nutzer wird nicht geachtet, es
+		ist also egal wer die Konversation tatsächlich gestartet hat
+		:author Vincent
+		:param userone: Chatteilnehmer1
+		:param usertwo: Chatteilnehmer2
+		:return: Konversation falls existent, sonst None
+		"""
+		conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation,
+																		 Starter=userOne,
+																		 Receiver=userTwo)
+
+		if conversation is None:
+			conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation, Starter=userTwo,
+																		 Receiver=userOne)
+
 
 # Zur delete Cascade: Ich bin mir nicht sicher, ob das wirklich so sinnvoll ist.
 # Die Frage ist, was bringen Nachrichten an einen nicht existierenden User -> Verhalten muss noch definiert werden.

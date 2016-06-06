@@ -13,7 +13,7 @@ from dcpcontainer import settings
 from django.contrib.auth.models import User
 from dcp.models import *
 from django.template import loader
-from dcp.forms import * 
+from dcp.forms import *
 from django.template.context_processors import request
 from .forms import UserForm
 from .models import Message
@@ -194,7 +194,10 @@ class TimelineView(View):
                 good = self.get_good_or_404(request)
                 creatingUser =  good.user
                 requestingUser = request.user
-                Conversation.objects.create(Starter=creatingUser,Receiver=requestingUser)
+                # Schaue nach, ob schon eine Conv besteht..
+                conv = Conversation.getConversationOrNone(userOne=self.currentUser, userTwo=self.otherUser)
+                if conv is None: # Wenn noch keine Conversation da ist
+                    Conversation.objects.create(Starter=creatingUser,Receiver=requestingUser)
                 # Jetzt: Redirect
                 url = url_with_querystring(reverse('dcp:Chat'), userid=creatingUser.id)
                 return HttpResponseRedirect(url)
@@ -333,12 +336,8 @@ class Chat(View):
         self.currentUser = request.user
         # Hole die "andere" User Id
         # Existiert schon eine Conversation:
-        self.conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation,
-                        Starter=self.otherUser, Receiver=self.currentUser)
-        if self.conversation == None:
-            self.conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation, Starter=self.currentUser,
-                                                                        Receiver=self.currentUser)
-            if self.conversation == None:
+        self.conversation = Conversation.getConversationOrNone(userOne=self.currentUser,userTwo=self.otherUser)
+        if self.conversation is None:
                 return HttpResponseRedirect(reverse('dcp:ChatOverview'))  # Bisher keine Konversation
         return super(Chat, self).dispatch(request, *args, **kwargs)
     def get(self,request):
@@ -390,3 +389,51 @@ class ChatOverview(View):
         for x in tmpList:
             mList.append(x[0])
         return render(request,self.template,context={'last_message_list':mList,'currentUser':request.user})
+class userAdminOverview(View):
+    template = 'dcp/content/adminstrator/nutzer.html'
+    def get(self,request):
+        """
+        :author: Vincent
+        Zeigt - falls der User  ein Admin ist - alle Benutzer an und ermöglicht es dem Admin, Nutzer zu löschen
+        """
+        userList = Users.objects.all()
+        return render(request,self.template,context={'users': userList})
+
+class catastropheOverview(View):
+    template = 'dcp/content/adminstrator/catastropheOverview.html'
+    def get(self,request):
+        """
+        :author Vincent
+        Gibt eine Liste an Katastrohpen aus, mit der Möglichkeit Einträge zu löschen, Namen zu editieren und Katastrophen
+        hinzuzufügen
+
+        :param request:
+        :return:
+        """
+        catastropheList = Catastrophe.objects.all()
+        return render(request,self.template,context={'catastrophes':catastropheList})
+
+class createCatastrophe(View):
+    template = 'dcp/content/adminstrator/createOrEditCatastrophe.html'
+    def get(self,request):
+        # Hat jemand die Id eine Katastrophe übergeben?
+        inputId = request.GET.get('catid')
+        if inputId  == None:
+            form = CatastropheForm()
+            return render(request, self.template, context={
+                'form': form,
+            })
+        else:
+            catastrophe = dcp.customclasses.Helpers.get_object_or_none(Catastrophe,id=inputId)
+            if catastrophe == None:
+                return HttpResponseRedirect(reverse_lazy('catastropheOverview'))
+
+
+    def post(self,request):
+        form = CatastropheForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            location = form.cleaned_data['location']
+            Catastrophe.objects.create(title=title,location=location)
+            return HttpResponseRedirect(reverse_lazy('catastropheOverview'))
+

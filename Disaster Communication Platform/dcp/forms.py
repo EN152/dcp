@@ -32,3 +32,7 @@ class Search_Material_Form(ModelForm):
     class Meta:
         model = Search_Material
         fields = ['title', 'description', 'location_x', 'location_y', 'radius', 'catastrophe', 'category']
+class CatastropheForm(forms.ModelForm):
+    class Meta:
+        model = Catastrophe
+        fields = ['cat_title','cat_location']
