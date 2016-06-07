@@ -45,16 +45,15 @@ class Login(View):
     template = 'dcp/content/spezial/anmelden.html'
 
     def get(self, request):
-        catastrophes = Catastrophe.objects.all()
-        params = {'catastrophes': catastrophes}
-        return render(request, self.template, params)   
+        catChoiceForm = CatastropheChoice
+        return render(request, self.template, context={'catChoiceForm':catChoiceForm})
         
     def post(self, request):
        if request.method == "POST":
            username = request.POST['username']
            password = request.POST['password']
-           #catastrophe = request.POST['catastrophe'] 
-
+           catastrophe = request.POST['catastrophe']
+           request.session['catastrophe'] = catastrophe
            valid = bool(False)
            user = authenticate(username=username, password=password)
            if user is not None:
@@ -133,7 +132,7 @@ class Index(View):
 
     def post(self, request):
         if request.user.is_authenticated():
-            params = {}
+            params = {'catastrophe':request.session.get('catastrophe')}
             return render(request, 'dcp/index.html', params)
         else:
             return HttpResponseRedirect("anmelden/")
@@ -436,12 +435,12 @@ class CreateOrEditCatastrophe(views.SuperuserRequiredMixin,View):
         if form.is_valid():
             title = form.cleaned_data["Title"]
             location = form.cleaned_data["Location"]
-            if inputId == None: # Keine Inputid -> Erstelle die Katastrophe direkt
+            if inputId is None: # Keine Inputid -> Erstelle die Katastrophe direkt
                 Catastrophe.objects.create(Title=title, Location=location)
                 return HttpResponseRedirect(self.nextUrl)
             else: # Doch eine bereits bestehende Katastrophe?
                 catastrophe = dcp.customclasses.Helpers.get_object_or_none(Catastrophe, id=inputId)
-                if catastrophe == None:
+                if catastrophe is None:
                     return HttpResponseRedirect(self.nextUrl)
                 else:
                     if not catastrophe.isAbleToEdit(request.user):

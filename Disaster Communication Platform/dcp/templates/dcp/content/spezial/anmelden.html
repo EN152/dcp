@@ -63,6 +63,10 @@
 										<input type="checkbox" tabindex="3" class="" name="remember" id="remember">
 										<label for="remember"> angemeldet bleiben</label>
 									</div>
+                                    <div class="form-group">
+                                            {{ catChoiceForm }}
+		                            </div>
+
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6 col-sm-offset-3">
@@ -121,6 +125,7 @@
 									<div class="form-group">
 										<input type="password" data-minlength="8" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Passwort wiederholen">
 									</div>
+
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6 col-sm-offset-3">
@@ -137,18 +142,6 @@
 		</div>
 
 
-		<div class="col-md-6 col-md-offset-3">
-		<h2 align="center">Welche Katastrophe betrifft dich?</h2>
-		<div name="catastropheStyle" style="font-size:1.5em;">
-		{% if catastrophes %}
-		{% for catastrophe  in catastrophes %} 
-				<div class="radio">
-			  		<label><input type="radio" name="catastrophe" id="{{ catastrophe.Title }}"><span class="label label-primary">{{ catastrophe.Title}} in {{ catastrophe.Location }}</span></label>
-				</div>
-		{% endfor %}
-		{% endif %}
-		</div>
-		</div>
 
 
 	</div>

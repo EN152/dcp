@@ -38,3 +38,15 @@ class CatastropheForm(forms.ModelForm):
     class Meta:
         model = Catastrophe
         fields = ["Title", "Location"]
+
+class CatastropheModelChoiceField(forms.ModelChoiceField):
+    """
+    Subclassing the ModelChoiceField Form um
+    label_from_instance zu überschreiben:
+    Siehe hier:https://docs.djangoproject.com/en/1.9/ref/forms/fields/#django.forms.ModelChoiceField
+    """
+    def label_from_instance(self,obj: Catastrophe):
+        return obj.Title + " in " + obj.Location
+
+class CatastropheChoice(forms.Form):
+    catastrophe = CatastropheModelChoiceField(queryset=Catastrophe.objects.all().order_by('Title'),empty_label='Bitte eine Katastrophe auswählen',widget=forms.Select(attrs={'class':'form-control',}),label='Katastrophe')
