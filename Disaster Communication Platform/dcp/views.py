@@ -8,9 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from collections import defaultdict
 from django.utils.http import urlencode
-from django.contrib.auth.decorators import login_required
-from dcpcontainer import settings
-from django.contrib.auth.models import User
+from braces import views
 from dcp.models import *
 from django.template import loader
 from dcp.forms import *
@@ -23,7 +21,7 @@ from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
 from dcp.customclasses.categorys import *
 import dcp.customclasses.Helpers
-import numbers
+from django.http import HttpResponseForbidden
 
 
 def getPageAuthenticated(request, template, params={}):
@@ -389,32 +387,32 @@ class ChatOverview(View):
         for x in tmpList:
             mList.append(x[0])
         return render(request,self.template,context={'last_message_list':mList,'currentUser':request.user})
-class userAdminOverview(View):
+class UserAdminOverview(views.SuperuserRequiredMixin,View):
     template = 'dcp/content/adminstrator/nutzer.html'
     def get(self,request):
         """
         :author: Vincent
         Zeigt - falls der User  ein Admin ist - alle Benutzer an und ermöglicht es dem Admin, Nutzer zu löschen
         """
-        userList = Users.objects.all()
+        userList = User.objects.all()
         return render(request,self.template,context={'users': userList})
 
-class catastropheOverview(View):
+class CatastropheOverview(views.SuperuserRequiredMixin,View):
     template = 'dcp/content/adminstrator/catastropheOverview.html'
     def get(self,request):
         """
         :author Vincent
         Gibt eine Liste an Katastrohpen aus, mit der Möglichkeit Einträge zu löschen, Namen zu editieren und Katastrophen
         hinzuzufügen
-
         :param request:
         :return:
         """
         catastropheList = Catastrophe.objects.all()
         return render(request,self.template,context={'catastrophes':catastropheList})
 
-class createCatastrophe(View):
+class CreateOrEditCatastrophe(views.SuperuserRequiredMixin,View):
     template = 'dcp/content/adminstrator/createOrEditCatastrophe.html'
+    nextUrl = reverse_lazy('dcp:CatastropheOverview')
     def get(self,request):
         # Hat jemand die Id eine Katastrophe übergeben?
         inputId = request.GET.get('catid')
@@ -425,15 +423,35 @@ class createCatastrophe(View):
             })
         else:
             catastrophe = dcp.customclasses.Helpers.get_object_or_none(Catastrophe,id=inputId)
+            if not catastrophe.isAbleToEdit(request.user):
+                return HttpResponseForbidden(render(request,'dcp/content/spezial/403.html'))
             if catastrophe == None:
-                return HttpResponseRedirect(reverse_lazy('catastropheOverview'))
-
-
+                return HttpResponseRedirect(self.nextUrl)
+            else:
+                form = CatastropheForm(instance=catastrophe)
+                return render(request,self.template,context={'form':form})
     def post(self,request):
         form = CatastropheForm(request.POST)
+        inputId = request.GET.get('catid')
         if form.is_valid():
-            title = form.cleaned_data['title']
-            location = form.cleaned_data['location']
-            Catastrophe.objects.create(title=title,location=location)
-            return HttpResponseRedirect(reverse_lazy('catastropheOverview'))
+            title = form.cleaned_data["Title"]
+            location = form.cleaned_data["Location"]
+            if inputId == None: # Keine Inputid -> Erstelle die Katastrophe direkt
+                Catastrophe.objects.create(Title=title, Location=location)
+                return HttpResponseRedirect(self.nextUrl)
+            else: # Doch eine bereits bestehende Katastrophe?
+                catastrophe = dcp.customclasses.Helpers.get_object_or_none(Catastrophe, id=inputId)
+                if catastrophe == None:
+                    return HttpResponseRedirect(self.nextUrl)
+                else:
+                    if not catastrophe.isAbleToEdit(request.user):
+                        return HttpResponseForbidden(render(request, 'dcp/content/spezial/403.html'))
+                    catastrophe.Title = title
+                    catastrophe.location = location
+                    catastrophe.PubDate = timezone.now()
+                    catastrophe.save()
+                    return HttpResponseRedirect(self.nextUrl)
+        else: # Falls Form nicht valid
+            return render(request, self.template, context={'form': form})
+
 

@@ -1,15 +1,15 @@
 {% extends "dcp/design/base.html" %}
-<link href="{% static 'dataTables/jquery.dataTables.min.css' %}" rel="stylesheet">
-	<script src="{% static 'dataTables/jquery.dataTables.min.js' %}"></script>
 {% block title %} Nutzerverwaltung {{otherUser}} {% endblock %}
-<script>$(document).ready( function () {
+
+{% block content %}
+    <script>$(document).ready( function () {
     $('#table_id').DataTable();
 } );</script>
 <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            DataTables Advanced Tables
+                            Benutzerübersicht
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -19,6 +19,7 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Email Adresse</th>
+                                            <th>Editieren</th>
                                             <th>Löschen</th>
 
                                         </tr>
@@ -26,20 +27,21 @@
                                     <tbody>
                                     {% for u in users %}
                                         <tr class="gradeA">
-                                            <td>u.username</td>
-                                            <td>u.email</td>
-                                            <td>Löschen</td>
+                                            <td>{{ u.username }}</td>
+                                            <td>{{ u.email }}</td>
+                                            <td>Editieren</td> <!-- Todo: Editier Formular ausführen -->
+                                            <td>Löschen</td>  <!-- Todo: Löschen Formular ausführen --->
                                         </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
                             <!-- /.table-responsive -->
-                            <div class="well">
+                            <!--<div class="well">
                                 <h4>DataTables Usage Information</h4>
                                 <p>DataTables is a very flexible, advanced tables plugin for jQuery. In SB Admin, we are using a specialized version of DataTables built for Bootstrap 3. We have also customized the table headings to use Font Awesome icons in place of images. For complete documentation on DataTables, visit their website at <a target="_blank" href="https://datatables.net/">https://datatables.net/</a>.</p>
                                 <a class="btn btn-default btn-lg btn-block" target="_blank" href="https://datatables.net/">View DataTables Documentation</a>
-                            </div>
+                            </div>-->
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -48,5 +50,4 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
-{% block content %}
 {% endblock content %}

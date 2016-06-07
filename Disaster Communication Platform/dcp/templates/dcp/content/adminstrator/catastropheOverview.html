@@ -1,9 +1,10 @@
 {% extends "dcp/design/base.html" %}
 
-{% block title %} KatastrophenVerwartlung {{otherUser}} {% endblock %}
+{% block title %} Katastrophen Verwaltung {% endblock title %}
+
 {% block content %}
-    <link href="{% static 'dataTables/jquery.dataTables.min.css' %}" rel="stylesheet">
-	<script src="{% static 'dataTables/jquery.dataTables.min.js' %}"></script>
+
+
 <script>$(document).ready( function () {
     $('#table_id').DataTable();
 } );</script>
@@ -11,7 +12,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            DataTables Advanced Tables
+                            Katastrophen Übersicht
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -20,27 +21,31 @@
                                     <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Email Adresse</th>
-                                            <th>Löschen</th>
+                                            <th>Ort</th>
+                                            <th>Datum</th>
 
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {% for u in users %}
+                                    {% if catastrophes %}
+                                    {% for c in catastrophes %}
                                         <tr class="gradeA">
-                                            <td>u.username</td>
-                                            <td>u.email</td>
-                                            <td>Löschen</td>
+                                            <td>{{c.Title}}</td>
+                                            <td>{{ c.Location }}</td>
+                                            <td>{{ c.PubDate }}</td>
+                                            <td><a href="{% url 'dcp:CreateOrEditCatastrophe' %}?catid={{ c.id }}"><button type="button" class="btn btn-warning">Bearbeiten</button></a></td>
+
                                         </tr>
                                     {% endfor %}
+                                    {% endif %}
                                     </tbody>
                                 </table>
                             </div>
                             <!-- /.table-responsive -->
                             <div class="well">
-                                <h4>DataTables Usage Information</h4>
-                                <p>DataTables is a very flexible, advanced tables plugin for jQuery. In SB Admin, we are using a specialized version of DataTables built for Bootstrap 3. We have also customized the table headings to use Font Awesome icons in place of images. For complete documentation on DataTables, visit their website at <a target="_blank" href="https://datatables.net/">https://datatables.net/</a>.</p>
-                                <a class="btn btn-default btn-lg btn-block" target="_blank" href="https://datatables.net/">View DataTables Documentation</a>
+                             <!--   <h4>Katastrophen Übersicht</h4>
+                                <p>Hier sehen sie eine Übersicht aller Katastrophen</p> -->
+                                <a class="btn btn-default btn-lg btn-block" target="_blank" href="{% url 'dcp:CreateOrEditCatastrophe' %}">Katastrophe erstellen</a>
                             </div>
                         </div>
                         <!-- /.panel-body -->

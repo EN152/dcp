@@ -2,9 +2,10 @@ from django.conf.urls import url
 from dcp.views import *
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib.staticfiles.urls import static
+from django.conf import  settings
 
 urlpatterns = [
-    url(r'^$', Index.as_view()),
+    url(r'^$', Index.as_view(),name='Index'),
 
     # Spezialseiten
     url(r'^anmelden/$', Login.as_view()),
@@ -29,7 +30,9 @@ urlpatterns = [
     url(r'^chat/$', Chat.as_view(), name='Chat'),
     url(r'^profil/netzwerke/$',ChatOverview.as_view(),name='ChatOverview'),
     # AdminPanel
-    url(r'^administator/$',userAdminOverview.as_view(),name='UserAdminOverview'),
+    url(r'^administator/useroverview/$',UserAdminOverview.as_view(),name='UserAdminOverview'),
+    url(r'^administrator/createcat/$',CreateOrEditCatastrophe.as_view(),name='CreateOrEditCatastrophe'),
+    url(r'^administrator/catoverview/$',CatastropheOverview.as_view(),name='CatastropheOverview'),
 #    # Bieten
 #    url(r'^bieten/$', views.bieten),
 #    url(r'^bieten/materielles/$', views.bieten_materielles),
@@ -51,7 +54,7 @@ urlpatterns = [
 #    url(r'^orte/fotos/$', views.orte_fotos),
     #Profil
     url(r'^profil/$', MyProfile.as_view()),
-    url(r'^profil/bearbeiten/$', EditProfile.as_view())
+    url(r'^profil/bearbeiten/$', EditProfile.as_view()),
 
 ]
 

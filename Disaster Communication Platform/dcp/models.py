@@ -10,12 +10,26 @@ import dcp.customclasses
 # from abc import abstractmethod
 
 class Catastrophe(models.Model):
-	cat_title = models.CharField(max_length=200)
-	cat_location = models.CharField(max_length=100) # Soll das so? Nicht per Map Anzeigen?r
-	cat_pub_date = models.DateTimeField('date published',default=timezone.now)
+	Title = models.CharField(max_length=200)
+	Location = models.CharField(max_length=100) # Soll das so? Nicht per Map Anzeigen?r
+	PubDate = models.DateTimeField('date published', default=timezone.now)
 	
 	def __unicode__(self):
-		return self.cat_title 
+		return self.Title
+	def isAbleToEdit(self,user : User):
+		"""
+		Gibt zurück, ob ein Benutzer eine Katastrophe bearbeiten darf oder nicht
+		:param user: Der Benutzer, der erfragt
+		:return: True falls er darf, False falls nciht
+		"""
+		return user.has_perm('dcp.EditCatastrophe')
+	class Meta:
+			permissions = (
+				("EditCatastrophe","Kann eine Katastrophe editieren/löschen"),
+				("CreateCatastrophe","Kann eine Katastrophe erstellen"),
+			)
+
+			unique_together = ('Title','Location')
 
 class Comment_Relation(models.Model):
 	class Meta:

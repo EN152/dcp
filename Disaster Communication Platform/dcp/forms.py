@@ -33,6 +33,8 @@ class Search_Material_Form(ModelForm):
         model = Search_Material
         fields = ['title', 'description', 'location_x', 'location_y', 'radius', 'catastrophe', 'category']
 class CatastropheForm(forms.ModelForm):
+    Title = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Katastrophentext eingeben'}))
+    Location = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Ort der Katastrophe eingeben'}))
     class Meta:
         model = Catastrophe
-        fields = ['cat_title','cat_location']
+        fields = ["Title", "Location"]
