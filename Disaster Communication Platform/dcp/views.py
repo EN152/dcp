@@ -20,7 +20,7 @@ from .forms import sendMessage # in Benutzung?
 from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
 from dcp.customclasses.categorys import *
-import dcp.customclasses.Helpers
+from dcp.customclasses import  Helpers
 from django.http import HttpResponseForbidden
 
 
@@ -53,7 +53,7 @@ class Login(View):
            username = request.POST['username']
            password = request.POST['password']
            catastrophe = request.POST['catastrophe']
-           request.session['catastrophe'] = catastrophe
+           request.session[Helpers.sessionStringCatastrophe] = catastrophe
            valid = bool(False)
            user = authenticate(username=username, password=password)
            if user is not None:
@@ -132,7 +132,7 @@ class Index(View):
 
     def post(self, request):
         if request.user.is_authenticated():
-            params = {'catastrophe':request.session.get('catastrophe')}
+            params = {}
             return render(request, 'dcp/index.html', params)
         else:
             return HttpResponseRedirect("anmelden/")

@@ -1,4 +1,6 @@
 from dcp.forms import CatastropheChoice
+from dcp.customclasses import  Helpers
+from dcp.models import Catastrophe
 
 def catForm(request):
     """
@@ -6,6 +8,11 @@ def catForm(request):
     :param request:
     :return:
     """
-    return {
-        'catChoiceForm':CatastropheChoice()
-    }
+    currentCatId = request.session.get(Helpers.sessionStringCatastrophe)
+    currentCat = Helpers.get_object_or_none(Catastrophe,id=currentCatId)
+    if currentCat!=None:
+        return {
+            'catChoiceForm':CatastropheChoice(initial={'catastrophe':currentCat.pk})
+        }
+    else:
+        return {'catChoiceForm':CatastropheChoice()}
