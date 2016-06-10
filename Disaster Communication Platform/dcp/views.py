@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import View
+from django.views.generic import UpdateView
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic.base import ContextMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DeleteView
 from django.http import HttpResponse, HttpResponseRedirect
-from django.http import HttpResponse, HttpResponseRedirect, Http404
 from collections import defaultdict
 from django.utils.http import urlencode
-from django.contrib.auth.decorators import login_required
-from dcpcontainer import settings
-from django.contrib.auth.models import User
+from braces import views
 from dcp.models import *
 from django.template import loader
-from dcp.forms import * 
-from django.template.context_processors import request
+from dcp.forms import *
 from .forms import UserForm
 from .models import Message
 from .models import Catastrophe
@@ -23,8 +20,7 @@ from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
 from django.contrib import messages
 from dcp.customclasses.categorys import *
-import dcp.customclasses.Helpers
-import numbers
+from django.http import HttpResponseForbidden
 
 
 def getPageAuthenticated(request, template, params={}):
@@ -48,21 +44,21 @@ class Login(View):
     template = 'dcp/content/spezial/anmelden.html'
 
     def get(self, request):
-        catastrophes = Catastrophe.objects.all()
-        params = {'catastrophes': catastrophes}
-        return render(request, self.template, params)   
+        catChoiceForm = CatastropheChoice
+        return render(request, self.template, context={'catChoiceForm':catChoiceForm})
         
     def post(self, request):
        if request.method == "POST":
            username = request.POST['username']
            password = request.POST['password']
-           #catastrophe = request.POST['catastrophe'] 
+           catId = request.POST['catastrophe']
 
            valid = bool(False)
            user = authenticate(username=username, password=password)
            if user is not None:
                if user.is_active:
                    login(request, user)
+                   Profile.get_profile_or_create(user).setCatastropheById(catId)
                    next = request.GET.get('next')
                    if next==None:
                        return HttpResponseRedirect("/")
@@ -82,13 +78,10 @@ class MyProfile(View):
         
 class EditProfile(View):
     template = 'dcp/content/spezial/profilBearbeiten.html'
-    
     def get(self, request):
         user = User.objects.get(username=request.user.username)
-        form = UserForm(initial={'email' : user.email})
+        form = UserForm(initial={'email' : user.email,'first_name': user.first_name,'last_name':user.last_name,'password':''})
         return getPageAuthenticated(request, self.template, {'form': form})
-
-    # Bugfixing nötig!
     def post(self,request):
         if request.method == "POST":
             form = UserForm(request.POST)
@@ -108,7 +101,6 @@ class EditProfile(View):
                     user.save()
                     return HttpResponseRedirect("/profil/")
         return HttpResponseRedirect("/profil/")
-
 
 class Logout(View):
     def get(self, request):
@@ -184,7 +176,8 @@ class TimelineView(View):
     def post(self, request):
         user = request.user
         if user.is_authenticated() and user.is_active:
-            if request.POST['post_identifier'] == 'comment':
+            postIdentifier = request.POST.get('post_identifier')
+            if postIdentifier == 'comment':
                 form = Comment_Form(request.POST)
                 if form.is_valid():
                     text = request.POST['text']
@@ -196,16 +189,19 @@ class TimelineView(View):
                     Comment.objects.create(text=text,user=user,relation=relation)
                     return HttpResponseRedirect('')
 
-            if request.POST['post_identifier'] == 'contact_form':
+            if postIdentifier == 'contact_form':
                 good = self.get_good_or_404(request)
                 creatingUser =  good.user
                 requestingUser = request.user
-                Conversation.objects.create(Starter=creatingUser,Receiver=requestingUser)
+                # Schaue nach, ob schon eine Conv besteht..
+                conv = Conversation.getConversationOrNone(userOne=self.currentUser, userTwo=self.otherUser)
+                if conv is None: # Wenn noch keine Conversation da ist
+                    Conversation.objects.create(Starter=creatingUser,Receiver=requestingUser)
                 # Jetzt: Redirect
                 url = url_with_querystring(reverse('dcp:Chat'), userid=creatingUser.id)
                 return HttpResponseRedirect(url)
 
-            if request.POST['post_identifier'] == 'create':
+            if postIdentifier == 'create':
                 # TODO form.vaild oder eine art der Sicherung, dass die Daten korrekt sind
                 radius = None
                 if radius in request.POST:
@@ -231,7 +227,7 @@ class TimelineView(View):
                 # else:
                     # return HttpResponse(status=500)
 
-            if request.POST['post_identifier'] == 'delete':
+            if postIdentifier == 'delete':
                 good = self.get_good_or_404(request)
                 if user.is_superuser or user == good.user:
                     if good.comments is not None:
@@ -243,7 +239,7 @@ class TimelineView(View):
                     good.delete()
                     return HttpResponseRedirect('')
 
-            if request.POST['post_identifier'] == 'bump':
+            if postIdentifier == 'bump':
                 good = self.get_good_or_404(request)
                 if good.bumps is None:
                     good.bumps = Bump_Relation.objects.create()
@@ -256,7 +252,7 @@ class TimelineView(View):
                 Bump.objects.create(user=user,relation=relation)
                 return HttpResponseRedirect('')
 
-            if request.POST['post_identifier'] == 'report':
+            if postIdentifier == 'report':
                 good = self.get_good_or_404(request)
                 if user == good.user:
                     return HttpResponse(status=403)
@@ -339,12 +335,8 @@ class Chat(View):
         self.currentUser = request.user
         # Hole die "andere" User Id
         # Existiert schon eine Conversation:
-        self.conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation,
-                        Starter=self.otherUser, Receiver=self.currentUser)
-        if self.conversation == None:
-            self.conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation, Starter=self.currentUser,
-                                                                        Receiver=self.currentUser)
-            if self.conversation == None:
+        self.conversation = Conversation.getConversationOrNone(userOne=self.currentUser,userTwo=self.otherUser)
+        if self.conversation is None:
                 return HttpResponseRedirect(reverse('dcp:ChatOverview'))  # Bisher keine Konversation
         return super(Chat, self).dispatch(request, *args, **kwargs)
     def get(self,request):
@@ -396,3 +388,86 @@ class ChatOverview(View):
         for x in tmpList:
             mList.append(x[0])
         return render(request,self.template,context={'last_message_list':mList,'currentUser':request.user})
+class UserAdminOverview(views.SuperuserRequiredMixin,View):
+    template = 'dcp/content/adminstrator/nutzer.html'
+    def get(self,request):
+        """
+        :author: Vincent
+        Zeigt - falls der User  ein Admin ist - alle Benutzer an und ermöglicht es dem Admin, Nutzer zu löschen
+        """
+        userList = User.objects.all()
+        return render(request,self.template,context={'users': userList})
+
+class CatastropheOverview(views.SuperuserRequiredMixin,View):
+    template = 'dcp/content/adminstrator/catastropheOverview.html'
+    def get(self,request):
+        """
+        :author Vincent
+        Gibt eine Liste an Katastrohpen aus, mit der Möglichkeit Einträge zu löschen, Namen zu editieren und Katastrophen
+        hinzuzufügen
+        :param request:
+        :return:
+        """
+        catastropheList = Catastrophe.objects.all()
+        return render(request,self.template,context={'catastrophes':catastropheList})
+
+class DeleteCatastropheView(views.SuperuserRequiredMixin,DeleteView):
+    model = Catastrophe
+    template_name =  'dcp/content/adminstrator/deleteCatastrophe.html'
+    def get_success_url(self):
+        return reverse_lazy('dcp:CatastropheOverview')
+class CreateOrEditCatastrophe(views.SuperuserRequiredMixin,View):
+    template = 'dcp/content/adminstrator/createOrEditCatastrophe.html'
+    nextUrl = reverse_lazy('dcp:CatastropheOverview')
+    def get(self,request):
+        # Hat jemand die Id eine Katastrophe übergeben?
+        inputId = request.GET.get('catid')
+        if inputId  == None:
+            form = CatastropheForm()
+            return render(request, self.template, context={
+                'form': form,
+            })
+        else:
+            catastrophe = dcp.customclasses.Helpers.get_object_or_none(Catastrophe,id=inputId)
+            if not catastrophe.isAbleToEdit(request.user):
+                return HttpResponseForbidden(render(request,'dcp/content/spezial/403.html'))
+            if catastrophe == None:
+                return HttpResponseRedirect(self.nextUrl)
+            else:
+                form = CatastropheForm(instance=catastrophe)
+                return render(request,self.template,context={'form':form})
+    def post(self,request):
+        form = CatastropheForm(request.POST)
+        inputId = request.GET.get('catid')
+        if form.is_valid():
+            title = form.cleaned_data["Title"]
+            location = form.cleaned_data["Location"]
+            if inputId is None: # Keine Inputid -> Erstelle die Katastrophe direkt
+                Catastrophe.objects.create(Title=title, Location=location)
+                return HttpResponseRedirect(self.nextUrl)
+            else: # Doch eine bereits bestehende Katastrophe?
+                catastrophe = dcp.customclasses.Helpers.get_object_or_none(Catastrophe, id=inputId)
+                if catastrophe is None:
+                    return HttpResponseRedirect(self.nextUrl)
+                else:
+                    if not catastrophe.isAbleToEdit(request.user):
+                        return HttpResponseForbidden(render(request, 'dcp/content/spezial/403.html'))
+                    catastrophe.Title = title
+                    catastrophe.location = location
+                    catastrophe.PubDate = timezone.now()
+                    catastrophe.save()
+                    return HttpResponseRedirect(self.nextUrl)
+        else: # Falls Form nicht valid
+            return render(request, self.template, context={'form': form})
+class AdminEditUserProfileView(views.SuperuserRequiredMixin,UpdateView):
+    fields = ['first_name', 'last_name', 'email']
+    template_name = 'dcp/content/spezial/profilBearbeiten.html'
+    model = User
+    def get_success_url(self):
+        return reverse('dcp:UserAdminOverview')
+
+class DeleteUserView(views.SuperuserRequiredMixin,DeleteView):
+    model = User
+    template_name =  'dcp/content/adminstrator/deleteUser.html'
+    def get_success_url(self):
+        return reverse_lazy('dcp:UserAdminOverview')

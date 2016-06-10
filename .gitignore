@@ -36,3 +36,17 @@ Disaster Communication Platform/dcp/migrations/0018_auto_20160604_2116.py
 Disaster Communication Platform/dcp/migrations/0019_auto_20160606_0101.py
 Disaster Communication Platform/dcp/migrations/0020_auto_20160606_0109.py
 Disaster Communication Platform/db.sqlite3
+.idea/dcp.iml
+.idea/encodings.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+Disaster Communication Platform/db.sqlite3
+Disaster Communication Platform/dcp/migrations/0002_auto_20160606_1834.py
+Disaster Communication Platform/dcp/migrations/0003_auto_20160606_2041.py
+Disaster Communication Platform/dcp/migrations/0004_profile.py
+Disaster Communication Platform/dcp/migrations/0005_auto_20160610_1542.py
+Disaster Communication Platform/db.sqlite3
