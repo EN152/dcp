@@ -10,6 +10,8 @@ Vincent: Funktionen, die immer wieder benutzt werden
 '''
 sessionStringCatastrophe = "CatastropheId"
 
+
+
 def get_object_or_none(model, **kwargs):
     """
     Gibt entweder das Objekt, oder ansonten None zurück

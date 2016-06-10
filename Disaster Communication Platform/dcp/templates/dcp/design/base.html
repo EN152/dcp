@@ -43,12 +43,11 @@
       <ul class="nav navbar-top-links navbar-right">
         <div class="navbar-form navbar-right">
             <form role="form" method="POST">
-
-         <div class="form-group">
-             {% csrf_token %}
-             {{ catChoiceForm }}
-         </div>
-                </form>
+                <div class="form-group">
+                    {% csrf_token %}
+                    {{ catChoiceForm }}
+                </div>
+            </form>
          <form role="search" method="POST">
           {% csrf_token %}
           <div class="form-group">

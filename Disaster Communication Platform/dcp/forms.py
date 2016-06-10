@@ -49,4 +49,4 @@ class CatastropheModelChoiceField(forms.ModelChoiceField):
         return obj.Title + " in " + obj.Location
 
 class CatastropheChoice(forms.Form):
-    catastrophe = CatastropheModelChoiceField(queryset=Catastrophe.objects.all().order_by('Title'),empty_label='Bitte eine Katastrophe auswählen',widget=forms.Select(attrs={'class':'form-control',}),label='Katastrophe')
+    catastrophe = CatastropheModelChoiceField(queryset=Catastrophe.objects.all().order_by('Title'),empty_label='Bitte eine Katastrophe auswählen',widget=forms.Select(attrs={'class':'form-control','onChange':'this.form.submit()'}),label='Katastrophe')

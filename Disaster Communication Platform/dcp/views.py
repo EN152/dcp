@@ -52,13 +52,14 @@ class Login(View):
        if request.method == "POST":
            username = request.POST['username']
            password = request.POST['password']
-           catastrophe = request.POST['catastrophe']
-           request.session[Helpers.sessionStringCatastrophe] = catastrophe
+           catId = request.POST['catastrophe']
+
            valid = bool(False)
            user = authenticate(username=username, password=password)
            if user is not None:
                if user.is_active:
                    login(request, user)
+                   Profile.get_profile_or_create(user).setCatastropheById(catId)
                    next = request.GET.get('next')
                    if next==None:
                        return HttpResponseRedirect("/")
@@ -175,7 +176,8 @@ class TimelineView(View):
     def post(self, request):
         user = request.user
         if user.is_authenticated() and user.is_active:
-            if request.POST['post_identifier'] == 'comment':
+            postIdentifier = request.POST.get('post_identifier')
+            if postIdentifier == 'comment':
                 form = Comment_Form(request.POST)
                 if form.is_valid():
                     text = request.POST['text']
@@ -187,7 +189,7 @@ class TimelineView(View):
                     Comment.objects.create(text=text,user=user,relation=relation)
                     return HttpResponseRedirect('')
 
-            if request.POST['post_identifier'] == 'contact_form':
+            if postIdentifier == 'contact_form':
                 good = self.get_good_or_404(request)
                 creatingUser =  good.user
                 requestingUser = request.user
@@ -199,7 +201,7 @@ class TimelineView(View):
                 url = url_with_querystring(reverse('dcp:Chat'), userid=creatingUser.id)
                 return HttpResponseRedirect(url)
 
-            if request.POST['post_identifier'] == 'create':
+            if postIdentifier == 'create':
                 # TODO form.vaild oder eine art der Sicherung, dass die Daten korrekt sind
                 radius = None
                 if radius in request.POST:
@@ -225,7 +227,7 @@ class TimelineView(View):
                 # else:
                     # return HttpResponse(status=500)
 
-            if request.POST['post_identifier'] == 'delete':
+            if postIdentifier == 'delete':
                 good = self.get_good_or_404(request)
                 if user.is_superuser or user == good.user:
                     if good.comments is not None:
@@ -237,7 +239,7 @@ class TimelineView(View):
                     good.delete()
                     return HttpResponseRedirect('')
 
-            if request.POST['post_identifier'] == 'bump':
+            if postIdentifier == 'bump':
                 good = self.get_good_or_404(request)
                 if good.bumps is None:
                     good.bumps = Bump_Relation.objects.create()
@@ -250,7 +252,7 @@ class TimelineView(View):
                 Bump.objects.create(user=user,relation=relation)
                 return HttpResponseRedirect('')
 
-            if request.POST['post_identifier'] == 'report':
+            if postIdentifier == 'report':
                 good = self.get_good_or_404(request)
                 if user == good.user:
                     return HttpResponse(status=403)

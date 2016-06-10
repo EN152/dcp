@@ -1,6 +1,6 @@
 from dcp.forms import CatastropheChoice
 from dcp.customclasses import  Helpers
-from dcp.models import Catastrophe
+from dcp.models import Catastrophe,Profile
 
 def catForm(request):
     """
@@ -8,11 +8,29 @@ def catForm(request):
     :param request:
     :return:
     """
-    currentCatId = request.session.get(Helpers.sessionStringCatastrophe)
-    currentCat = Helpers.get_object_or_none(Catastrophe,id=currentCatId)
-    if currentCat!=None:
-        return {
-            'catChoiceForm':CatastropheChoice(initial={'catastrophe':currentCat.pk})
-        }
-    else:
-        return {'catChoiceForm':CatastropheChoice()}
+    if request.method == 'GET':
+        print("###")
+        print(request.user)
+        print("##")
+        currentProfile= Profile.get_profile_or_create(request.user)
+        currentCat = currentProfile.currentCatastrophe
+        if currentCat!=None:
+            return {
+                'catChoiceForm':CatastropheChoice(initial={'catastrophe':currentCat.pk})
+            }
+        else:
+            return {'catChoiceForm':CatastropheChoice()}
+    elif request.method == 'POST':
+        newCatId = request.POST.get('catastrophe')
+        p = Profile.get_profile_or_create(request.user)
+        result = request.user.profile.setCatastropheById(newCatId)
+        print("### Katastrophe ###")
+        print(request.user.profile.currentCatastrophe)
+        print("##")
+
+        if result == True: # Valid Katastrophen ID
+            return {
+                'catChoiceForm': CatastropheChoice(initial={'catastrophe': request.user.profile.currentCatastrophe.pk})
+            }
+        else: # Komische id, mache nichts
+            return {'catChoiceForm': CatastropheChoice()}
