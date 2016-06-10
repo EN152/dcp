@@ -13,9 +13,10 @@ class Offer_Form(ModelForm):
 		fields = ['title','description']
 
 class UserForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ['email', 'password']
+	scndpwd = forms.CharField(max_length=200)
+	class Meta:
+		model = User
+		fields = ['email', 'password', 'scndpwd']
 
 class sendMessage(forms.ModelForm):
     Text = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control input-sm','placeholder': 'Bitte Nachricht eingeben'}))

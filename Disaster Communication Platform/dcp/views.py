@@ -21,6 +21,7 @@ from .models import Catastrophe
 from .forms import sendMessage # in Benutzung?
 from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
+from django.contrib import messages
 from dcp.customclasses.categorys import *
 import dcp.customclasses.Helpers
 import numbers
@@ -75,7 +76,7 @@ class Login(View):
 
 class MyProfile(View):
     template = 'dcp/content/spezial/profil.html'
-    
+           
     def get(self, request):
         return getPageAuthenticated(request, self.template)
         
@@ -93,15 +94,20 @@ class EditProfile(View):
             form = UserForm(request.POST)
             if form.is_valid():
                 user = User.objects.get(username=request.user.username)
-                email = request.POST.get('email')
-                password = request.POST.get('password')
+                email = request.POST.get("email")
+                password = request.POST.get("password")
+                scndpwd = request.POST.get("scndpwd")
                 if email != None: # Der Nutzer will die Email ändern
                     user.email = email
                     user.save()
-                if password != None:
-                    User.set_password(request.user,password)
+                if password != None and password != scndpwd:
+                    messages.add_message(request, messages.INFO,'Passwörter nicht identisch')
+                    return render(request, self.template, {'form': form})
+                else:
+                    user.set_password(password)
                     user.save()
                     return HttpResponseRedirect("/profil/")
+        return HttpResponseRedirect("/profil/")
 
 
 class Logout(View):
