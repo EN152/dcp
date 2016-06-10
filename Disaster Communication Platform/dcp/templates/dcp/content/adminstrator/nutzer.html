@@ -17,7 +17,9 @@
                                 <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
+                                            <th>Username</th>
+                                            <th>Vorname</th>
+                                            <th>Nachname</th>
                                             <th>Email Adresse</th>
                                             <th>Editieren</th>
                                             <th>Löschen</th>
@@ -28,9 +30,11 @@
                                     {% for u in users %}
                                         <tr class="gradeA">
                                             <td>{{ u.username }}</td>
+                                            <td>{{ u.first_name }}</td>
+                                            <td>{{ u.last_name }}</td>
                                             <td>{{ u.email }}</td>
-                                            <td>Editieren</td> <!-- Todo: Editier Formular ausführen -->
-                                            <td>Löschen</td>  <!-- Todo: Löschen Formular ausführen --->
+                                            <td><a href="{% url "dcp:AdminEditUserProfileView" pk=u.id %}"><button type="button" class="btn btn-warning">Bearbeiten</button></a></td> <!-- Todo: Editier Formular ausführen -->
+                                            <td><a href="{% url "dcp:DeleteUserView" pk=u.id %}"><button type="button" class="btn btn-danger">Löschen</button></a></td>  <!-- Todo: Löschen Formular ausführen --->
                                         </tr>
                                     {% endfor %}
                                     </tbody>

@@ -1,26 +1,23 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import View
+from django.views.generic import UpdateView
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic.base import ContextMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DeleteView
 from django.http import HttpResponse, HttpResponseRedirect
-from django.http import HttpResponse, HttpResponseRedirect, Http404
 from collections import defaultdict
 from django.utils.http import urlencode
 from braces import views
 from dcp.models import *
 from django.template import loader
 from dcp.forms import *
-from django.template.context_processors import request
 from .forms import UserForm
 from .models import Message
 from .models import Catastrophe
 from .forms import sendMessage # in Benutzung?
 from django.core.urlresolvers import reverse,reverse_lazy
-from django.db import IntegrityError
 from dcp.customclasses.categorys import *
-from dcp.customclasses import  Helpers
 from django.http import HttpResponseForbidden
 
 
@@ -79,27 +76,31 @@ class MyProfile(View):
         
 class EditProfile(View):
     template = 'dcp/content/spezial/profilBearbeiten.html'
-    
     def get(self, request):
         user = User.objects.get(username=request.user.username)
-        form = UserForm(initial={'email' : user.email})
+        form = UserForm(initial={'email' : user.email,'first_name': user.first_name,'last_name':user.last_name,'password':''})
         return getPageAuthenticated(request, self.template, {'form': form})
-
-    # Bugfixing nötig!
     def post(self,request):
         if request.method == "POST":
             form = UserForm(request.POST)
             if form.is_valid():
                 user = User.objects.get(username=request.user.username)
-                email = request.POST.get('email')
+                email = form.cleaned_data['email']
                 password = request.POST.get('password')
+                first_name = form.cleaned_data['first_name']
+                last_name = form.cleaned_data['last_name']
                 if email != None: # Der Nutzer will die Email ändern
                     user.email = email
-                    user.save()
                 if password != None:
                     User.set_password(request.user,password)
-                    user.save()
-                    return HttpResponseRedirect("/profil/")
+                if first_name is not None:
+                    user.first_name = first_name
+                if last_name is not None:
+                    user.last_name = last_name
+                user.save()
+                return HttpResponseRedirect("/profil/")
+            else:
+                return getPageAuthenticated(request, self.template, {'form': form})
 
 
 class Logout(View):
@@ -411,6 +412,11 @@ class CatastropheOverview(views.SuperuserRequiredMixin,View):
         catastropheList = Catastrophe.objects.all()
         return render(request,self.template,context={'catastrophes':catastropheList})
 
+class DeleteCatastropheView(views.SuperuserRequiredMixin,DeleteView):
+    model = Catastrophe
+    template_name =  'dcp/content/adminstrator/deleteCatastrophe.html'
+    def get_success_url(self):
+        return reverse_lazy('dcp:CatastropheOverview')
 class CreateOrEditCatastrophe(views.SuperuserRequiredMixin,View):
     template = 'dcp/content/adminstrator/createOrEditCatastrophe.html'
     nextUrl = reverse_lazy('dcp:CatastropheOverview')
@@ -454,5 +460,15 @@ class CreateOrEditCatastrophe(views.SuperuserRequiredMixin,View):
                     return HttpResponseRedirect(self.nextUrl)
         else: # Falls Form nicht valid
             return render(request, self.template, context={'form': form})
+class AdminEditUserProfileView(views.SuperuserRequiredMixin,UpdateView):
+    fields = ['first_name', 'last_name', 'email']
+    template_name = 'dcp/content/spezial/profilBearbeiten.html'
+    model = User
+    def get_success_url(self):
+        return reverse('dcp:UserAdminOverview')
 
-
+class DeleteUserView(views.SuperuserRequiredMixin,DeleteView):
+    model = User
+    template_name =  'dcp/content/adminstrator/deleteUser.html'
+    def get_success_url(self):
+        return reverse_lazy('dcp:UserAdminOverview')

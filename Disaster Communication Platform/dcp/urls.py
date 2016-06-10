@@ -31,8 +31,12 @@ urlpatterns = [
     url(r'^profil/netzwerke/$',ChatOverview.as_view(),name='ChatOverview'),
     # AdminPanel
     url(r'^administator/useroverview/$',UserAdminOverview.as_view(),name='UserAdminOverview'),
+    url(r'^adminstrator/edituser/(?P<pk>\d+)/$', AdminEditUserProfileView.as_view(),name='AdminEditUserProfileView'),
+    url(r'administrator/deleteuser/(?P<pk>\d+)/$',DeleteUserView.as_view(),name='DeleteUserView'),
     url(r'^administrator/createcat/$',CreateOrEditCatastrophe.as_view(),name='CreateOrEditCatastrophe'),
     url(r'^administrator/catoverview/$',CatastropheOverview.as_view(),name='CatastropheOverview'),
+    url(r'^administrator/catdelete/(?P<pk>\d+)/$',DeleteCatastropheView.as_view(),name='DeleteCatastropheView'),
+
 #    # Bieten
 #    url(r'^bieten/$', views.bieten),
 #    url(r'^bieten/materielles/$', views.bieten_materielles),

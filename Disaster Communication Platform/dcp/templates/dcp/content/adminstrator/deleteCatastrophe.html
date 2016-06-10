@@ -1,0 +1,14 @@
+{% extends "dcp/design/base.html" %}
+{% block title %} Löschen von {{ catastrophe.Title }} {% endblock title %}
+{% block content %}
+
+<p>Sind Sie sicher, dass sie {{ catastrophe.Title }} löschen wollen?</p>
+
+<form action="{% url "dcp:DeleteCatastropheView" pk=catastrophe.id %}" method="POST">
+  {% csrf_token %}
+
+  <input type="submit" value="Ja, löschen." />
+  <a href="{% url "dcp:CatastropheOverview" %}">Nein.</a>
+</form>
+
+{% endblock content %}

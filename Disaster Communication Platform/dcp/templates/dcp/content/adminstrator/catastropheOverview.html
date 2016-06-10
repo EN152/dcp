@@ -34,6 +34,7 @@
                                             <td>{{ c.Location }}</td>
                                             <td>{{ c.PubDate }}</td>
                                             <td><a href="{% url 'dcp:CreateOrEditCatastrophe' %}?catid={{ c.id }}"><button type="button" class="btn btn-warning">Bearbeiten</button></a></td>
+                                            <td><a href="{% url "dcp:DeleteCatastropheView" pk=c.id %}"><button type="button" class="btn btn-danger">Löschen</button></a></td>
 
                                         </tr>
                                     {% endfor %}
