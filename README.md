@@ -2,12 +2,14 @@
 [![Build Status](https://travis-ci.org/EN152/dcp.svg?branch=master)](https://travis-ci.org/EN152/dcp)
 # Disaster Communication Platform
 
-## Installation
+## Installation (bspw. unter Ubuntu)
+`sudo apt-get install python3`<br />
+`sudo apt-get install python3-pip`<br />
 `git clone https://github.com/EN152/dcp` <br />
 `pip install -r "Disaster Communication Platform/requirements.txt"`
 
 ### Serverstart
-`python manage.py runserver`<br />
+`python3 manage.py runserver`<br />
 
 ###lokale Erreichbarkeit
 [http://localhost:8000/](http://localhost:8000/)<br />
