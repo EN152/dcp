@@ -4,9 +4,9 @@
 
 ## Installation
 `git clone https://github.com/EN152/dcp` <br />
+`pip install -r "Disaster Communication Platform/requirements.txt"`
 
-### Start
-`cd dcp-container/` <br />
+### Serverstart
 `python manage.py runserver`<br />
 
 ###lokale Erreichbarkeit
