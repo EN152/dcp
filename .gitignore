@@ -1,6 +1,9 @@
 ### Linux ###
 *~
 
+### virtual environment
+py3env/
+
 # temporary files which can be created if a process still has a handle open of a deleted file
 .fuse_hidden*
 
@@ -49,5 +52,3 @@ Disaster Communication Platform/dcp/migrations/0002_auto_20160606_1834.py
 Disaster Communication Platform/dcp/migrations/0003_auto_20160606_2041.py
 Disaster Communication Platform/dcp/migrations/0004_profile.py
 Disaster Communication Platform/dcp/migrations/0005_auto_20160610_1542.py
-Disaster Communication Platform/db.sqlite3
-*.py
