@@ -21,6 +21,9 @@ from django.db import IntegrityError
 from django.contrib import messages
 from dcp.customclasses.categorys import *
 from django.http import HttpResponseForbidden
+import dcp.customclasses.Helpers
+import numbers
+from django.contrib.auth import update_session_auth_hash
 
 
 def getPageAuthenticated(request, template, params={}):
@@ -30,12 +33,20 @@ def getPageAuthenticated(request, template, params={}):
         return HttpResponseRedirect("/anmelden/")
 
 class Register(View):
+    template = 'dcp/content/spezial/anmelden.html'
     def post(self, request):
         if not request.user.is_authenticated():
             if request.method == "POST":
                 username = request.POST['username']
                 password = request.POST['password']
                 email = request.POST['email']
+                valid = bool(False)
+
+                for users in User.objects.all():
+                    if username == users.username:
+                         return render(request, self.template, {'notVaild': valid})
+
+
                 user = User.objects.create_user(username, email, password)
                 user.save()
                 return HttpResponseRedirect("/anmelden/")
