@@ -291,7 +291,7 @@ class MissedPeople(models.Model):
     eyeColor = models.CharField(max_length=50, null=False)
     hairColor = models.CharField(max_length=50, null=False)
     characteristics = models.CharField(max_length=500, null=False)
-    # picture = ???
+    picture = models.ImageField(upload_to='upload/people/', default='no-img.png')
 
     def __unicode__(self):
         return self.title

@@ -33,112 +33,11 @@
 </div>
 </div>
 
-<!--b>Eintrag "Lisa" ist statisch!</b><br>
-<div class="col-lg-4">
-	<div class="panel panel-red">
-		<div class="panel-heading">
-			<b><i class="fa fa-venus"></i> Lisa, 24 Jahre, Wedding</b>
-		</div>
-		<p>
-			<table>
-				<tr>
-					<td>
-						<ul>
-							<li>Geschlecht: <b><i class="fa fa-venus"></i></b></li>
-							<li>Alter: <b>24 Jahre</b></li>
-							<li>Name: <b>Lisa Mustermann</b></li>
-						</ul>
-					</td>
-					<td>
-						<ul>
-							<li>Größe: <b>175cm</b></li>
-							<li>Augenfarbe: <b>grün</b></li>
-							<li>Haarfarbe: <b>braun</b></li>
-						</ul>		
-					</td>
-				</tr>
-			</table>
-			<ul>
-				<li>besondere Merkmale:</li>
-				<ul>
-					<li><b>links nur ein Arm</b></li>
-					<li><b>trägt immer gelbe Schuhe</b></li>
-				</ul>
-			</ul>
-		</p>
-		
-		<div class="panel-body">
-			<p>
-				<img src="/media/upload/people/lisa24.jpg" width="auto" style="float:center;" class="img-thumbnail">
-			</p>
-			<p>
-				<b>Beschreibung: </b>Wir waren zusammen am Hauptbahnhof, doch im Gedränge haben wir uns verloren. Bitte meldet euch bei mir, falls ihr sie gesehen habt!
-			</p>
-			<center>
-				<span class="glyphicon glyphicon-user"></span> <a href="#">Elias</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor 12 Minuten</small>
-			</center>	
-
-
-			{% if user.is_active %}
-			<center>
-				<form action="" role="form" id="bump_form" method="post" style="display: inline;">
-					{% csrf_token %}
-					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
-					<input type="hidden" name="good_id" value="{{good.id}}" />
-					<button type="submit" class="btn btn-success" name="post_identifier" value="bump" style="margin-top: 10px; margin-bottom: 10px;">
-						<span class="glyphicon glyphicon-arrow-up" ></span>
-						Bump! <span class="badge">{{good.getBumps|length}}</span>
-					</button>
-				</form>
-
-				{% if good.user != user %}
-				<form action="" role="form" id="contact_form" method="post" style="display: inline;">
-					{% csrf_token %}
-					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
-					<input type="hidden" name="good_id" value="{{good.id}}" />
-					<button type="submit" class="btn btn-primary" value="contact_form" name="post_identifier" style="margin-top: 10px; margin-bottom: 10px;">
-						<span class="glyphicon glyphicon-envelope"></span>
-						Kontaktieren
-					</button>
-				</form>
-				{% endif %}
-
-				{% if user.is_superuser or good.user == user %}
-				<form action="" role="form" id="delete_form" method="post" style="display: inline;">
-					{% csrf_token %}
-					<input type="hidden" name="good_id" value="{{good.id}}" />
-					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
-					<button type="submit" class="btn btn-danger" name="post_identifier" value="delete" style="margin-top: 10px; margin-bottom: 10px;">
-						<span class="glyphicon glyphicon-trash"></span> 
-						Löschen
-					</button>
-				</form>
-
-				{% else %}
-				<form action="" role="form" id="report_form" method="post">
-					{% csrf_token %}
-					<input type="hidden" name="good_id" value="{{good.id}}" />
-					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
-					<button class="btn btn-danger" type="submit" name="post_identifier" value="report">
-						<span class="glyphicon glyphicon-ban-circle"></span> 
-						Melden <span class="badge">{{good.getReports|length}}</span>
-					</button>
-				</form>
-				{% endif %}
-			</center>
-			{% endif %}
-
-		</div>
-	</div>
-</div -->
-
-
-<!-- ++++++++++++++++ dynamische Personen ++++++++++++++++ -->
 
 {% if missed_people %}
 {% for person in missed_people %}
-<div class="col-lg-4">
-	<div class="panel panel-{% if person.gender == 'w' %}red{% else %}primary{% endif %}">
+<div class="col-xs-4">
+	<div class="panel panel-{% if person.gender == 'w' %}red{% else %}primary{% endif %}" style="vertical-align:bottom;">
 		<div class="panel-heading">
 			<b>{% if person.gender == 'w' %}<i class="fa fa-venus"></i>{% else %}<i class="fa fa-mars"></i>{% endif %} {{ person.title }}</b>
 		</div>
@@ -161,7 +60,7 @@
 					</td>
 				</tr>
 			</table>
-	
+			</p>
 			{% if characteristicsToUser %}
 			<p>
 			<ul>
@@ -180,7 +79,13 @@
 
 		<div class="panel-body">
 			<p>
-				<img src="/media/upload/people/daniel28.jpg" width="auto" style="float:center;" class="img-thumbnail">
+				{% if person.picture %}
+				<img src="{{ person.picture.url }}" width="auto" style="float:center;" class="img-thumbnail">
+				{% else %}
+				<!--center>
+				<img style="float:center;" class="img-thumbnail" src="/media/no-img.png">
+				</center-->
+				{% endif %}
 			</p>
 			<p>
 				<b>Beschreibung: </b>{{ person.description }}
@@ -244,6 +149,6 @@
 </div>
 {% endfor %}
 {% endif %}
-
+</div>
 
 {% endblock content %}

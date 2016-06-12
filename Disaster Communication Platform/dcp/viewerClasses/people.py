@@ -31,6 +31,7 @@ class Suchen_Personen(View):
 					eyeColor=request.POST['eyeColor'], 
 					hairColor=request.POST['hairColor'], 
 					characteristics=request.POST['characteristics'],
+					picture=request.POST['picture'],
 					user=request.user)
 					# catastrophe=Catastrophe.objects.get(id=1) # TODO: replace with real catastrophe id!
 				missed_person.save()

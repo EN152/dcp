@@ -64,6 +64,7 @@ class MissedPeopleForm(forms.ModelForm):
     eyeColor = forms.CharField(required=True,label='Augenfarbe',widget=forms.TextInput(attrs={'placeholder': 'grün'}))
     hairColor = forms.CharField(required=True,label='Haarfarbe',widget=forms.TextInput(attrs={'placeholder': 'braun'}))
     characteristics = forms.CharField(required=True,label='Besondere Merkmale (mehrere durch Semikolon trennen!)',widget=forms.TextInput(attrs={'placeholder': 'trägt immer gelbe Schuhe; hat links nur einen Arm'}))
+    picture = forms.ImageField(required=False, label='Aktuelles Foto (optional)')
     class Meta:
         model = MissedPeople
-        fields = ['title', 'description', 'gender', 'age', 'name',  'size', 'eyeColor', 'hairColor', 'characteristics']
+        fields = ['title', 'description', 'gender', 'age', 'name',  'size', 'eyeColor', 'hairColor', 'characteristics', 'picture']
