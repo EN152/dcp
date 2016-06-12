@@ -138,7 +138,6 @@ class Report(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
 
 class Goods(models.Model):
-<<<<<<< HEAD
 	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
 	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
 	title = models.CharField(max_length=100, null=False)
@@ -248,7 +247,7 @@ class Search_Immaterial(Immaterial_Goods):
 
     def getGoodType(self):
         return 'Search_immaterial'
-        
+
 class Offer_Immaterial(Immaterial_Goods):
     timeline_badge_color = models.CharField(max_length=100, null=False, default='red')
     timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-transfer')
