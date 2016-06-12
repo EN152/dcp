@@ -24,6 +24,7 @@ from django.db import IntegrityError
 from dcp.customclasses.categorys import *
 import dcp.customclasses.Helpers
 import numbers
+from django.contrib.auth import update_session_auth_hash
 
 
 def getPageAuthenticated(request, template, params={}):
@@ -99,9 +100,10 @@ class EditProfile(View):
                     user.email = email
                     user.save()
                 if password != None:
-                    User.set_password(request.user,password)
+                    user.set_password(password)
                     user.save()
-                    return HttpResponseRedirect("/profil/")
+                    update_session_auth_hash(request, request.user)
+            return HttpResponseRedirect("/profil/")
 
 
 class Logout(View):
