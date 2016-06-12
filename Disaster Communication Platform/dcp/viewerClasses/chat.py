@@ -44,7 +44,8 @@ class Chat(View):
         """
         messages = Message.objects.filter(Conversation=self.conversation)
         form = self.form_class()
-        return render(request,self.template,context={'message_list':messages,'otherUser':self.otherUser,'currentUser':self.currentUser,'form':form})
+        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template,context={'message_list':messages,'otherUser':self.otherUser,'currentUser':self.currentUser,'form':form})
+    
     def post(self,request):
         form = self.form_class(request.POST)
         if form.is_valid():

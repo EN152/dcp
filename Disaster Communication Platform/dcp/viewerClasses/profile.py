@@ -5,14 +5,14 @@ class MyProfile(View):
     template = 'dcp/content/spezial/profil.html'
            
     def get(self, request):
-        return getPageAuthenticated(request, self.template)
+        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template)
         
 class EditProfile(View):
     template = 'dcp/content/spezial/profilBearbeiten.html'
     def get(self, request):
         user = User.objects.get(username=request.user.username)
         form = UserForm(initial={'email' : user.email,'first_name': user.first_name,'last_name':user.last_name,'password':''})
-        return getPageAuthenticated(request, self.template, {'form': form})
+        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template, {'form': form})
     def post(self,request):
         if request.method == "POST":
             form = UserForm(request.POST)
