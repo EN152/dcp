@@ -1,0 +1,14 @@
+{% extends "dcp/design/base.html" %}
+{% block title %} Löschen von {{ user.username }} {% endblock title %}
+{% block content %}
+
+<p>Sind Sie sicher, dass Sie den Benutzer {{ user.username }} löschen wollen?</p>
+
+<form action="{% url "dcp:DeleteUserView" pk=user.id %}" method="POST">
+  {% csrf_token %}
+
+  <input type="submit" value="Ja, löschen." />
+  <a href="{% url "dcp:UserAdminOverview" %}">Nein.</a>
+</form>
+
+{% endblock content %}

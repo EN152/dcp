@@ -1,0 +1,13 @@
+{% extends "dcp/design/base.html" %}
+{% block title %} Katastrophe erstellen {% endblock %}
+{% block content %}
+    <div class="row">
+          <form role="form" action="#" method="post">
+              <div class="form-group">
+              {% csrf_token %}
+              {{  form.as_p }}
+              <input type="submit" value="Submit"/>
+                  </div>
+              </form>
+    </div>
+{% endblock %}

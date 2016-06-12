@@ -3,12 +3,28 @@
 {% block title %} Profil bearbeiten {% endblock %}
 
 {% block content %}
+{% load bootstrap3 %}
 
-<form action="#" method="POST">
-	{% csrf_token %}
-	{{ form.as_p }}
-	<input type="submit" class="btn btn-success btn-lg" value="Profil aktualiseren">
-</form>
 
+<div class="panel panel-default">
+
+<div class="panel-body">
+	 <div class="col-sm-6">
+
+		<form action="#" method="POST">
+		{% csrf_token %}	
+		{% bootstrap_form form %}
+	
+		{% for message in messages %}
+    	<div class="alert alert-{{ message.tags }}">{{ message }}</div>
+		{% endfor %}
+	
+		{% buttons %}
+		{% bootstrap_button "Profil aktualisieren" button_type="submit" icon="upload" button_class="btn btn-success  btn-lg" name="testbutton" value="testbutton" %}
+   		{% endbuttons %}
+   	
+		</form>
+	</div>
+</div>
 
 {% endblock content %}
