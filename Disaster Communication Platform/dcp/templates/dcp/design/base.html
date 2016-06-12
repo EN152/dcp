@@ -42,39 +42,32 @@
       <!-- /.navbar-header -->
       <ul class="nav navbar-top-links navbar-right">
         <div class="navbar-form navbar-right">
-          <form role="form" method="POST">
-            <div class="form-group">
-              {% csrf_token %}
-              {{ catChoiceForm }}
-            </div>
-          </form>
-          <form role="search" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-             <input type="text" name="search" class="form-control" placeholder="Was brauchst du?">
-           </div>
-           <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Suchen</button>
-         </form>
-       </div>
-       {{ catastrophe }}
-       <!-- /.dropdown -->
-       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-user">
-          <li><a href="/profil/"><i class="fa fa-user fa-fw"></i> Dein Profil</a>
-          </li>
+         <form role="search" method="GET" action="{% url "dcp:WordSearch" %}">
+          <div class="form-group">
+           <input type="text" name="searchText" class="form-control" placeholder="Was brauchst du?">
+         </div>
+         <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Suchen</button>
+       </form>
+     </div>
 
-          <li class="divider"></li>
-          <li><a href="/abmelden/"><i class="fa fa-sign-out fa-fw"></i> Abmelden</a>
-          </li>
-        </ul>
-        <!-- /.dropdown-user -->
-      </li>
-      <!-- /.dropdown -->
-    </ul>
-    <!-- /.navbar-top-links -->
+     <!-- /.dropdown -->
+     <li class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+      </a>
+      <ul class="dropdown-menu dropdown-user">
+        <li><a href="/profil/"><i class="fa fa-user fa-fw"></i> Dein Profil</a>
+        </li>
+  
+        <li class="divider"></li>
+        <li><a href="/abmelden/"><i class="fa fa-sign-out fa-fw"></i> Abmelden</a>
+        </li>
+      </ul>
+      <!-- /.dropdown-user -->
+    </li>
+    <!-- /.dropdown -->
+  </ul>
+  <!-- /.navbar-top-links -->
 
     <div class="navbar-default sidebar" role="navigation">
       <div class="sidebar-nav navbar-collapse">

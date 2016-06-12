@@ -1,4 +1,3 @@
-
 # imports:
 from dcp.importUrls import *
 
@@ -13,3 +12,4 @@ from dcp.viewerClasses.admin import *
 from dcp.viewerClasses.index import *
 from dcp.viewerClasses.search import *
 from dcp.viewerClasses.goods import *
+from dcp.viewerClasses.wordsearch import *
