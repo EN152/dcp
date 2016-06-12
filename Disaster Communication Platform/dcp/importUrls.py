@@ -15,7 +15,7 @@ from dcp.forms import *
 from .forms import UserForm
 from .models import Message
 from .models import Catastrophe
-from .forms import sendMessage # in Benutzung?
+from .forms import *
 from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
 from django.contrib import messages
