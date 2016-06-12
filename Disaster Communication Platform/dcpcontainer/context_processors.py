@@ -9,6 +9,8 @@ def catForm(request):
     :return:
     """
     if request.method == 'GET':
+        if request.user.is_anonymous():
+            return {'catChoiceForm': CatastropheChoice()}
         print("###")
         print(request.user)
         print("##")
