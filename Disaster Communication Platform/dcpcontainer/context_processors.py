@@ -21,9 +21,13 @@ def catForm(request):
         else:
             return {'catChoiceForm':CatastropheChoice()}
     elif request.method == 'POST':
+        if request.user.is_anonymous():
+            return {'catChoiceForm': CatastropheChoice()}
         newCatId = request.POST.get('catastrophe')
         p = Profile.get_profile_or_create(request.user)
-        result = request.user.profile.setCatastropheById(newCatId)
+        if request.user.is_anonymous():
+            return {'catChoiceForm': CatastropheChoice()}
+        result = p.setCatastropheById(newCatId)
         print("### Katastrophe ###")
         print(request.user.profile.currentCatastrophe)
         print("##")

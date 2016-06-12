@@ -13,7 +13,9 @@ class Offer_Form(ModelForm):
 		fields = ['title','description']
 
 class UserForm(ModelForm):
-	scndpwd = forms.CharField(max_length=200)
+	email = forms.CharField(widget=forms.EmailInput)
+	password = forms.CharField(widget=forms.PasswordInput, required=False)
+	scndpwd = forms.CharField(max_length=200,widget=forms.PasswordInput, required=False,label='Passwort wiederholen')
 	class Meta:
 		model = User
 		fields = ['email', 'password', 'scndpwd']

@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mathfilters'
+    'mathfilters',
+    'bootstrap3'
 ]
 
 LOGIN_URL = '/anmelden/'
