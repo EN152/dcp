@@ -4,4 +4,4 @@ class Suchen_Personen(View):
     template = 'dcp/content/suchen/personen.html'
 
     def get(self, request):
-        return getPageAuthenticated(request, self.template)
+        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template)
