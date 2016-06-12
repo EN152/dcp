@@ -145,11 +145,11 @@
                                 {% if user.is_active %}
                                 <!-- TODO Button werden nicht richtig angezeigt -->
     								<center>
-                                        <form action="" role="form" id="bump_form" method="post">
+                                        <form action="" role="form" id="bump_form" method="post" style="display: inline;">
                                             {% csrf_token %}
                                             <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
                                             <input type="hidden" name="good_id" value="{{good.id}}" />
-    						                <button type="submit" class="btn btn-success" name="post_identifier" value="bump">
+    						                <button type="submit" class="btn btn-success" name="post_identifier" value="bump" style="margin-top: 10px; margin-bottom: 10px;">
     							            	<span class="glyphicon glyphicon-arrow-up" ></span>
     							            	Bump! <span class="badge">{{good.getBumps|length}}</span>
                                             </button>
@@ -157,11 +157,11 @@
                                               
                                         {% if good.user != user %}
 
-                                            <form action="" role="form" id="contact_form" method="post">
+                                            <form action="" role="form" id="contact_form" method="post" style="display: inline;">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
                                                 <input type="hidden" name="good_id" value="{{good.id}}" />
-						                             <button type="submit" class="btn btn-primary" value="contact_form" name="post_identifier">
+						                             <button type="submit" class="btn btn-primary" value="contact_form" name="post_identifier" style="margin-top: 10px; margin-bottom: 10px;">
 							                       	    <span class="glyphicon glyphicon-envelope"></span>
 							                       	    Kontaktieren
                                                     </button>
@@ -169,11 +169,11 @@
                                         {% endif %}
     
                                         {% if user.is_superuser or good.user == user %}
-                                            <form action="" role="form" id="delete_form" method="post"> <!-- method="delete" funktioniert nicht -->
+                                            <form action="" role="form" id="delete_form" method="post" style="display: inline;">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="good_id" value="{{good.id}}" />
                                                 <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
-                                                <button type="submit" class="btn btn-danger" name="post_identifier" value="delete">
+                                                <button type="submit" class="btn btn-danger" name="post_identifier" value="delete" style="margin-top: 10px; margin-bottom: 10px;">
     							                    <span class="glyphicon glyphicon-trash"></span> 
     							                    Löschen
                                                  </button>
