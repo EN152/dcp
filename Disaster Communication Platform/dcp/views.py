@@ -1,8 +1,7 @@
-
-# imports:
+# library imports
 from dcp.importUrls import *
 
-# classes import's
+# our own classes
 from dcp.viewerClasses.authentication import *
 from dcp.viewerClasses.profile import *
 from dcp.viewerClasses.maps import *
@@ -13,3 +12,4 @@ from dcp.viewerClasses.admin import *
 from dcp.viewerClasses.index import *
 from dcp.viewerClasses.search import *
 from dcp.viewerClasses.goods import *
+from dcp.viewerClasses.people import *
