@@ -3,10 +3,7 @@
 {% block title %} Überblick {% endblock %}
 
 {% block content %}
-<p><b>Achtung! </b>Dies sind alles nur Beispieleinträge!</p>
 
-
-<!-- /.row -->
             <div class="row">
                 <div class="col-lg-3 col-md-6">
                     <div class="panel panel-primary">
@@ -16,21 +13,20 @@
                                     <span class="glyphicon glyphicon-search" style="font-size: 5em;"></span>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">12</div>
-                                    <div>Neue Gesuche!</div>
+                                    <div class="huge">{{ countSearch }}</div>
+                                  
                                 </div>
                             </div>
                         </div>
                         <a href="/suchen/">
                             <div class="panel-footer">
-                                <span class="pull-left">Suchen</span>
+                                <span class="pull-left">Gesuche</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
                         </a>
                     </div>
                 </div>
-
 
 
                 <div class="col-lg-3 col-md-6">
@@ -41,23 +37,20 @@
                                      <span class="glyphicon glyphicon-transfer" style="font-size:5em;"></span>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">13</div>
-                                    <div>Neue Angebote!</div>
+                                    <div class="huge">{{ countOffer }}</div>
+                                 
                                 </div>
                             </div>
                         </div>
                         <a href="/bieten/">
                             <div class="panel-footer">
-                                <span class="pull-left">Bieten</span>
+                                <span class="pull-left">Gebote</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
                         </a>
                     </div>
                 </div>
-
-
-
 
                 <div class="col-lg-3 col-md-6">
                     <div class="panel panel-yellow">
@@ -67,41 +60,36 @@
                                    <span class="glyphicon glyphicon-info-sign" style="font-size: 5em;"></span>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">124</div>
-                                    <div>Neue Informationen!</div>
+                                    <div class="huge">{{ countInformation }}</div>
+                                   
                                 </div>
                             </div>
                         </div>
                         <a href="/wissen/">
                             <div class="panel-footer">
-                                <span class="pull-left">Wissen</span>
+                                <span class="pull-left">Informationen</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
                         </a>
                     </div>
                 </div>
-
-
-
-
 
                 <div class="col-lg-3 col-md-6">
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <span class="glyphicon glyphicon-map-marker" style="font-size: 5em;"></span>
+                                    <span class="glyphicon glyphicon-user" style="font-size: 5em;"></span>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">12</div>
-                                    <div>Neue Karteneinträge!</div>
+                                    <div class="huge">{{ countPeople }}</div>
                                 </div>
                             </div>
                         </div>
                         <a href="/orte/">
                             <div class="panel-footer">
-                                <span class="pull-left">Orte</span>
+                                <span class="pull-left">Vermisste Personen</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
@@ -110,89 +98,116 @@
                 </div>
                 </div>
 
-                <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-
-                <div class="panel panel-default">
+             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-clock-o fa-fw"></i> Deine Aktivitäten
                 </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <ul class="timeline">
-                        <li>
-                            <div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span>
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4 class="timeline-title">Suche sauberes Trinkwasser</h4>
-                                    <p><small class="text-muted"><i class="fa fa-clock-o"></i> vor 1 Minute </small>
+
+            <div class="panel-body">
+                  <ul class="timeline">
+
+               {% if goods_list %}
+                {% for good in goods_list %}
+    
+                <!-- Beginn eines Elements -->
+                {% load mathfilters %}
+                <li {% if forloop.counter|mod:2 == 0 %}class="timeline-inverted"{% endif %}>
+                    <div class="timeline-badge {{good.timeline_badge_color}}"> <span class="glyphicon {{good.timeline_glyphicon}}"></span></div>
+    
+                    <div class="timeline-panel">
+    
+                        {% if good.image.url != None %}
+                            <img src="{{ good.image.url }}" width="150" style="float:right;" class="img-thumbnail">
+                        {% endif %}
+    
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title"><b>{{ good.title }}</b></h4>
+                            <p><span class="glyphicon glyphicon-user"></span> <a href="#">{{ good.user }}</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor {{ good.created_date|timesince }}</small></p>
+                        </div>
+    
+                        <div class="timeline-body">
+                            <p>{{ good.description }}</p>
+                        </div>
+    
+                        <div class="col-lg-12" margin="20px">
+                            <div class="panel panel-primary">
+                                <div class="panel-body">
+                                    <p><div><!--Abstand--></div>
+                                        <span class="{{good.getCategoryGlyphiconAsString}}"></span> {{good.getCategoryNameAsString}}<br>
+                                        <span class="glyphicon glyphicon-map-marker"></span> Straße des 17. Juni 135, Berlin
                                     </p>
-                                </div>
-                                <div class="timeline-body">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
-                                </div>
+                                </div>  
+    
+                                <!-- Karte hier einfügen -->
+                                <img src="http://topofusion.com/images/tucson-osm.jpg" width="100%" height="120px">
+    
+                                {% if user.is_active %}
+                                <!-- TODO Button werden nicht richtig angezeigt -->
+                                    <center>
+                                        <form action="" role="form" id="bump_form" method="post" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+                                            <input type="hidden" name="good_id" value="{{good.id}}" />
+                                            <button type="submit" class="btn btn-success" name="post_identifier" value="bump" style="margin-top: 10px; margin-bottom: 10px;">
+                                                <span class="glyphicon glyphicon-arrow-up" ></span>
+                                                Bump! <span class="badge">{{good.getBumps|length}}</span>
+                                            </button>
+                                        </form>
+                                              
+                                        {% if good.user != user %}
+
+                                            <form action="" role="form" id="contact_form" method="post" style="display: inline;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+                                                <input type="hidden" name="good_id" value="{{good.id}}" />
+                                                     <button type="submit" class="btn btn-primary" value="contact_form" name="post_identifier" style="margin-top: 10px; margin-bottom: 10px;">
+                                                        <span class="glyphicon glyphicon-envelope"></span>
+                                                        Kontaktieren
+                                                    </button>
+                                            </form>
+                                        {% endif %}
+    
+                                        {% if user.is_superuser or good.user == user %}
+                                            <form action="" role="form" id="delete_form" method="post" style="display: inline;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="good_id" value="{{good.id}}" />
+                                                <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+                                                <button type="submit" class="btn btn-danger" name="post_identifier" value="delete" style="margin-top: 10px; margin-bottom: 10px;">
+                                                    <span class="glyphicon glyphicon-trash"></span> 
+                                                    Löschen
+                                                 </button>
+                                            </form>
+    
+                                        {% else %}
+                                            <form action="" role="form" id="report_form" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="good_id" value="{{good.id}}" />
+                                                <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+                                                <button class="btn btn-danger" type="submit" name="post_identifier" value="report">
+                                                   <span class="glyphicon glyphicon-ban-circle"></span> 
+                                                   Melden <span class="badge">{{good.getReports|length}}</span>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </center>
+                                {% endif %}
                             </div>
-                        </li>
-
-                        
-                        <li class="timeline-inverted">
-                        <div class="timeline-badge red"> <span class="glyphicon glyphicon-transfer"></span>
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4 class="timeline-title">Biete Stromaggregat</h4>
-                                     <p><small class="text-muted"><i class="fa fa-clock-o"></i> vor 12 Stunden</small>
-                                    </p>
-                                </div>
-                                <div class="timeline-body">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates est quaerat asperiores sapiente, eligendi, nihil. Itaque quos, alias sapiente rerum quas odit! Aperiam officiis quidem delectus libero, omnis ut debitis!</p>
-                                </div>
-                            </div>
-                        </li>
 
 
-                            <li>
-                            <div class="timeline-badge yellow"> <span class="glyphicon glyphicon-info-sign"></span>
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4 class="timeline-title">Informationen zur Kinderbetreuung</h4>
-                                    <p><small class="text-muted"><i class="fa fa-clock-o"></i> vor 3 Tagen</small>
-                                    </p>
-                                </div>
-                                <div class="timeline-body">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
-                                </div>
-                            </div>
-                        </li>
-
-                        
-                        <li class="timeline-inverted">
-                        <div class="timeline-badge green"> <span class="glyphicon glyphicon-map-marker"></span>
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4 class="timeline-title">Freies WLAN in Kreuzberg</h4>
-                                     <p><small class="text-muted"><i class="fa fa-clock-o"></i> vor 12 Tagen</small>
-                                    </p>
-                                </div>
-                                <div class="timeline-body">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates est quaerat asperiores sapiente, eligendi, nihil. Itaque quos, alias sapiente rerum quas odit! Aperiam officiis quidem delectus libero, omnis ut debitis!</p>
-                                </div>
-                            </div>
-                        </li>
-
-                    </ul>
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
+                         </div>
+                       </div>
+                   </li>
+                <!-- Ende eines Elements -->
+            
+                {% endfor %}
+                {% endif %}
+    
 
 
 
 
-            </div>
+           
 
             {% endblock content %}
             <!-- /.row -->
