@@ -16,8 +16,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="dcp.svg"
-   inkscape:export-filename="/home/elias/tubcloud/2016 Sommersemester/Programmierpraktikum: Soziale Netzwerke/Disaster Communication Platform/dcp.git/Disaster Communication Platform/dcp/static/media/dcp.png"
+   sodipodi:docname="ppsn.svg"
+   inkscape:export-filename="/home/elias/Schreibtisch/ppsn-gitlab"
    inkscape:export-xdpi="241"
    inkscape:export-ydpi="241">
   <defs
@@ -34,21 +34,21 @@
      id="base"
      pagecolor="#ffffff"
      bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     borderopacity="0.0"
+     inkscape:pageopacity="1.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="-117.00892"
-     inkscape:cy="90.240235"
+     inkscape:zoom="1.4"
+     inkscape:cx="55.205731"
+     inkscape:cy="153.07441"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="cm"
-     inkscape:window-width="875"
-     inkscape:window-height="366"
+     inkscape:window-width="1551"
+     inkscape:window-height="876"
      inkscape:window-x="49"
      inkscape:window-y="24"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -80,29 +80,29 @@
        x="-125.09028"
        y="756.27472" />
     <rect
-       style="fill:#ffffff;stroke:#000000;stroke-width:0.75791204;stroke-opacity:0"
+       style="fill:#ffffff;stroke:#000000;stroke-width:0.74398178;stroke-opacity:0"
        id="rect3525-6"
-       width="334.42929"
-       height="110.43536"
-       x="57.430462"
-       y="875.67963" />
+       width="334.44321"
+       height="106.40868"
+       x="57.423496"
+       y="877.71326" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:102.36843109px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="66.247734"
-       y="976.01074"
+       style="font-style:normal;font-weight:normal;font-size:98.4462738px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0"
+       x="89.447769"
+       y="955.11285"
        id="text3542"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3544"
-         x="66.247734"
-         y="976.01074"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:129.98007202px;font-family:ubuntu;-inkscape-font-specification:ubuntu;fill:#000000;fill-opacity:1">DCP</tspan></text>
+         x="89.447769"
+         y="955.11285"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:75px;font-family:ubuntu;-inkscape-font-specification:ubuntu;fill:#000000;fill-opacity:1">PP:SN</tspan></text>
     <g
        id="g4372"
        transform="matrix(0.81154145,0,0,0.81154145,-562.55769,-145.49814)">
       <path
-         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.81154144;stroke-opacity:0"
+         style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.81154144;stroke-opacity:0"
          d="M -47.808594 -48.621094 L -47.808594 396.56836 L 397.38086 396.56836 L 397.38086 -48.621094 L -47.808594 -48.621094 z M 180.00195 5.09375 A 170.61819 170.61819 0 0 1 350.62109 175.71289 A 170.61819 170.61819 0 0 1 180.00195 346.33008 A 170.61819 170.61819 0 0 1 9.3847656 175.71289 A 170.61819 170.61819 0 0 1 180.00195 5.09375 z "
          transform="matrix(1.232223,0,0,1.232223,693.1965,1039.4165)"
          id="rect4366" />
@@ -115,5 +115,28 @@
        preserveAspectRatio="none"
        height="86.414284"
        width="159.59285" />
-  </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4142"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(0,698.03146)"><flowRegion
+         id="flowRegion4144"><rect
+           id="rect4146"
+           width="70"
+           height="57.142857"
+           x="-239.28572"
+           y="168.61642" /></flowRegion><flowPara
+         id="flowPara4148">2016</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4150"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="translate(475,700.31717)"><flowRegion
+         id="flowRegion4152"><rect
+           id="rect4154"
+           width="158.57143"
+           height="112.14286"
+           x="-232.85715"
+           y="130.045" /></flowRegion><flowPara
+         id="flowPara4156"
+         style="fill:#ffffff">2016</flowPara></flowRoot>  </g>
 </svg>

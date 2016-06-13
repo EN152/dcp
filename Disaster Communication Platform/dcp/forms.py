@@ -35,6 +35,7 @@ class Search_Material_Form(ModelForm):
     class Meta:
         model = Search_Material
         fields = ['title', 'description', 'location_x', 'location_y', 'radius', 'catastrophe', 'category']
+
 class CatastropheForm(forms.ModelForm):
     Title = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Katastrophentext eingeben'}))
     Location = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Ort der Katastrophe eingeben'}))
@@ -52,7 +53,7 @@ class CatastropheModelChoiceField(forms.ModelChoiceField):
         return obj.Title + " in " + obj.Location
 
 class CatastropheChoice(forms.Form):
-    catastrophe = CatastropheModelChoiceField(queryset=Catastrophe.objects.all().order_by('Title'),empty_label='Bitte eine Katastrophe auswählen',widget=forms.Select(attrs={'class':'form-control','onChange':'this.form.submit()'}),label='Katastrophe')
+    catastrophe = CatastropheModelChoiceField(queryset=Catastrophe.objects.all().order_by('Title'),empty_label='Katastrophe auswählen...',widget=forms.Select(attrs={'class':'form-control','onChange':'this.form.submit()'}),label='')
 
 class MissedPeopleForm(forms.ModelForm):
     title = forms.CharField(required=True,label='Überschrift',widget=forms.TextInput(attrs={'placeholder': 'Lisa, 24 Jahre, Wedding'}))
