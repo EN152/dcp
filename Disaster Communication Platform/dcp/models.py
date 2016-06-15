@@ -21,6 +21,14 @@ class Goverment(models.Model):
 	radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10000)])
 	# ---------------------------------------------------------------------
 
+	def getInvites(self):
+		"""
+		Gibt eine Liste von den Invites zurück
+		:author: Jasper
+		:return: Eine Liste mit allen Invites
+		"""
+		return getInvites(goverment=self)
+
 	def isInArea(self, good):
 		distance = distance.calculateDistanceClass.calculate_distance(self.location_x, self.location_y, good.location_x, good.location_y)
 		if (distance <= self.radius):
@@ -32,6 +40,14 @@ class Ngo(models.Model):
 	name = models.CharField(max_length=200, null=False)
 	name_short = models.CharField(max_length=3, null=False)
 	created_date = models.DateTimeField(default=timezone.now)
+
+	def getInvites(self):
+		"""
+		Gibt eine Liste von den Invites zurück
+		:author: Jasper
+		:return: Eine Liste mit allen Invites
+		"""
+		return getInvites(ngo=self)
 
 	def getAreas(self):
 		return Ngo_Area.ojects.get(ngo=self)
@@ -84,8 +100,6 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
     ngo = models.ForeignKey(Ngo, on_delete=models.DO_NOTHING, null=True)
     goverment = models.ForeignKey(Goverment, on_delete=models.DO_NOTHING, null=True)
     is_organziation_admin = models.BooleanField(default=False, null=False)
-    #invites_ngo = models.ManyToManyField(Ngo)
-    #invites_goverment = models.ManyToManyField(Goverment)
 
     def acceptNgoInviteById(self, ngoId):
         """
@@ -101,14 +115,15 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         except ValueError: #  ngoId kein Int
             return False
         ngo = get_object_or_none(Ngo,id=ngoId)
-        if ngo is None:
+        invite = get_object_or_none(Invite_Ngo,user=self.user,organization=ngo)
+        if ngo is None or invite is None:
             return False
         else:
-            
             self.goverment = None
             self.ngo = ngo
             self.isOrganziationAdmin = False
             self.save()
+            invite.delete()
             return True
 
     def acceptGovermentInviteById(self, govermentId):
@@ -125,7 +140,8 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         except ValueError: #  ngoId kein Int
             return False
         goverment = get_object_or_none(Goverment,id=govermentId)
-        if goverment is None:
+        invite = get_object_or_none(Invite_Goverment,user=self.user,organization=goverment)
+        if goverment is None or invite is None:
             return False
         else:
             self.goverment = goverment
@@ -133,6 +149,14 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
             self.isOrganziationAdmin = False
             self.save()
             return True
+
+    def getInvites(self):
+        """
+        Gibt eine Liste von den Invites zurück
+        :author: Jasper
+        :return: Eine Liste mit allen Invites
+        """
+        return getInvites(user=self)
 
     def setCatastropheById(self,catId):
         """
@@ -198,6 +222,44 @@ def create_profile(sender, **kwargs):
         user_profile = Profile(user=user)
         user_profile.save()
 post_save.connect(create_profile, sender=User)
+
+class Invite_Ngo(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    organization = models.ForeignKey(Ngo, on_delete=models.CASCADE, null=False)
+    date_created = models.DateTimeField(default=timezone.now())
+
+    def getInviteType(self):
+        return 'Invite_Ngo'
+
+class Invite_Goverment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    organization = models.ForeignKey(Goverment, on_delete=models.CASCADE, null=False)
+    date_created = models.DateTimeField(default=timezone.now())
+
+    def getInviteType(self):
+        return 'Invite_Goverment'
+
+def getInvites(user=None, ngo=None, goverment=None):
+    """
+    Liste von den gewünschten Invites, wobei immer nur der erste Parameter ausgeführt wird
+    :author: Jasper
+    :param user: User für den die Invites zurückgebenen werden sollen
+    :param ngo: NGO für den die Invites zurückgebenen werden sollen
+    :param goverment: Goverment für den die Invites zurückgebenen werden sollen
+    :return: Liste von allen gefunden Invites
+    """
+    invites = []
+    if user != None:
+        inivtes.append(Invite_Ngo.objects.filter(user = user))
+        invites.append(Invite_Goverment.objects.filter(user = user))
+    elif ngo != None:
+        invites.append(Invite_Ngo.objects.filter(ngo = ngo))
+    elif goverment != None:
+        invites.append(Invite_Goverment.objects.filter(goverment = goverment))
+    else:
+        inivtes.append(Invite_Ngo.objects.all())
+        invites.append(Invite_Goverment.objects.all())
+    return sorted(invites, key=lambda i: i.created_date, reverse=True)
 
 class Comment_Relation(models.Model):
     class Meta:

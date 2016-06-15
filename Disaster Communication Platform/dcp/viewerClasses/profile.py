@@ -15,6 +15,40 @@ class EditProfile(View):
         return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template, {'form': form})
     def post(self,request):
         if request.method == "POST":
+            post_identifier = request.POST.get('post_identifier')
+            user = request.user
+            if post_identifier == 'accept_invite':
+                if not(user.is_authenticated() and user.is_active):
+                    return HttpResponse(status=403)
+                invite_type = request.POST.get('invite_type')
+                invite_id = request.POST.get('invite_id')
+                if invite_type is None or invite_id is None:
+                    return HttpResponse(status=404)
+                if invite_type == 'Invite_Ngo':
+                    user.profile.acceptNgoInviteById(invite_id)
+                    return self.get(request)
+                elif invite_type == 'Invite_Goverment':
+                    user.profile.acceptGovermentInviteById(invite_id)
+                    return self.get(request)
+                else:
+                    return HttpResponse(status=404)
+
+            if post_identifier == 'decline_invite':
+                if not(user.is_authenticated() and user.is_active):
+                    return HttpResponse(status=403)
+                invite_type = request.POST.get('invite_type')
+                invite_id = request.POST.get('invite_id')
+                if invite_type is None or invite_id is None:
+                    return HttpResponse(status=404)
+                if invite_type == 'Invite_Ngo':
+                    Invite_Ngo.objects.get(id=invite_id).delete()
+                    return self.get(request)
+                elif invite_type == 'Invite_Goverment':
+                    Invite_Goverment.objects.get(id=invite_id).delete()
+                    return self.get(request)
+                else:
+                    return HttpResponse(status=404)
+                    
             form = UserForm(request.POST)
             if form.is_valid():
                 user = User.objects.get(username=request.user.username)

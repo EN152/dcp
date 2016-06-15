@@ -152,17 +152,14 @@
 								<li>
 									<a href="/nachrichten/"><span class="glyphicon glyphicon-envelope"></span> Nachrichten</a>
 								</li>
-								<li>
-									<a href="/profil/netzwerke/"><span class="glyphicon glyphicon-retweet"></span> Netzwerke</a>
-								</li>
                                 {% if user.profile.ngo != None %}
                                     <li>
-                                        <a href="{% url 'dcp:NgoView' %}"><span class="glyphicon glyphicon-retweet"></span> NGO</a>
+                                        <a href="{% url 'dcp:NgoView' user.profile.ngo.id%}"><span class="glyphicon glyphicon-retweet"></span> NGO</a>
                                     </li>
                                 
                                 {% elif user.profile.goverment != None %}
                                     <li>
-                                        <a href="{% url 'dcp:GovermentView' %}"><span class="glyphicon glyphicon-retweet"></span> Goverment</a>
+                                        <a href="{% url 'dcp:GovermentView' user.profile.goverment.id%}"><span class="glyphicon glyphicon-retweet"></span> Goverment</a>
                                     </li>
                                 {% endif %}
 							</ul>
