@@ -11,6 +11,53 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 import dcp.customclasses
 
+class Goverment(models.Model):
+	name = models.CharField(max_length=200, null=False)
+	name_short = models.CharField(max_length=3, null=False)
+	created_date = models.DateTimeField(default=timezone.now)
+	# Sollte durch Polygone für die Grenzen ersetzt werden
+	location_x = models.FloatField(null=False)
+	location_y = models.FloatField(null=False)
+	radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10000)])
+	# ---------------------------------------------------------------------
+
+	def isInArea(self, good):
+		distance = distance.calculateDistanceClass.calculate_distance(self.location_x, self.location_y, good.location_x, good.location_y)
+		if (distance <= self.radius):
+			return True;
+		return False
+		
+
+class Ngo(models.Model):
+	name = models.CharField(max_length=200, null=False)
+	name_short = models.CharField(max_length=3, null=False)
+	created_date = models.DateTimeField(default=timezone.now)
+
+	def getAreas(self):
+		return Ngo_Area.ojects.get(ngo=self)
+
+	def isInArea(self, good):
+		for area in self.getAreas():
+			distance = distance.calculateDistanceClass.calculate_distance(area.location_x, area.location_y, good.location_x, good.location_y)
+			if (distance <= area.radius):
+			    return True;
+		return False
+
+class Ngo_Area(models.Model):
+	ngo = models.ForeignKey(Ngo, on_delete=models.CASCADE, null=False)
+	created_date = models.DateTimeField(default=timezone.now)
+	# Sollte durch Polygone für die Grenzen ersetzt werden
+	location_x = models.FloatField(null=False)
+	location_y = models.FloatField(null=False)
+	radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+	# ---------------------------------------------------------------------
+
+	def isInArea(self, good):
+		distance = distance.calculateDistanceClass.calculate_distance(self.location_x, self.location_y, good.location_x, good.location_y)
+		if (distance <= self.radius):
+			return True;
+		return False
+
 class Catastrophe(models.Model):
     Title = models.CharField(max_length=200)
     Location = models.CharField(max_length=100) # Soll das so? Nicht per Map Anzeigen?r
@@ -34,6 +81,59 @@ class Catastrophe(models.Model):
 class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschrieben wird:https://docs.djangoproject.com/en/1.8/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User)
     currentCatastrophe = models.ForeignKey(Catastrophe,related_name='currentCatastrophe',null=True,blank=True) # TODO: Kaskade?
+    ngo = models.ForeignKey(Ngo, on_delete=models.DO_NOTHING, null=True)
+    goverment = models.ForeignKey(Goverment, on_delete=models.DO_NOTHING, null=True)
+    is_organziation_admin = models.BooleanField(default=False, null=False)
+    #invites_ngo = models.ManyToManyField(Ngo)
+    #invites_goverment = models.ManyToManyField(Goverment)
+
+    def acceptNgoInviteById(self, ngoId):
+        """
+        Setzt eine neue Ngo
+        :author: Jasper
+        :param ngoId: Die Id der neuen Ngo
+        :return: False falls nicht erfolgreich, True falls erfolgreich
+        """
+        if ngoId is None: # Mache nichts
+            return False
+        try:
+            ngoId = int(ngoId)
+        except ValueError: #  ngoId kein Int
+            return False
+        ngo = get_object_or_none(Ngo,id=ngoId)
+        if ngo is None:
+            return False
+        else:
+            
+            self.goverment = None
+            self.ngo = ngo
+            self.isOrganziationAdmin = False
+            self.save()
+            return True
+
+    def acceptGovermentInviteById(self, govermentId):
+        """
+        Setzt ein neues Goverment
+        :author: Jasper
+        :param ngoId: Die Id des neuen Goverment
+        :return: False falls nicht erfolgreich, True falls erfolgreich
+        """
+        if govermentId is None: # Mache nichts
+            return False
+        try:
+            govermentId = int(GovermentId)
+        except ValueError: #  ngoId kein Int
+            return False
+        goverment = get_object_or_none(Goverment,id=govermentId)
+        if goverment is None:
+            return False
+        else:
+            self.goverment = goverment
+            self.ngo = None
+            self.isOrganziationAdmin = False
+            self.save()
+            return True
+
     def setCatastropheById(self,catId):
         """
         Setzt eine neue Katastrophe

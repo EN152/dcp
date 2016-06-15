@@ -1,4 +1,4 @@
-{% load staticfiles %}
+﻿{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="de">
 
@@ -150,15 +150,25 @@
 									<a href="/profil/daten/"><span class="glyphicon glyphicon-th-list"></span> Persönliche Daten</a>
 								</li>
 								<li>
-									<a href="/nachrichten/"><span class="glyphicon glyphicon-envelope"></span> Nachrichten</a></li-->
+									<a href="/nachrichten/"><span class="glyphicon glyphicon-envelope"></span> Nachrichten</a>
 								</li>
 								<li>
 									<a href="/profil/netzwerke/"><span class="glyphicon glyphicon-retweet"></span> Netzwerke</a>
 								</li>
+                                {% if user.profile.ngo != None %}
+                                    <li>
+                                        <a href="{% url 'dcp:NgoView' %}"><span class="glyphicon glyphicon-retweet"></span> NGO</a>
+                                    </li>
+                                
+                                {% elif user.profile.goverment != None %}
+                                    <li>
+                                        <a href="{% url 'dcp:GovermentView' %}"><span class="glyphicon glyphicon-retweet"></span> Goverment</a>
+                                    </li>
+                                {% endif %}
 							</ul>
 						</li>
 
-						{% if request.user.is_superuser %}
+						{% if user.is_superuser %}
 						<li>
 							<a href="/admin/"><span class="glyphicon glyphicon-cog"></span> <b> Administration</b><span class="fa arrow"></span></a>
 							<ul class="nav nav-second-level">
@@ -168,6 +178,12 @@
 								<li>
 									<a href="{% url 'dcp:UserAdminOverview' %}"><span class="glyphicon glyphicon-user"></span> Benutzer</a>
 								</li>
+                                <li>
+                                    <a href="{% url 'dcp:NgoManagerView' %}"><span class="glyphicon glyphicon-retweet"></span> NGO Manager</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'dcp:GovermentManagerView' %}"><span class="glyphicon glyphicon-retweet"></span> Goverment Manager</a>
+                                </li>
 							</ul>
 						</li>
 						{% endif %}
