@@ -36,7 +36,7 @@ class OfferImmaterialView(dcp.viewerClasses.timeline.TimelineView):
 
 
 class Bieten(LoginRequiredMixin, View):
-    templatePath = 'dcp/content/bieten/bieten.html'
+    template = 'dcp/content/bieten/bieten.html'
 
     def get(self, request):
-        form = Offer_Form
+        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template)
