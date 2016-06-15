@@ -4,9 +4,9 @@ from dcp.importUrls import *
 class Index(View):
 
 	def get(self, request):
-		countSearch = -1
-		countOffer = -1
-		countInformation = -1
+		countSearch = len(dcp.models.Search_Material.objects.all()) + len(dcp.models.Search_Immaterial.objects.all())
+		countOffer = len(dcp.models.Offer_Material.objects.all()) + len(dcp.models.Offer_Immaterial.objects.all())
+		countInformation = 0 # TODO
 		countPeople = len(MissedPeople.objects.all())
 		
 		# user = request.user und irgendwas wie .filter(user=user) fehlt noch...
