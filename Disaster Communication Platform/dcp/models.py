@@ -440,7 +440,7 @@ class Search_Immaterial(Immaterial_Goods):
     timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-search')
 
     def getGoodType(self):
-        return 'Search_immaterial'
+        return 'Search_Immaterial'
 
 class Offer_Immaterial(Immaterial_Goods):
     timeline_badge_color = models.CharField(max_length=100, null=False, default='red')
