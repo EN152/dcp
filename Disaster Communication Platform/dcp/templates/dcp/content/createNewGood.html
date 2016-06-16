@@ -21,23 +21,17 @@
 <script src="https://domoritz.github.io/leaflet-locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
 
 <style>
-
-
 	.leaflet-control-locate.active.following a {
-	
 	display:none;
-	
 	}
 	
 	.leaflet-control-locate.active a {
 	display:none;
-	
 	}
+
 	.leaflet-control-locate.leaflet-bar.leaflet-control.requesting{
 	display:none;
 	}
-
-
 </style>
 
 <!-- Script: Aufklappen des Bereiches für eine neue Erstellung-->
@@ -86,8 +80,8 @@
 				</div>
 
 				<div class="form-group">
-					<label>Standort:	<input type="button" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
-					<div id="map" style="height:400px;width:100%"></div> <!-- TODO ort über javascript finden -->
+					<label>Standort:	<input type="button" class="btn btn-success" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
+					<div id="map" style="height:400px;width:100%"></div>
 				</div>
 
 				{% if show_radius %}
