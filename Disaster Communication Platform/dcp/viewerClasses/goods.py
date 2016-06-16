@@ -24,7 +24,7 @@ class SearchMaterialView(dcp.viewerClasses.timeline.TimelineView):
             if radius is None or title is None or catastrophe is None or location_x is None or location_y is None or category is None:
                 raise Http404 
             Search_Material.objects.create(title=title, description=description, radius=radius, catastrophe=catastrophe, location_x=location_x, location_y=location_y, category=category, user=request.user)
-            return HttpResponseRedirect('')
+            return HttpResponseRedirect('/suchen/materielles/')
         return super().post(request)
 
 
@@ -48,7 +48,7 @@ class SearchImmaterialView(dcp.viewerClasses.timeline.TimelineView):
             if radius is None or title is None or catastrophe is None or location_x is None or location_y is None:
                 raise Http404
             Search_Immaterial.objects.create(title=title, description=description, radius=radius, catastrophe=catastrophe, location_x=location_x, location_y=location_y, user=request.user)
-            return HttpResponseRedirect('')
+            return HttpResponseRedirect('/suchen/immaterielles/')
         return super().post(request)
 
 
@@ -68,7 +68,7 @@ class OfferMaterialView(dcp.viewerClasses.timeline.TimelineView):
             if title is None or catastrophe is None or location_x is None or location_y is None or category is None:
                 raise Http404 
             Offer_Material.objects.create(title=title, description=description, catastrophe=catastrophe, location_x=location_x, location_y=location_y, category=category, user=request.user)
-            return HttpResponseRedirect('')
+            return HttpResponseRedirect('/bieten/materielles/')
         return super().post(request)
 
 
@@ -86,7 +86,7 @@ class OfferImmaterialView(dcp.viewerClasses.timeline.TimelineView):
             if title is None or  catastrophe is None or location_x is None or location_y is None:
                 raise Http404
             Offer_Immaterial.objects.create(title=title, description=description, catastrophe=catastrophe, location_x=location_x, location_y=location_y, user=request.user)
-            return HttpResponseRedirect('')
+            return HttpResponseRedirect('/bieten/immaterielles/')
         return super().post(request)      
 
 
