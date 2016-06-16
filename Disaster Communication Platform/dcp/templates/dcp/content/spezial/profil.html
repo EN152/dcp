@@ -26,12 +26,12 @@
       <table class="table">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Kurzname</th>
-            <th>Mitglieder</th>
-            <th>Datum</th>
-            <th>Aktionen</th>
+            <th width="5%">#</th>
+            <th width="10%">Name</th>
+            <th width="7%">Kurzname</th>
+            <th width="5%">Mitglieder</th>
+            <th width="10%">Datum</th>
+            <th width="63%">Aktionen</th>
           </tr>
         </thead>
         <tbody>
@@ -50,11 +50,11 @@
                                 <input type="hidden" name="invite_id" value="{{invite.id}}" />
                                 <input type="hidden" name="organization_id" value="{{invite.organization.id}}" />
                                 <span class="input-group-btn">
-                                    <button class="btn btn-success btn-sm" id="btn-chat" type="submit" name="post_identifier" value="accept_invite">
-                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Aktzeptieren
+                                    <button class="btn btn-success" id="btn-chat" type="submit" name="post_identifier" value="accept_invite">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Akzeptieren
                                     </button>
-                                
-                                    <button class="btn btn-danger btn-sm" id="btn-chat" type="submit" name="post_identifier" value="decline_invite">
+                               
+                                    <button class="btn btn-danger" id="btn-chat" type="submit" name="post_identifier" value="decline_invite">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ablehnen
                                     </button>
                                 </span>

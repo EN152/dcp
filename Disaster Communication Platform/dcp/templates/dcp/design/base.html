@@ -180,12 +180,15 @@
 								<li>
 									<a href="{% url 'dcp:UserAdminOverview' %}"><span class="glyphicon glyphicon-user"></span> Benutzer</a>
 								</li>
-                                <li>
-                                    <a href="{% url 'dcp:NgoManagerView' %}"><span class="glyphicon glyphicon-retweet"></span> NGO Manager</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'dcp:GovermentManagerView' %}"><span class="glyphicon glyphicon-retweet"></span> Goverment Manager</a>
-                                </li>
+                              <li>
+									<a href="{% url 'dcp:UserAdminOverview' %}"><span class="glyphicon glyphicon-user"></span> Benutzer</a>
+								</li>
+								<li>
+									<a href="{% url 'dcp:NgoManagerView' %}"><i class="fa fa-users" aria-hidden="true"></i> NGO</a>
+								</li>
+								<li>
+									<a href="{% url 'dcp:GovermentManagerView' %}"><i class="fa fa-globe" aria-hidden="true"></i> Staat</a>
+								</li>
 							</ul>
 						</li>
 						{% endif %}
