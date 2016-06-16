@@ -1,8 +1,6 @@
 # imports
 from dcp.importUrls import *
 
-
-
 class SearchMaterialView(dcp.viewerClasses.timeline.TimelineView):
     def get(self, request):
         return super().getCreateNew(request, 'Search_Material', True, 'glyphicon-search', 'Suchen: Materielles')
