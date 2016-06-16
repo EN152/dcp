@@ -1,6 +1,6 @@
 {% extends "dcp/design/base.html" %}
 
-{% block title %} {{ngo.name}} {% endblock title %}
+{% block title %} Überblick: {{ ngo.name }} {% endblock title %}
 
 {% block content %}
 
@@ -10,25 +10,26 @@
             <div class="col-sm-12">
                 <h2>{{ngo.name}}</h2>
                 <p>
-                  <b>Kürzel:</b> {{ngo.name_short}}<br>
-                  <b>Erstellt vor</b> {{ngo.created_date|timesince}}
+                  <b>Kürzel:</b> {{ ngo.name_short }}<br>
+                  <b>Beitrittszeitpunkt:</b> vor {{ ngo.created_date|timesince }}
               </p>
               
                   {% if user.profile.ngo == ngo %}
-                    <form class="form-horizontal" role="form" id="inviteUserSearch" method="post">
+                    <form class="form-inline" role="form" id="inviteUserSearch" method="post">
     				    <div class="input-group">  
                             {% csrf_token %}
                             <input type="hidden" name="member_id" value="{{user.id}}" />
 
-                            <button type="submit" name="post_identifier" value="endMembership" class="btn btn-danger">NGO verlassen</button>
+                            <button type="submit" name="post_identifier" value="endMembership" class="btn btn-danger"><i class="fa fa-times"></i>  {{ ngo.name }} verlassen</button>
                         </div>
                     </form>
                   {% endif %}
+                  <br>
                   {% if user.is_superuser %}
-                    <form class="form-horizontal" role="form" id="inviteUserSearch" method="post">
+                    <form class="form-inline" role="form" id="inviteUserSearch" method="post">
     				    <div class="input-group">
                             {% csrf_token %}
-                            <button type="submit" name="post_identifier" value="deleteOrganization" class="btn btn-danger">NGO löschen</button>
+                            <button type="submit" name="post_identifier" value="deleteOrganization" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> NGO löschen</button>
                         </div>
                     </form>
                   {% endif %}
@@ -114,7 +115,7 @@
 
 
         <div class="panel-heading" id="membersHeading">
-            <button class="btn btn-success btn-lg" id="overviewMembers"><i class="fa fa-envelope" aria-hidden="true"></i> Mitglieder anzeigen</button></div>
+            <button class="btn btn-success btn-lg" id="overviewMembers"><i class="fa fa-users" aria-hidden="true"></i> Mitglieder der NGO anzeigen</button></div>
 
             <div class="panel panel-green" id="overviewMembersAll" style="display: none;">
               <div class="panel-heading">
