@@ -153,9 +153,9 @@
 
                                             {% if user.profile.is_organization_admin or user.is_superuser%}
                                                 {% if not member.profile.is_organization_admin and not member.is_superuser %}
-                                                    <button type="submit" name="post_identifier" value="promoteAdmin" class="btn btn-success"><i class="fa fa-times"></i> Admin befordern</button>
+                                                    <button type="submit" name="post_identifier" value="promoteAdmin" class="btn btn-success"><i class="fa fa-times"></i> zum Admin befördern</button>
                                                 {% elif member.profile.is_organization_admin and not member.is_superuser %}
-                                                    <button type="submit" name="post_identifier" value="degrateAdmin" class="btn btn-warning"><i class="fa fa-times"></i> Admin entfernen</button>
+                                                    <button type="submit" name="post_identifier" value="degrateAdmin" class="btn btn-warning"><i class="fa fa-times"></i> als Admin entfernen</button>
                                                 {% endif %}
                                                 <button type="submit" name="post_identifier" value="endMembership" class="btn btn-danger"><i class="fa fa-times"></i> Mitgliedschaft beenden</button>
                                             {% endif %}
