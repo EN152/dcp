@@ -1,6 +1,7 @@
 # imports
 from dcp.importUrls import *
 from django.http import Http404
+import dcp.dcpSettings
 
 
 

@@ -2,6 +2,13 @@ from dcp.importUrls import *
 
 class GovermentView(View):
     """description of class"""
+    def get(self, request, pk, usernameSearchString=None):
+        templatePath= 'dcp/content/organization/goverment.html'
+        template = loader.get_template(templatePath)
+
+        context = {}
+
+        return HttpResponse(template.render(context,request))
 
 class GovermentManagerView(View):
     """description of class"""

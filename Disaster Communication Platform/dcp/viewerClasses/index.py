@@ -1,7 +1,8 @@
 # imports
 from dcp.importUrls import *
+from dcp.viewerClasses.timeline import *
 
-class Index(View):
+class Index(TimelineView):
 
 	def get(self, request):
 		countSearch = len(dcp.models.Search_Material.objects.all()) + len(dcp.models.Search_Immaterial.objects.all())
@@ -32,9 +33,4 @@ class Index(View):
 		return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, params)
 
 	def post(self, request):
-		self.params += request.user
-
-		if request.user.is_authenticated():
-			return HttpResponseRedirect("")
-		else:
-			return HttpResponseRedirect("anmelden/")
+		return super().post(request)

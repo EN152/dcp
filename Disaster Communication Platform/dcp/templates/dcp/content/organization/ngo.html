@@ -137,10 +137,15 @@
                             <tbody>
                                 {% for member in ngo.getMembers %}
                                 <tr>
-                                    <td>{{member}}</td>
+                                    <td>{% if member == user %}
+                                            {{member}}
+                                        {% else %}
+                                            <a href="{% url 'dcp:Chat'%}?userid={{member.id}}">{{member}}</a> 
+                                        {% endif %}
+                                    </td>
                                     <td>seit {{member.profile.date_joined_organization|timesince}}</td>
                                     <td>
-                                        {% if member.profile.is_organization_admin %}
+                                        {% if member.profile.is_organization_admin or member.is_superuser%}
                                             <span class="glyphicon glyphicon-ok"></span>
                                         {% else %}
                                             <span class="glyphicon glyphicon-remove"></span>
@@ -151,7 +156,7 @@
                                             {% csrf_token %}
                                             <input type="hidden" name="member_id" value="{{member.id}}" />
 
-                                            {% if user.profile.is_organization_admin or user.is_superuser%}
+                                            {% if user.profile.is_organization_admin or user.is_superuser %}
                                                 {% if not member.profile.is_organization_admin and not member.is_superuser %}
                                                     <button type="submit" name="post_identifier" value="promoteAdmin" class="btn btn-success"><i class="fa fa-times"></i> zum Admin befördern</button>
                                                 {% elif member.profile.is_organization_admin and not member.is_superuser %}
