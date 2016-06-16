@@ -7,6 +7,8 @@ class TimelineView(View):
     def getCreateNew(self, request, good_typ, show_radius, create_new_glyphicon, page_title):
         templatePath = 'dcp/content/createNewGood.html'
         goods_list = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
+        goods_list = filter(lambda x: type(x) is eval(good_typ), goods_list)
+
         category_glyphicon_list = Categorys.getCategoryListAsGlyphiconString()
         category_name_list = Categorys.getCategoryListAsNameString()
 
