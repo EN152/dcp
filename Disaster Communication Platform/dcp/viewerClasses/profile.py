@@ -29,11 +29,16 @@ class MyProfile(View):
             if invite_type == 'Invite_Ngo':
                 if not user.profile.acceptNgoInviteById(organization_id):
                     raise Http404
-                return self.get(request)
+                url = '/ngo/' # TODO Probleme mit Reverse von Urls
+                url += str(organization_id)
+                return HttpResponseRedirect(url)
+
             elif invite_type == 'Invite_Goverment':
                 if not user.profile.acceptGovermentInviteById(organization_id):
                     raise Http404
-                return self.get(request)
+                url = '/goverment/' # TODO Probleme mit Reverse von Urls
+                url += str(organization_id)
+                return HttpResponseRedirect(url)
             else:
                 raise Http404
         

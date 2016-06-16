@@ -126,6 +126,10 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
     is_organization_admin = models.BooleanField(default=False, null=False)
     date_joined_organization = models.DateTimeField(default=timezone.now)
 
+    def setOrganizationAdmin(self, organitationAdmin):
+        self.is_organization_admin = organitationAdmin
+        self.save()
+
     def resetOrganization(self):
         """
         Setzt NGO und Goverment auf null zurück
