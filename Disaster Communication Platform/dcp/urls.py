@@ -28,7 +28,9 @@ urlpatterns = [
 
     # Chat
     url(r'^chat/$', Chat.as_view(), name='Chat'),
-    url(r'^profil/netzwerke/$',ChatOverview.as_view(),name='ChatOverview'),
+    url(r'^nachrichten/$',ChatOverview.as_view(),name='ChatOverview'),
+    #url(r'^profil/netzwerke/$',ChatOverview.as_view(),name='ChatOverview'),
+    
     # AdminPanel
     url(r'^administator/useroverview/$',UserAdminOverview.as_view(),name='UserAdminOverview'),
     url(r'^adminstrator/edituser/(?P<pk>\d+)/$', AdminEditUserProfileView.as_view(),name='AdminEditUserProfileView'),
@@ -36,12 +38,6 @@ urlpatterns = [
     url(r'^administrator/createcat/$',CreateOrEditCatastrophe.as_view(),name='CreateOrEditCatastrophe'),
     url(r'^administrator/catoverview/$',CatastropheOverview.as_view(),name='CatastropheOverview'),
     url(r'^administrator/catdelete/(?P<pk>\d+)/$',DeleteCatastropheView.as_view(),name='DeleteCatastropheView'),
-
-#    # Bieten
-#    url(r'^bieten/$', views.bieten),
-#    url(r'^bieten/materielles/$', views.bieten_materielles),
-#    url(r'^bieten/immmaterielles/$', views.bieten_immaterielles),
-#
 
 #    # Wissen
 #    url(r'^wissen/$', views.wissen),
@@ -56,10 +52,10 @@ urlpatterns = [
 #    url(r'^orte/anlaufstellen/$', views.orte_anlaufstellen),
 #    url(r'^orte/karten/$', views.orte_karten),
 #    url(r'^orte/fotos/$', views.orte_fotos),
+
     #Profil
     url(r'^profil/$', MyProfile.as_view()),
     url(r'^profil/bearbeiten/$', EditProfile.as_view()),
-
 ]
 
 # media url patters

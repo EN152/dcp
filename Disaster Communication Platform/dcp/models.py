@@ -10,13 +10,6 @@ from dcp.customclasses.Helpers import get_object_or_none
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 import dcp.customclasses
-# from abc import abstractmethod
-
-
-
-
-
-
 
 class Catastrophe(models.Model):
     Title = models.CharField(max_length=200)
@@ -280,3 +273,25 @@ class Message(models.Model):
     Text = models.TextField(max_length=5000,null=False)
     SendTime = models.DateTimeField(default=timezone.now)
     Conversation = models.ForeignKey(Conversation, null=False, related_name='Conversation')
+
+class MissedPeople(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    # catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    #bumps = models.ForeignKey(Bump_Relation, on_delete=models.DO_NOTHING, null=True)
+    #reports = models.ForeignKey(Report_Relation, on_delete=models.DO_NOTHING, null=True)
+
+    title = models.CharField(max_length=100, null=False)
+    description = models.CharField(max_length=5000, null=False)
+    gender = models.CharField(max_length=1, null=False)
+    age = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    name = models.CharField(max_length=100, null=False)
+    size = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(250)])
+    eyeColor = models.CharField(max_length=50, null=False)
+    hairColor = models.CharField(max_length=50, null=False)
+    characteristics = models.CharField(max_length=500, null=False)
+    picture = models.ImageField(upload_to='media/upload/people/', null=True)
+
+    def __unicode__(self):
+        return self.title

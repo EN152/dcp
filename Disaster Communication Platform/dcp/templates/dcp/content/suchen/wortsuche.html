@@ -1,0 +1,202 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %} {{goods_list_size}} Suchergebnis(se) für "{{searchString}}"{% endblock %}
+
+{% block content %}
+
+
+<!-- /.row -->
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <span class="glyphicon glyphicon-search" style="font-size: 5em;"></span>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">{{total_search_materials}}</div>
+                                    <div>Gesuche</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/suchen/">
+                            <div class="panel-footer">
+                                <span class="pull-left">Suchen</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                     <span class="glyphicon glyphicon-transfer" style="font-size:5em;"></span>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">{{total_offer_materials}}</div>
+                                    <div>Angebote</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/bieten/">
+                            <div class="panel-footer">
+                                <span class="pull-left">Bieten</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                   <span class="glyphicon glyphicon-info-sign" style="font-size: 5em;"></span>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">0</div>
+                                    <div>Informationen</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/wissen/">
+                            <div class="panel-footer">
+                                <span class="pull-left">Wissen</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <span class="glyphicon glyphicon-map-marker" style="font-size: 5em;"></span>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">0</div>
+                                    <div>Karteneinträge</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/orte/">
+                            <div class="panel-footer">
+                                <span class="pull-left">Orte</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                </div>
+
+                <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-clock-o fa-fw"></i> Deine Aktivitäten
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <ul class="timeline">
+                        <li>
+                            <div class="timeline-badge blue"> <span class="glyphicon glyphicon-search"></span>
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">Suche sauberes Trinkwasser</h4>
+                                    <p><small class="text-muted"><i class="fa fa-clock-o"></i> vor 1 Minute </small>
+                                    </p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
+                                </div>
+                            </div>
+                        </li>
+
+                        
+                        <li class="timeline-inverted">
+                        <div class="timeline-badge red"> <span class="glyphicon glyphicon-transfer"></span>
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">Biete Stromaggregat</h4>
+                                     <p><small class="text-muted"><i class="fa fa-clock-o"></i> vor 12 Stunden</small>
+                                    </p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates est quaerat asperiores sapiente, eligendi, nihil. Itaque quos, alias sapiente rerum quas odit! Aperiam officiis quidem delectus libero, omnis ut debitis!</p>
+                                </div>
+                            </div>
+                        </li>
+
+
+                            <li>
+                            <div class="timeline-badge yellow"> <span class="glyphicon glyphicon-info-sign"></span>
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">Informationen zur Kinderbetreuung</h4>
+                                    <p><small class="text-muted"><i class="fa fa-clock-o"></i> vor 3 Tagen</small>
+                                    </p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
+                                </div>
+                            </div>
+                        </li>
+
+                        
+                        <li class="timeline-inverted">
+                        <div class="timeline-badge green"> <span class="glyphicon glyphicon-map-marker"></span>
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">Freies WLAN in Kreuzberg</h4>
+                                     <p><small class="text-muted"><i class="fa fa-clock-o"></i> vor 12 Tagen</small>
+                                    </p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates est quaerat asperiores sapiente, eligendi, nihil. Itaque quos, alias sapiente rerum quas odit! Aperiam officiis quidem delectus libero, omnis ut debitis!</p>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+
+
+<!-- Anfang der Timeline -->
+{% include "dcp/design/timeline.html" %}
+<!-- Ende der Timeline-->
+
+
+            </div>
+
+
+
+            {% endblock content %}
+            <!-- /.row -->
+

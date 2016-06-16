@@ -3,5 +3,152 @@
 {% block title %} Personensuche {% endblock %}
 
 {% block content %}
+{% load bootstrap3 %}
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$("#newSearch").click(function(){
+			$("#suchFormular").toggle();
+			$("#suchFormularHeading").hide();
+		});
+	});
+</script>
+
+<div class="panel panel-default">
+<div class="panel-heading" id="suchFormularHeading">
+<button class="btn btn-success btn-lg" id="newSearch"><span class="glyphicon glyphicon-search"></span> Vermisste Person hinzufügen</button></div>
+
+<div class="panel-body" id="suchFormular" style="display: none;">
+<div class="col-sm-6">
+<form method="POST">
+	<h2><span class="glyphicon glyphicon-search"></span> Welche Person suchst Du? </h2>
+		{% csrf_token %}	
+		{% bootstrap_form form %}
+        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span> Person hinzufügen</button>
+</form>
+
+
+</div>
+</div>
+</div>
+
+
+{% if missed_people %}
+{% for person in missed_people %}
+<div class="col-xs-4">
+	<div class="panel panel-{% if person.gender == 'w' %}red{% else %}primary{% endif %}" style="vertical-align:bottom;">
+		<div class="panel-heading">
+			<b>{% if person.gender == 'w' %}<i class="fa fa-venus"></i>{% else %}<i class="fa fa-mars"></i>{% endif %} {{ person.title }}</b>
+		</div>
+		<p>
+			<table>
+				<tr>
+					<td>
+						<ul>
+							<li>Geschlecht: <b>{% if person.gender == 'w' %}<i class="fa fa-venus"></i> (w){% else %}<i class="fa fa-mars"></i> (m){% endif %}</b></li>
+							<li>Alter: <b>{{ person.age }} Jahre</b></li>
+							<li>Name: <b>{{ person.name }}</b></li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<li>Größe: <b>{{ person.size }}cm</b></li>
+							<li>Augenfarbe: <b>{{ person.eyeColor }}</b></li>
+							<li>Haarfarbe: <b>{{ person.hairColor }}</b></li>
+						</ul>		
+					</td>
+				</tr>
+			</table>
+			</p>
+			{% if characteristicsToUser %}
+			<p>
+			<ul>
+				<li>besondere Merkmale:</li>
+					<ul>
+					{% for c in characteristicsToUser %}
+						{% if person.title in c  %}
+						<li><b>{{ c.0 }}</b></li>
+						{% endif %}
+					{% endfor %}
+					</ul>
+			</ul>
+			</p>
+			{% endif %}
+	
+
+		<div class="panel-body">
+			<p>
+				{% if person.picture %}
+				<img src="{{ person.picture.url }}" width="auto" style="float:center;" class="img-thumbnail">
+				{% else %}
+				<!--center>
+				<img style="float:center;" class="img-thumbnail" src="/media/no-img.png">
+				</center-->
+				{% endif %}
+			</p>
+			<p>
+				<b>Beschreibung: </b>{{ person.description }}
+			</p>
+			<center>
+				<span class="glyphicon glyphicon-user"></span> <a href="#">{{ person.user }}</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor {{person.created_date|timesince}}</small>
+			</center>	
+
+
+			{% if user.is_active %}
+			<center>
+				<form action="" role="form" id="bump_form" method="post" style="display: inline;">
+					{% csrf_token %}
+					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+					<input type="hidden" name="good_id" value="{{good.id}}" />
+					<button type="submit" class="btn btn-success" name="post_identifier" value="bump" style="margin-top: 10px; margin-bottom: 10px;">
+						<span class="glyphicon glyphicon-arrow-up" ></span>
+						Bump! <span class="badge">{{good.getBumps|length}}</span>
+					</button>
+				</form>
+
+				{% if good.user != user %}
+				<form action="" role="form" id="contact_form" method="post" style="display: inline;">
+					{% csrf_token %}
+					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+					<input type="hidden" name="good_id" value="{{good.id}}" />
+					<button type="submit" class="btn btn-primary" value="contact_form" name="post_identifier" style="margin-top: 10px; margin-bottom: 10px;">
+						<span class="glyphicon glyphicon-envelope"></span>
+						Kontaktieren
+					</button>
+				</form>
+				{% endif %}
+
+				{% if user.is_superuser or good.user == user %}
+				<form action="" role="form" id="delete_form" method="post" style="display: inline;">
+					{% csrf_token %}
+					<input type="hidden" name="good_id" value="{{good.id}}" />
+					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+					<button type="submit" class="btn btn-danger" name="post_identifier" value="delete" style="margin-top: 10px; margin-bottom: 10px;">
+						<span class="glyphicon glyphicon-trash"></span> 
+						Löschen
+					</button>
+				</form>
+
+				{% else %}
+				<form action="" role="form" id="report_form" method="post">
+					{% csrf_token %}
+					<input type="hidden" name="good_id" value="{{good.id}}" />
+					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+					<button class="btn btn-danger" type="submit" name="post_identifier" value="report">
+						<span class="glyphicon glyphicon-ban-circle"></span> 
+						Melden <span class="badge">{{good.getReports|length}}</span>
+					</button>
+				</form>
+				{% endif %}
+			</center>
+			{% endif %}
+
+		</div>
+	</div>
+</div>
+{% endfor %}
+{% endif %}
+</div>
 
 {% endblock content %}
