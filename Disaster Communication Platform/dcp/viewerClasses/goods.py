@@ -8,10 +8,12 @@ class SearchMaterialView(dcp.viewerClasses.timeline.TimelineView):
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
-            radius = None
-            if radius in request.POST:
-                radiusSplit = request.POST['radius'].split(' ')
+            radius = request.POST.get('radius')
+            try:
+                radiusSplit = radius.split(' ')
                 radius = radiusSplit[0]
+            except:
+                raise Http404
             title = request.POST.get('title')
             description = request.POST.get('description')
             catastrophe = get_object_or_404(Catastrophe, id=request.POST.get('catastrophe'))
@@ -19,7 +21,7 @@ class SearchMaterialView(dcp.viewerClasses.timeline.TimelineView):
             location_y = request.POST.get('location_y')
             categoryString = request.POST.get('category')
             category = Categorys.stringToCategoryTypeAsNumber(categoryString)
-            if radius is None or title is None or  catastrophe is None or location_x is None or location_y is None or category is None:
+            if radius is None or title is None or catastrophe is None or location_x is None or location_y is None or category is None:
                 raise Http404 
             Search_Material.objects.create(title=title, description=description, radius=radius, catastrophe=catastrophe, location_x=location_x, location_y=location_y, category=category, user=request.user)
             return HttpResponseRedirect('')
@@ -32,17 +34,19 @@ class SearchImmaterialView(dcp.viewerClasses.timeline.TimelineView):
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
-            radius = None
-            if radius in request.POST:
-                radiusSplit = request.POST['radius'].split(' ')
+            radius = request.POST.get('radius')
+            try:
+                radiusSplit = radius.split(' ')
                 radius = radiusSplit[0]
+            except:
+                raise Http404
             title = request.POST.get('title')
             description = request.POST.get('description')
             catastrophe = get_object_or_404(Catastrophe, id=request.POST.get('catastrophe'))
             location_x = request.POST.get('location_x')
             location_y = request.POST.get('location_y')
-            if radius is None or title is None or  catastrophe is None or location_x is None or location_y is None:
-                raise Http404 
+            if radius is None or title is None or catastrophe is None or location_x is None or location_y is None:
+                request.POST['crash']
             Search_Immaterial.objects.create(title=title, description=description, radius=radius, catastrophe=catastrophe, location_x=location_x, location_y=location_y, user=request.user)
             return HttpResponseRedirect('')
         return super().post(request)
@@ -61,7 +65,7 @@ class OfferMaterialView(dcp.viewerClasses.timeline.TimelineView):
             location_y = request.POST.get('location_y')
             categoryString = request.POST.get('category')
             category = Categorys.stringToCategoryTypeAsNumber(categoryString)
-            if title is None or  catastrophe is None or location_x is None or location_y is None or category is None:
+            if title is None or catastrophe is None or location_x is None or location_y is None or category is None:
                 raise Http404 
             Offer_Material.objects.create(title=title, description=description, catastrophe=catastrophe, location_x=location_x, location_y=location_y, category=category, user=request.user)
             return HttpResponseRedirect('')
