@@ -29,6 +29,14 @@ class Goverment(models.Model):
 		"""
 		return getInvites(goverment=self)
 
+	def getMembers(self):
+		"""
+		Gibt eine Liste von allen Mitgliedern zurück
+		:author: Jasper
+		:return: Eine Liste mit allen Mitgliedern
+		"""
+		return User.objects.filter(goverment=self)
+
 	def isInArea(self, good):
 		distance = distance.calculateDistanceClass.calculate_distance(self.location_x, self.location_y, good.location_x, good.location_y)
 		if (distance <= self.radius):
@@ -49,8 +57,24 @@ class Ngo(models.Model):
 		"""
 		return getInvites(ngo=self)
 
+	def getMembers(self):
+		"""
+		Gibt eine Liste von allen Mitgliedern zurück
+		:author: Jasper
+		:return: Eine Liste mit allen Mitgliedern
+		"""
+		users = []
+		for profile in Profile.objects.filter(ngo=self):
+			users.append(profile.user)
+		return  sorted(users, key=lambda u: u.profile.date_joined_organization, reverse=True)
+
 	def getAreas(self):
-		return Ngo_Area.ojects.get(ngo=self)
+		"""
+		Gibt eine Liste von den Gebieten zurück
+		:author: Jasper
+		:return: Eine Liste mit allen Gebieten
+		"""
+		return Ngo_Area.ojects.filter(ngo=self)
 
 	def isInArea(self, good):
 		for area in self.getAreas():
@@ -99,7 +123,19 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
     currentCatastrophe = models.ForeignKey(Catastrophe,related_name='currentCatastrophe',null=True,blank=True) # TODO: Kaskade?
     ngo = models.ForeignKey(Ngo, on_delete=models.DO_NOTHING, null=True)
     goverment = models.ForeignKey(Goverment, on_delete=models.DO_NOTHING, null=True)
-    is_organziation_admin = models.BooleanField(default=False, null=False)
+    is_organization_admin = models.BooleanField(default=False, null=False)
+    date_joined_organization = models.DateTimeField(default=timezone.now)
+
+    def resetOrganization(self):
+        """
+        Setzt NGO und Goverment auf null zurück
+        :author: Jasper
+        :return: False falls nicht erfolgreich, True falls erfolgreich
+        """
+        self.ngo = None
+        self.goverment = None
+        self.is_organization_admin = False
+        self.save()
 
     def acceptNgoInviteById(self, ngoId):
         """
@@ -117,11 +153,13 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         ngo = get_object_or_none(Ngo,id=ngoId)
         invite = get_object_or_none(Invite_Ngo,user=self.user,organization=ngo)
         if ngo is None or invite is None:
+            print('HERE')
             return False
         else:
             self.goverment = None
             self.ngo = ngo
             self.isOrganziationAdmin = False
+            self.date_joined_organization = timezone.now()
             self.save()
             invite.delete()
             return True
@@ -147,7 +185,9 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
             self.goverment = goverment
             self.ngo = None
             self.isOrganziationAdmin = False
+            self.date_joined_organization = timezone.now()
             self.save()
+            invite.delete()
             return True
 
     def getInvites(self):
@@ -156,7 +196,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         :author: Jasper
         :return: Eine Liste mit allen Invites
         """
-        return getInvites(user=self)
+        return getInvites(user=self.user)
 
     def setCatastropheById(self,catId):
         """
@@ -226,7 +266,7 @@ post_save.connect(create_profile, sender=User)
 class Invite_Ngo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     organization = models.ForeignKey(Ngo, on_delete=models.CASCADE, null=False)
-    date_created = models.DateTimeField(default=timezone.now())
+    date_created = models.DateTimeField(default=timezone.now)
 
     def getInviteType(self):
         return 'Invite_Ngo'
@@ -234,7 +274,7 @@ class Invite_Ngo(models.Model):
 class Invite_Goverment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     organization = models.ForeignKey(Goverment, on_delete=models.CASCADE, null=False)
-    date_created = models.DateTimeField(default=timezone.now())
+    date_created = models.DateTimeField(default=timezone.now)
 
     def getInviteType(self):
         return 'Invite_Goverment'
@@ -250,16 +290,20 @@ def getInvites(user=None, ngo=None, goverment=None):
     """
     invites = []
     if user != None:
-        inivtes.append(Invite_Ngo.objects.filter(user = user))
-        invites.append(Invite_Goverment.objects.filter(user = user))
+        for invite in Invite_Ngo.objects.filter(user = user):
+            invites.append(invite)
+        for invite in Invite_Goverment.objects.filter(user = user):
+            invites.append(invite)
     elif ngo != None:
-        invites.append(Invite_Ngo.objects.filter(ngo = ngo))
+        invites = Invite_Ngo.objects.filter(organization = ngo)
     elif goverment != None:
-        invites.append(Invite_Goverment.objects.filter(goverment = goverment))
+        invites = Invite_Goverment.objects.filter(organization = goverment)
     else:
-        inivtes.append(Invite_Ngo.objects.all())
-        invites.append(Invite_Goverment.objects.all())
-    return sorted(invites, key=lambda i: i.created_date, reverse=True)
+        for invite in Invite_Ngo.objects.all():
+            invites.append(invite)
+        for invite in Invite_Goverment.objects.all():
+            invites.append(invite)
+    return sorted(invites, key=lambda i: i.date_created, reverse=True)
 
 class Comment_Relation(models.Model):
     class Meta:

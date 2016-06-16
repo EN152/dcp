@@ -154,12 +154,12 @@
 								</li>
                                 {% if user.profile.ngo != None %}
                                     <li>
-                                        <a href="{% url 'dcp:NgoView' user.profile.ngo.id%}"><span class="glyphicon glyphicon-retweet"></span> NGO</a>
+                                        <a href="{% url 'dcp:NgoView' user.profile.ngo.id%}"><span class="glyphicon glyphicon-retweet"></span> {{user.profile.ngo.name_short}}</a>
                                     </li>
                                 
                                 {% elif user.profile.goverment != None %}
                                     <li>
-                                        <a href="{% url 'dcp:GovermentView' user.profile.goverment.id%}"><span class="glyphicon glyphicon-retweet"></span> Goverment</a>
+                                        <a href="{% url 'dcp:GovermentView' user.profile.goverment.id%}"><span class="glyphicon glyphicon-retweet"></span> {{user.profile.goverment.name_short}}</a>
                                     </li>
                                 {% endif %}
 							</ul>

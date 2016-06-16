@@ -1,6 +1,6 @@
 ﻿{% extends "dcp/design/base.html" %}}
 
-{% block title %} NGO Manager {% endblock %}
+{% block title %} Goverment Manager {% endblock %}
 
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
@@ -22,7 +22,7 @@
     <div class="panel-body" id="govermentFormular" {% if not invalidInput %} style="display: none;" {% endif %}>
 	    <div class="col-sm-6">
 		    <form method="POST">
-		        <h2><span class="glyphicon glyphicon-retweet"></span> Neue NGO </h2>
+		        <h2><span class="glyphicon glyphicon-retweet"></span> Neues Goverment </h2>
                 {% csrf_token %}
 		    	<div class="form-group">
 		    		<label>Name:</label>

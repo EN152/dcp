@@ -77,7 +77,7 @@
 			<div class="form-group">
                 {% csrf_token %}
                 <input type="hidden" id="catastrophe" name="good_typ" value="{{create_new_good_typ}}" />
-                <input type="hidden" id="catastrophe" name="catastrophe" value="1" /> <!-- TODO Replace with real implentation !!!! -->
+                <input type="hidden" id="catastrophe" name="catastrophe" value="0" /> <!-- TODO Replace with real implentation !!!! -->
                 <input type="hidden" id="locaton_x" name="location_x" value="50" /> <!-- TODO Replace with real implentation !!!! -->
                 <input type="hidden" name="location_y" value="50" /> <!-- TODO Replace with real implentation !!!! -->
 				<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
