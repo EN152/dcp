@@ -67,7 +67,7 @@
 				<li>besondere Merkmale:</li>
 					<ul>
 					{% for c in characteristicsToUser %}
-						{% if person.title in c  %}
+						{% if person.id in c  %}
 						<li><b>{{ c.0 }}</b></li>
 						{% endif %}
 					{% endfor %}
