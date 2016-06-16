@@ -46,7 +46,7 @@ class SearchImmaterialView(dcp.viewerClasses.timeline.TimelineView):
             location_x = request.POST.get('location_x')
             location_y = request.POST.get('location_y')
             if radius is None or title is None or catastrophe is None or location_x is None or location_y is None:
-                request.POST['crash']
+                raise Http404
             Search_Immaterial.objects.create(title=title, description=description, radius=radius, catastrophe=catastrophe, location_x=location_x, location_y=location_y, user=request.user)
             return HttpResponseRedirect('')
         return super().post(request)
