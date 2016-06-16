@@ -13,6 +13,8 @@ class TimelineView(View):
         category_name_list = Categorys.getCategoryListAsNameString()
 
         category_list = zip(category_glyphicon_list, category_name_list)
+         
+        panel_title = "Überblick | " + page_title
             
         template = loader.get_template(templatePath)
         context = {
@@ -21,7 +23,8 @@ class TimelineView(View):
             'show_radius' : show_radius,
             'create_new_good_typ' : good_typ,
             'create_new_glyphicon': create_new_glyphicon,
-            'page_title': page_title
+            'page_title': page_title,
+            'panel_title': panel_title
         }
 
         return HttpResponse(template.render(context,request))

@@ -30,7 +30,7 @@ class OfferImmaterialView(dcp.viewerClasses.timeline.TimelineView):
         return super().getCreateNew(request, 'Offer_Immaterial', False, 'glyphicon-transfer', 'Bieten: Immaterielles')
 
     def post(self, request):
-        return super().post(request)
+        return super().post(request)       
 
 
 class Bieten(LoginRequiredMixin, View):
