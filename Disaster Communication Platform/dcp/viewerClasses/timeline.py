@@ -3,8 +3,6 @@ from dcp.importUrls import *
 from django.http import Http404
 import dcp.dcpSettings
 
-
-
 class TimelineView(View):
     def getCreateNew(self, request, good_typ, show_radius, show_categorys, create_new_glyphicon, page_title):
         templatePath = 'dcp/content/createNewGood.html'
