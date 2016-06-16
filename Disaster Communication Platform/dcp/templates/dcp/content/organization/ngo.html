@@ -139,7 +139,7 @@
                                     <td>{{member}}</td>
                                     <td>seit {{member.profile.date_joined_organization|timesince}}</td>
                                     <td>
-                                        {% if member.is_organization_admin %}
+                                        {% if member.profile.is_organization_admin %}
                                             <span class="glyphicon glyphicon-ok"></span>
                                         {% else %}
                                             <span class="glyphicon glyphicon-remove"></span>
@@ -151,9 +151,9 @@
                                             <input type="hidden" name="member_id" value="{{member.id}}" />
 
                                             {% if user.profile.is_organization_admin or user.is_superuser%}
-                                                {% if not member.is_organization_admin and not member.is_superuser %}
+                                                {% if not member.profile.is_organization_admin and not member.is_superuser %}
                                                     <button type="submit" name="post_identifier" value="promoteAdmin" class="btn btn-success"><i class="fa fa-times"></i> Admin befordern</button>
-                                                {% elif member.is_organization_admin and not member.is_superuser %}
+                                                {% elif member.profile.is_organization_admin and not member.is_superuser %}
                                                     <button type="submit" name="post_identifier" value="degrateAdmin" class="btn btn-warning"><i class="fa fa-times"></i> Admin entfernen</button>
                                                 {% endif %}
                                                 <button type="submit" name="post_identifier" value="endMembership" class="btn btn-danger"><i class="fa fa-times"></i> Mitgliedschaft beenden</button>
