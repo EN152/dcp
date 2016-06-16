@@ -1,4 +1,4 @@
-﻿{% load staticfiles %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="de">
 
@@ -19,6 +19,10 @@
 	<link href="{% static 'sb-admin/bower_components/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 	<link href="{% static 'dataTables/jquery.dataTables.min.css' %}" rel="stylesheet">
+	
+	<!-- Please leave them here because, if you move them to the end of the page the map site won't work -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 	
 		<!-- SCRIPTS werden am Ende geladen: siehe unten! -->
 </head>
@@ -211,8 +215,6 @@
 				<script src="{% static 'sb-admin/bower_components/morrisjs/morris.min.js' %}"></script>
 				<script src="{% static 'sb-admin/js/morris-data.js' %}"></script>
 				<script src="{% static 'sb-admin/dist/js/sb-admin-2.js' %}"></script>
-				<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-				<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 				<script src="{% static 'dataTables/jquery.dataTables.min.js' %}"></script>
 			</body>
 			</html>
