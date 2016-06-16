@@ -37,7 +37,7 @@
 				<label>Titel:</label>
 				<input name="title" type="text" placeholder="Leistungsstarkes Stromaggregat..." class="form-control">
 			</div>
-            {% if category_list %}
+            {% if category_list and show_categorys %}
 			    <label>Kategorie:</label><br />
 
 			    {% for category_glyphicon, category_name in category_list%}
