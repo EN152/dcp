@@ -1,8 +1,17 @@
-﻿{% extends "dcp/design/base.html" %}}
+{% extends "dcp/design/base.html" %}}
+
+
+
 
 {% block title %} {{page_title}} {% endblock %}
 
+
 {% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 
 <!-- Script: Aufklappen des Bereiches für eine neue Erstellung-->
@@ -52,7 +61,7 @@
 
 			<div class="form-group">
 				<label>Standort:</label>
-				<input name="location" type="text" class="form-control" id="inputlg" placeholder="Berlin"> <!-- TODO ort über javascript finden -->
+				<div id="map" style="height:400px;width:100%"></div> <!-- TODO ort über javascript finden -->
 			</div>
 
             {% if show_radius %}
@@ -81,13 +90,48 @@
                 <input type="hidden" id="locaton_x" name="location_x" value="50" /> <!-- TODO Replace with real implentation !!!! -->
                 <input type="hidden" name="location_y" value="50" /> <!-- TODO Replace with real implentation !!!! -->
 				<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
-			</div>			
+			</div>	
+			
+			<script>
+  	var map = L.map('map').setView([37.804146, -122.275045], 16);
+
+	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+ 			 attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+		}).addTo(map);
+	
+	// Add geocoding plugin
+    var options = {
+      bounds: true,
+		position: "topleft",
+      expanded: true
+    }
+	
+	
+	var geocoder = L.control.geocoder('search-Hv2UM4h', options).addTo(map);
+	var lat="";
+	var longe="";
+	
+	
+	geocoder.on('select', function (e) {
+    	console.log('highlight', e);
+    	lat= e.latlng.lat;
+		longe= e.latlng.lng;
+		document.getElementsByName("location_x").value = lat
+		document.getElementsByName("location_y").value = longe
+    });
+
+	
+</script>
+					
         </form>
 	  </div>	
     </div>
 </div>
+
+
 {% endif %}
 <!-- Ende des Bereiches für die Neuerstellung -->
+
 
 <!-- Anfang der Timeline -->
 {% include "dcp/design/timeline.html" %}
