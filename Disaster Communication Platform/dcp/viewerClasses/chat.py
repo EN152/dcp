@@ -1,7 +1,4 @@
-# imports
 from dcp.importUrls import *
-
-
 
 class Chat(View):
     form_class = sendMessage
