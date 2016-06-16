@@ -55,14 +55,15 @@ class TimelineView(View):
 
             if postIdentifier == 'contact_form':
                 good = self.get_good_or_404(request)
-                creatingUser =  good.user
-                requestingUser = request.user
+                goodOwner =  good.user
+                user = request.user
                 # Schaue nach, ob schon eine Conv besteht..
-                conv = Conversation.getConversationOrNone(userOne=self.currentUser, userTwo=self.otherUser)
+                conv = Conversation.getConversationOrNone(userOne=user, userTwo=goodOwner)
                 if conv is None: # Wenn noch keine Conversation da ist
-                    Conversation.objects.create(Starter=creatingUser,Receiver=requestingUser)
+                    Conversation.objects.create(Starter=user,Receiver=goodOwner)
                 # Jetzt: Redirect
-                url = url_with_querystring(reverse('dcp:Chat'), userid=creatingUser.id)
+                url = '/chat/?userid='
+                url += str(goodOwner.id)
                 return HttpResponseRedirect(url)
 
             if postIdentifier == 'delete':

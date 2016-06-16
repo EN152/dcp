@@ -157,7 +157,6 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         ngo = get_object_or_none(Ngo,id=ngoId)
         invite = get_object_or_none(Invite_Ngo,user=self.user,organization=ngo)
         if ngo is None or invite is None:
-            print('HERE')
             return False
         else:
             self.goverment = None
@@ -473,6 +472,7 @@ class Conversation(models.Model):
         if conversation is None:
             conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation, Starter=userTwo,
                                                                          Receiver=userOne)
+        return conversation
 
 
 # Zur delete Cascade: Ich bin mir nicht sicher, ob das wirklich so sinnvoll ist.
@@ -482,7 +482,7 @@ class Message(models.Model):
     To = models.ForeignKey(User,on_delete=models.CASCADE,null=False,related_name='To')
     Text = models.TextField(max_length=5000,null=False)
     SendTime = models.DateTimeField(default=timezone.now)
-    Conversation = models.ForeignKey(Conversation, null=False, related_name='Conversation')
+    Conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, null=False, related_name='Conversation')
 
 class MissedPeople(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
