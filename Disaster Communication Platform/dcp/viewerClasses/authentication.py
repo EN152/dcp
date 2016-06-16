@@ -27,8 +27,6 @@ class Register(View):
                 user.save()
                 return HttpResponseRedirect("/anmelden/")
 
-
-
 class Login(View):
     template = 'dcp/content/spezial/anmelden.html'
 
