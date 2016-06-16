@@ -5,22 +5,67 @@
 {% block content %}
 
 <div class="panel panel-default">
-	
-	<div class="panel-body">
-	 <div class="col-sm-6">
+    <div class="panel-body">
+        <div class="col-sm-6">
 
-		<h3>Benutzername: <b>{{ user.username }}</b></h3><br>
+		    <h3>Benutzername: <b>{{ user.username }}</b></h3><br>
 		
-		{% if user.email != '' %}
-			<h3>Email-Adresse: <b>{{ user.email }}</b></h3><br>
-		{% endif %}
+		    {% if user.email != '' %}
+		    	<h3>Email-Adresse: <b>{{ user.email }}</b></h3><br>
+		    {% endif %}
 
-		<h3>Letzter Login: <b>{{ user.last_login }}</b></h3><br>
-
-
-
-		<a href="/profil/bearbeiten/" class="btn btn-primary btn-lg" type="submit"><span class="glyphicon glyphicon-edit"></span> Profil bearbeiten</a>
+		    <h3>Letzter Login: <b>{{ user.last_login }}</b></h3><br>
+            <a href="/profil/bearbeiten/" class="btn btn-primary btn-lg" type="submit"><span class="glyphicon glyphicon-edit"></span> Profil bearbeiten</a>
+        </div>
+    </div>
 </div>
-</div>
+
+{% if inviteList %}
+    <h3>Einladungen</h3>
+    <div class="table-responsive">          
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Kurzname</th>
+            <th>Mitglieder</th>
+            <th>Datum</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for invite in inviteList %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{invite.organization.name}}</td>
+                    <td>{{invite.organization.name_short}}</td>
+                    <td>{{invite.organization.getMembers|length}}</td>
+                    <td>{{invite.date_created}}</td>
+                    <td>
+                        <form class="form-horizontal" role="form" id="accept_invite" method="post">
+    					    <div class="input-group">         
+                                {% csrf_token %}
+                                <input type="hidden" name="invite_type" value="{{invite.getInviteType}}" />
+                                <input type="hidden" name="invite_id" value="{{invite.id}}" />
+                                <input type="hidden" name="organization_id" value="{{invite.organization.id}}" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success btn-sm" id="btn-chat" type="submit" name="post_identifier" value="accept_invite">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Aktzeptieren
+                                    </button>
+                                
+                                    <button class="btn btn-danger btn-sm" id="btn-chat" type="submit" name="post_identifier" value="decline_invite">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ablehnen
+                                    </button>
+                                </span>
+    					    </div>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% endif %}
 
 {% endblock content %}

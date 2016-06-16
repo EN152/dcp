@@ -1,0 +1,102 @@
+﻿{% extends "dcp/design/base.html" %}}
+
+{% block title %} Goverment Manager {% endblock %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<!-- Script: Aufklappen des Bereiches für eine neue Erstellung-->
+<script>
+	$(document).ready(function(){
+		$("#newGoverment").click(function(){
+			$("#govermentFormular").toggle();
+			$("#govermentFormularHeading").hide();
+		});
+	});
+</script>
+
+<!-- Anfang des Bereich für die Neuerstellung -->
+{% if user.is_active and user.is_superuser %}
+<div class="panel panel-default">
+    <div class="panel-heading" id="govermentFormularHeading"{% if invalidInput %} style="display: none;" {% endif %}><button class="btn btn-primary btn-lg" id="newGoverment"><span class="glyphicon glyphicon-retweet"></span> Neu</button></div>
+    <div class="panel-body" id="govermentFormular" {% if not invalidInput %} style="display: none;" {% endif %}>
+	    <div class="col-sm-6">
+		    <form method="POST">
+		        <h2><span class="glyphicon glyphicon-retweet"></span> Neues Goverment </h2>
+                {% csrf_token %}
+		    	<div class="form-group">
+		    		<label>Name:</label>
+		    		<input name="name" type="text" placeholder="Goverment Name..." class="form-control">
+		    	</div>
+
+		    	<div class="form-group">
+		    		<label>Kurzname:</label>
+		    		<input name="name_short" type="text" placeholder="3 Buchstaben als Kürzel..." class="form-control">
+		    	</div>
+
+                <div class="form-group">
+		    		<label>Position X</label>
+		    		<input name="position_x" type="text" placeholder="50.394756" class="form-control">
+		    	</div>
+
+                <div class="form-group">
+		    		<label>Position Y</label>
+		    		<input name="position_y" type="text" placeholder="38.649382" class="form-control">
+		    	</div>
+
+                <div class="form-group">
+		    		<label>Radius in km</label>
+		    		<input name="radius" type="text" placeholder="200" class="form-control">
+		    	</div>
+
+                <!-- Keine 3 Buchstaben als Kürzel-->
+                {% if invalidInput %}
+                    <div id="inVaildAlert">
+				    	<div class='alert alert-danger alert-dismissible' role='alert'>
+				    		<button type='button' class='close' data-dismiss='alert'>
+				    			<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
+				    		</button>
+				    		Die Eingabe war ungültig.
+				    	</div>
+				    </div>
+                {% endif %}
+		    	<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
+            </form>
+	    </div>	
+    </div>
+</div>
+{% endif %}
+<!-- Ende des Bereiches für die Neuerstellung -->
+
+<!-- Aufzählung von allen NGOs-->
+{% if goverment_list %}
+    <div class="table-responsive">          
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Kurzname</th>
+            <th>Mitglieder</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for goverment in goverment_list %}
+                <tr>
+                  <td>{{forloop.counter}}</td>
+                  <td><a href="{% url 'dcp:GovermentView' goverment.id %}">{{goverment.name}}</a></td>
+                  <td>{{goverment.name_short}}</td>
+                  <td>{{goverment.getMembers|length}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% else %}
+    <center>
+        <h3>Keine Staaten gefunden</h3>
+    </center>
+{% endif %}
+<!-- Ende der Aufzählung von allen NGOs-->
+
+{% endblock content %}

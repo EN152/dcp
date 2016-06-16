@@ -11,6 +11,93 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 import dcp.customclasses
 
+class Goverment(models.Model):
+	name = models.CharField(max_length=200, null=False)
+	name_short = models.CharField(max_length=3, null=False)
+	created_date = models.DateTimeField(default=timezone.now)
+	# Sollte durch Polygone für die Grenzen ersetzt werden
+	location_x = models.FloatField(null=False)
+	location_y = models.FloatField(null=False)
+	radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10000)])
+	# ---------------------------------------------------------------------
+
+	def getInvites(self):
+		"""
+		Gibt eine Liste von den Invites zurück
+		:author: Jasper
+		:return: Eine Liste mit allen Invites
+		"""
+		return getInvites(goverment=self)
+
+	def getMembers(self):
+		"""
+		Gibt eine Liste von allen Mitgliedern zurück
+		:author: Jasper
+		:return: Eine Liste mit allen Mitgliedern
+		"""
+		return User.objects.filter(goverment=self)
+
+	def isInArea(self, good):
+		distance = distance.calculateDistanceClass.calculate_distance(self.location_x, self.location_y, good.location_x, good.location_y)
+		if (distance <= self.radius):
+			return True;
+		return False
+		
+
+class Ngo(models.Model):
+	name = models.CharField(max_length=200, null=False)
+	name_short = models.CharField(max_length=3, null=False)
+	created_date = models.DateTimeField(default=timezone.now)
+
+	def getInvites(self):
+		"""
+		Gibt eine Liste von den Invites zurück
+		:author: Jasper
+		:return: Eine Liste mit allen Invites
+		"""
+		return getInvites(ngo=self)
+
+	def getMembers(self):
+		"""
+		Gibt eine Liste von allen Mitgliedern zurück
+		:author: Jasper
+		:return: Eine Liste mit allen Mitgliedern
+		"""
+		users = []
+		for profile in Profile.objects.filter(ngo=self):
+			users.append(profile.user)
+		return  sorted(users, key=lambda u: u.profile.date_joined_organization, reverse=True)
+
+	def getAreas(self):
+		"""
+		Gibt eine Liste von den Gebieten zurück
+		:author: Jasper
+		:return: Eine Liste mit allen Gebieten
+		"""
+		return Ngo_Area.ojects.filter(ngo=self)
+
+	def isInArea(self, good):
+		for area in self.getAreas():
+			distance = distance.calculateDistanceClass.calculate_distance(area.location_x, area.location_y, good.location_x, good.location_y)
+			if (distance <= area.radius):
+			    return True;
+		return False
+
+class Ngo_Area(models.Model):
+	ngo = models.ForeignKey(Ngo, on_delete=models.CASCADE, null=False)
+	created_date = models.DateTimeField(default=timezone.now)
+	# Sollte durch Polygone für die Grenzen ersetzt werden
+	location_x = models.FloatField(null=False)
+	location_y = models.FloatField(null=False)
+	radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+	# ---------------------------------------------------------------------
+
+	def isInArea(self, good):
+		distance = distance.calculateDistanceClass.calculate_distance(self.location_x, self.location_y, good.location_x, good.location_y)
+		if (distance <= self.radius):
+			return True;
+		return False
+
 class Catastrophe(models.Model):
     Title = models.CharField(max_length=200)
     Location = models.CharField(max_length=100) # Soll das so? Nicht per Map Anzeigen?r
@@ -34,6 +121,83 @@ class Catastrophe(models.Model):
 class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschrieben wird:https://docs.djangoproject.com/en/1.8/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User)
     currentCatastrophe = models.ForeignKey(Catastrophe,related_name='currentCatastrophe',null=True,blank=True) # TODO: Kaskade?
+    ngo = models.ForeignKey(Ngo, on_delete=models.DO_NOTHING, null=True)
+    goverment = models.ForeignKey(Goverment, on_delete=models.DO_NOTHING, null=True)
+    is_organization_admin = models.BooleanField(default=False, null=False)
+    date_joined_organization = models.DateTimeField(default=timezone.now)
+
+    def resetOrganization(self):
+        """
+        Setzt NGO und Goverment auf null zurück
+        :author: Jasper
+        :return: False falls nicht erfolgreich, True falls erfolgreich
+        """
+        self.ngo = None
+        self.goverment = None
+        self.is_organization_admin = False
+        self.save()
+
+    def acceptNgoInviteById(self, ngoId):
+        """
+        Setzt eine neue Ngo
+        :author: Jasper
+        :param ngoId: Die Id der neuen Ngo
+        :return: False falls nicht erfolgreich, True falls erfolgreich
+        """
+        if ngoId is None: # Mache nichts
+            return False
+        try:
+            ngoId = int(ngoId)
+        except ValueError: #  ngoId kein Int
+            return False
+        ngo = get_object_or_none(Ngo,id=ngoId)
+        invite = get_object_or_none(Invite_Ngo,user=self.user,organization=ngo)
+        if ngo is None or invite is None:
+            print('HERE')
+            return False
+        else:
+            self.goverment = None
+            self.ngo = ngo
+            self.isOrganziationAdmin = False
+            self.date_joined_organization = timezone.now()
+            self.save()
+            invite.delete()
+            return True
+
+    def acceptGovermentInviteById(self, govermentId):
+        """
+        Setzt ein neues Goverment
+        :author: Jasper
+        :param ngoId: Die Id des neuen Goverment
+        :return: False falls nicht erfolgreich, True falls erfolgreich
+        """
+        if govermentId is None: # Mache nichts
+            return False
+        try:
+            govermentId = int(GovermentId)
+        except ValueError: #  ngoId kein Int
+            return False
+        goverment = get_object_or_none(Goverment,id=govermentId)
+        invite = get_object_or_none(Invite_Goverment,user=self.user,organization=goverment)
+        if goverment is None or invite is None:
+            return False
+        else:
+            self.goverment = goverment
+            self.ngo = None
+            self.isOrganziationAdmin = False
+            self.date_joined_organization = timezone.now()
+            self.save()
+            invite.delete()
+            return True
+
+    def getInvites(self):
+        """
+        Gibt eine Liste von den Invites zurück
+        :author: Jasper
+        :return: Eine Liste mit allen Invites
+        """
+        return getInvites(user=self.user)
+
     def setCatastropheById(self,catId):
         """
         Setzt eine neue Katastrophe
@@ -98,6 +262,48 @@ def create_profile(sender, **kwargs):
         user_profile = Profile(user=user)
         user_profile.save()
 post_save.connect(create_profile, sender=User)
+
+class Invite_Ngo(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    organization = models.ForeignKey(Ngo, on_delete=models.CASCADE, null=False)
+    date_created = models.DateTimeField(default=timezone.now)
+
+    def getInviteType(self):
+        return 'Invite_Ngo'
+
+class Invite_Goverment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    organization = models.ForeignKey(Goverment, on_delete=models.CASCADE, null=False)
+    date_created = models.DateTimeField(default=timezone.now)
+
+    def getInviteType(self):
+        return 'Invite_Goverment'
+
+def getInvites(user=None, ngo=None, goverment=None):
+    """
+    Liste von den gewünschten Invites, wobei immer nur der erste Parameter ausgeführt wird
+    :author: Jasper
+    :param user: User für den die Invites zurückgebenen werden sollen
+    :param ngo: NGO für den die Invites zurückgebenen werden sollen
+    :param goverment: Goverment für den die Invites zurückgebenen werden sollen
+    :return: Liste von allen gefunden Invites
+    """
+    invites = []
+    if user != None:
+        for invite in Invite_Ngo.objects.filter(user = user):
+            invites.append(invite)
+        for invite in Invite_Goverment.objects.filter(user = user):
+            invites.append(invite)
+    elif ngo != None:
+        invites = Invite_Ngo.objects.filter(organization = ngo)
+    elif goverment != None:
+        invites = Invite_Goverment.objects.filter(organization = goverment)
+    else:
+        for invite in Invite_Ngo.objects.all():
+            invites.append(invite)
+        for invite in Invite_Goverment.objects.all():
+            invites.append(invite)
+    return sorted(invites, key=lambda i: i.date_created, reverse=True)
 
 class Comment_Relation(models.Model):
     class Meta:
