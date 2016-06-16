@@ -40,9 +40,6 @@ class NgoView(View):
                     usernameSearchListMember.append(True)
                 else:
                     usernameSearchListMember.append(False)
-        print(len(usernameSearchListUser))
-        print(len(usernameSearchListInvited))
-        print(len(usernameSearchListMember))
         usernameSearchList = zip(usernameSearchListUser, usernameSearchListInvited, usernameSearchListMember)
 
         context = {
@@ -91,16 +88,12 @@ class NgoView(View):
         
         if post_identifier == 'promoteAdmin':
             member = get_object_or_404(User, id = request.POST.get('member_id'))
-            member.profile.is_organziation_admin = True
-            member.profile.save()
-            member.save()
+            member.profile.setOrganizationAdmin(True)
             return self.get(request, pk)
 
         if post_identifier == 'degrateAdmin':
             member = get_object_or_404(User, id = request.POST.get('member_id'))
-            member.profile.is_organziation_admin = False
-            member.profile.save()
-            member.save()
+            member.profile.setOrganizationAdmin(False)
             return self.get(request, pk)
 
         if not user.is_superuser:
