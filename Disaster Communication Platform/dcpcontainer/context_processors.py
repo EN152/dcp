@@ -9,9 +9,7 @@ def catForm(request):
     :return:
     """
     if request.method == 'GET':
-        print("###")
-        print(request.user)
-        print("##")
+        print("###" + str(request.user) + "###")
         currentProfile= Profile.get_profile_or_create(request.user)
         currentCat = currentProfile.currentCatastrophe
         if currentCat!=None:
@@ -28,9 +26,7 @@ def catForm(request):
         if request.user.is_anonymous():
             return {'catChoiceForm': CatastropheChoice()}
         result = p.setCatastropheById(newCatId)
-        print("### Katastrophe ###")
-        print(request.user.profile.currentCatastrophe)
-        print("##")
+        print("### Katastrophe ###" + request.user.profile.currentCatastrophe + "##")
 
         if result == True: # Valid Katastrophen ID
             return {
