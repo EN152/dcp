@@ -398,6 +398,13 @@ class Goods(models.Model):
             listOfGoods.append(oneGood)
         return listOfGoods
 
+    def isSearchedForByString(self, searchString):
+        if searchString in self.description or searchString in self.title:
+            return True
+        else:
+            return False
+
+
     class Meta:
         abstract = True
 
