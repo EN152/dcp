@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mathfilters',
-    'bootstrap3'
+    'bootstrap3',
+    'channels'
 ]
 
 LOGIN_URL = '/anmelden/'
