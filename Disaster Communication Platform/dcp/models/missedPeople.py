@@ -17,7 +17,15 @@ class MissedPeople(models.Model):
     eyeColor = models.CharField(max_length=50, null=False)
     hairColor = models.CharField(max_length=50, null=False)
     characteristics = models.CharField(max_length=500, null=False)
-    picture = models.ImageField(upload_to='media/upload/people/', null=True)
+    picture = models.ImageField(upload_to='upload/people/', null=True)
 
     def __unicode__(self):
         return self.title
+
+    def delete(self, using = None, keep_parents = False):
+        if self.picture is not None:
+            try:
+                self.picture.delete()
+            except Exception:
+                pass
+        return super().delete(using, keep_parents)

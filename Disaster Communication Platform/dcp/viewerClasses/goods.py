@@ -20,10 +20,12 @@ class SearchMaterialView(dcp.viewerClasses.timeline.TimelineView):
             location_x = request.POST.get('location_x')
             location_y = request.POST.get('location_y')
             categoryString = request.POST.get('category')
+            image = request.FILES.get('upload_image')
             category = Categorys.stringToCategoryTypeAsNumber(categoryString)
             if radius is None or title is None or catastrophe is None or location_x is None or location_y is None or category is None:
                 raise Http404 
-            Search_Material.objects.create(title=title, description=description, radius=radius, catastrophe=catastrophe, location_x=location_x, location_y=location_y, category=category, user=request.user)
+            Search_Material.objects.create(title=title, description=description, radius=radius, catastrophe=catastrophe,
+                 location_x=location_x, location_y=location_y, category=category, user=request.user, image=image)
             return HttpResponseRedirect('/suchen/materielles/')
         return super().post(request)
 
@@ -45,9 +47,11 @@ class SearchImmaterialView(dcp.viewerClasses.timeline.TimelineView):
             catastrophe = get_object_or_404(Catastrophe, id=request.POST.get('catastrophe'))
             location_x = request.POST.get('location_x')
             location_y = request.POST.get('location_y')
+            image = request.FILES.get('upload_image')
             if radius is None or title is None or catastrophe is None or location_x is None or location_y is None:
                 raise Http404
-            Search_Immaterial.objects.create(title=title, description=description, radius=radius, catastrophe=catastrophe, location_x=location_x, location_y=location_y, user=request.user)
+            Search_Immaterial.objects.create(title=title, description=description, radius=radius, catastrophe=catastrophe, 
+                    location_x=location_x, location_y=location_y, user=request.user, image=image)
             return HttpResponseRedirect('/suchen/immaterielles/')
         return super().post(request)
 
@@ -65,9 +69,11 @@ class OfferMaterialView(dcp.viewerClasses.timeline.TimelineView):
             location_y = request.POST.get('location_y')
             categoryString = request.POST.get('category')
             category = Categorys.stringToCategoryTypeAsNumber(categoryString)
+            image = request.FILES.get('upload_image')
             if title is None or catastrophe is None or location_x is None or location_y is None or category is None:
                 raise Http404 
-            Offer_Material.objects.create(title=title, description=description, catastrophe=catastrophe, location_x=location_x, location_y=location_y, category=category, user=request.user)
+            Offer_Material.objects.create(title=title, description=description, catastrophe=catastrophe,
+                    location_x=location_x, location_y=location_y, category=category, user=request.user, image=image)
             return HttpResponseRedirect('/bieten/materielles/')
         return super().post(request)
 
@@ -83,9 +89,11 @@ class OfferImmaterialView(dcp.viewerClasses.timeline.TimelineView):
             catastrophe = get_object_or_404(Catastrophe, id=request.POST.get('catastrophe'))
             location_x = request.POST.get('location_x')
             location_y = request.POST.get('location_y')
+            image = request.FILES.get('upload_image')
             if title is None or  catastrophe is None or location_x is None or location_y is None:
                 raise Http404
-            Offer_Immaterial.objects.create(title=title, description=description, catastrophe=catastrophe, location_x=location_x, location_y=location_y, user=request.user)
+            Offer_Immaterial.objects.create(title=title, description=description, catastrophe=catastrophe,
+                     location_x=location_x, location_y=location_y, user=request.user, image=image)
             return HttpResponseRedirect('/bieten/immaterielles/')
         return super().post(request)      
 

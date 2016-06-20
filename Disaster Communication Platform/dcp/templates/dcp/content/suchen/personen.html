@@ -21,7 +21,7 @@
 
 <div class="panel-body" id="suchFormular" style="display: none;">
 <div class="col-sm-6">
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
 	<h2><span class="glyphicon glyphicon-search"></span> Welche Person suchst Du? </h2>
 		{% csrf_token %}	
 		{% bootstrap_form form %}
