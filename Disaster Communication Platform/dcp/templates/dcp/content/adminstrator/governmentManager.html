@@ -1,6 +1,6 @@
 ﻿{% extends "dcp/design/base.html" %}}
 
-{% block title %} Goverment Manager {% endblock %}
+{% block title %} Government Manager {% endblock %}
 
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
@@ -8,9 +8,9 @@
 <!-- Script: Aufklappen des Bereiches für eine neue Erstellung-->
 <script>
 	$(document).ready(function(){
-		$("#newGoverment").click(function(){
-			$("#govermentFormular").toggle();
-			$("#govermentFormularHeading").hide();
+		$("#newGovernment").click(function(){
+			$("#governmentFormular").toggle();
+			$("#governmentFormularHeading").hide();
 		});
 	});
 </script>
@@ -18,15 +18,15 @@
 <!-- Anfang des Bereich für die Neuerstellung -->
 {% if user.is_active and user.is_superuser %}
 <div class="panel panel-default">
-    <div class="panel-heading" id="govermentFormularHeading"{% if invalidInput %} style="display: none;" {% endif %}><button class="btn btn-primary btn-lg" id="newGoverment"><span class="glyphicon glyphicon-retweet"></span> Neu</button></div>
-    <div class="panel-body" id="govermentFormular" {% if not invalidInput %} style="display: none;" {% endif %}>
+    <div class="panel-heading" id="governmentFormularHeading"{% if invalidInput %} style="display: none;" {% endif %}><button class="btn btn-primary btn-lg" id="newGovernment"><span class="glyphicon glyphicon-retweet"></span> Neu</button></div>
+    <div class="panel-body" id="governmentFormular" {% if not invalidInput %} style="display: none;" {% endif %}>
 	    <div class="col-sm-6">
 		    <form method="POST">
-		        <h2><span class="glyphicon glyphicon-retweet"></span> Neues Goverment </h2>
+		        <h2><span class="glyphicon glyphicon-retweet"></span> Neues Government </h2>
                 {% csrf_token %}
 		    	<div class="form-group">
 		    		<label>Name:</label>
-		    		<input name="name" type="text" placeholder="Goverment Name..." class="form-control">
+		    		<input name="name" type="text" placeholder="Government Name..." class="form-control">
 		    	</div>
 
 		    	<div class="form-group">
@@ -69,7 +69,7 @@
 <!-- Ende des Bereiches für die Neuerstellung -->
 
 <!-- Aufzählung von allen NGOs-->
-{% if goverment_list %}
+{% if government_list %}
     <div class="table-responsive">          
       <table class="table">
         <thead>
@@ -81,12 +81,12 @@
           </tr>
         </thead>
         <tbody>
-            {% for goverment in goverment_list %}
+            {% for government in government_list %}
                 <tr>
                   <td>{{forloop.counter}}</td>
-                  <td><a href="{% url 'dcp:GovermentView' goverment.id %}">{{goverment.name}}</a></td>
-                  <td>{{goverment.name_short}}</td>
-                  <td>{{goverment.getMembers|length}}</td>
+                  <td><a href="{% url 'dcp:GovernmentView' government.id %}">{{government.name}}</a></td>
+                  <td>{{government.name_short}}</td>
+                  <td>{{government.getMembers|length}}</td>
                 </tr>
             {% endfor %}
         </tbody>

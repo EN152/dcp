@@ -40,11 +40,11 @@ urlpatterns = [
     url(r'^administrator/catoverview/$',CatastropheOverview.as_view(),name='CatastropheOverview'),
     url(r'^administrator/catdelete/(?P<pk>\d+)/$',DeleteCatastropheView.as_view(),name='DeleteCatastropheView'),
     url(r'^administrator/ngomanager/$',NgoManagerView.as_view(),name='NgoManagerView'),
-    url(r'^administrator/govermentmanager/$',GovermentManagerView.as_view(),name='GovermentManagerView'),
+    url(r'^administrator/governmentmanager/$',GovernmentManagerView.as_view(),name='GovernmentManagerView'),
 
     # Organisationen
     url(r'^ngo/(?P<pk>\d+)/$', NgoView.as_view(), name='NgoView'),
-    url(r'^goverment/(?P<pk>\d+)/$', GovermentView.as_view(),name='GovermentView'),
+    url(r'^government/(?P<pk>\d+)/$', GovernmentView.as_view(),name='GovernmentView'),
 
 #    # Wissen
 #    url(r'^wissen/$', views.wissen),

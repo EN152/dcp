@@ -1,26 +1,26 @@
 from dcp.importUrls import *
 
-class GovermentView(View):
+class GovernmentView(View):
     """description of class"""
     def get(self, request, pk, usernameSearchString=None):
-        templatePath= 'dcp/content/organization/goverment.html'
+        templatePath= 'dcp/content/organization/government.html'
         template = loader.get_template(templatePath)
 
         context = {}
 
         return HttpResponse(template.render(context,request))
 
-class GovermentManagerView(View):
+class GovernmentManagerView(View):
     """description of class"""
 
     def get(self, request, invalidInput=False):
-        templatePath = 'dcp/content/adminstrator/govermentManager.html'
+        templatePath = 'dcp/content/adminstrator/governmentManager.html'
         template = loader.get_template(templatePath)
         user = request.user
-        goverment_list = Goverment.objects.all()
+        government_list = Government.objects.all()
 
         context = {
-            'goverment_list': goverment_list,
+            'government_list': government_list,
             'invalidInput': invalidInput
         }
         if user.is_authenticated() and user.is_active and user.is_superuser:
@@ -49,7 +49,7 @@ class GovermentManagerView(View):
         if len(name_short) != 3 or len(name) <= 3:
             return self.get(request, invalidInput=True)
 
-        ngo = Goverment.objects.create(name=name, name_short=name_short, location_x= position_x, location_y = position_y, radius=radius)
-        url = '/goverment/' # Probleme mit Reverse von Urls
+        ngo = Government.objects.create(name=name, name_short=name_short, location_x= position_x, location_y = position_y, radius=radius)
+        url = '/government/' # Probleme mit Reverse von Urls
         url += str(ngo.id)
         return HttpResponseRedirect(url)
