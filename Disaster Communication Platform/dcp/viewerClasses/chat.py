@@ -1,5 +1,5 @@
 from dcp.importUrls import *
-
+from dcp.customclasses.Helpers import  *
 class Chat(View):
     form_class = sendMessage
     template = 'dcp/content/chat/chat.html'
