@@ -1,9 +1,9 @@
 from dcp.importUrls import *
-
+from dcp.customclasses.Helpers import  *
 class Chat(View):
     form_class = sendMessage
     template = 'dcp/content/chat/chat.html'
-    initial = {'Text': dcp.customclasses.Helpers.PleaseEnterMessageString}
+    initial = {'Text': PleaseEnterMessageString}
     otherUser = None
     otherId = None
     currentUser = None
@@ -22,7 +22,7 @@ class Chat(View):
             return HttpResponseRedirect(reverse('dcp:ChatOverview'))
         if self.otherId==None:
             return HttpResponseRedirect(reverse('dcp:ChatOverview'))
-        self.otherUser = dcp.customclasses.Helpers.get_object_or_none(User,id=self.otherId)
+        self.otherUser = get_object_or_none(User,id=self.otherId)
         if self.otherUser == None: # User existiert nicht -> redirect
             return HttpResponseRedirect(reverse('dcp:ChatOverview'))
         self.currentUser = request.user

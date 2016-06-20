@@ -1,5 +1,5 @@
 from .imports import *
-
+from dcp.customclasses import Helpers
 class Conversation(models.Model):
     Starter  = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='Starter')
     Receiver = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='Receiver')
@@ -16,12 +16,12 @@ class Conversation(models.Model):
         :param usertwo: Chatteilnehmer2
         :return: Konversation falls existent, sonst None
         """
-        conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation,
+        conversation = Helpers.get_object_or_none(Conversation,
                                                                          Starter=userOne,
                                                                          Receiver=userTwo)
 
         if conversation is None:
-            conversation = dcp.customclasses.Helpers.get_object_or_none(Conversation, Starter=userTwo,
+            conversation = Helpers.get_object_or_none(Conversation, Starter=userTwo,
                                                                          Receiver=userOne)
         return conversation
 
