@@ -1,9 +1,38 @@
-﻿{% extends "dcp/design/base.html" %}}
+{% extends "dcp/design/base.html" %}}
+
+
+
 
 {% block title %} {{page_title}} {% endblock %}
 
+
 {% block content %}
+
+<!-- for the search engine -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<!-- css and js for the current location -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://domoritz.github.io/leaflet-locatecontrol/dist/L.Control.Locate.min.css" />
+<script src="https://domoritz.github.io/leaflet-locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+
+<style>
+	.leaflet-control-locate.active.following a {
+	display:none;
+	}
+	
+	.leaflet-control-locate.active a {
+	display:none;
+	}
+
+	.leaflet-control-locate.leaflet-bar.leaflet-control.requesting{
+	display:none;
+	}
+</style>
 
 <!-- Script: Aufklappen des Bereiches für eine neue Erstellung-->
 <script>
@@ -18,76 +47,125 @@
 <!-- Anfang des Bereich für die Neuerstellung -->
 {% if user.is_active %}
 <div class="panel panel-default">
-   <div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon {{create_new_glyphicon}}"></span> Neu</button></div>
+	<div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon {{create_new_glyphicon}}"></span> Neu</button></div>
 	<div class="panel-body" id="suchFormular" style="display: none;">
-	 <div class="col-sm-6">
-		<form method="POST">
-		    <h2><span class="glyphicon {{create_new_glyphicon}}"></span> Was möchtest du erstellen? </h2>
+		<div class="col-sm-6">
+			<form method="POST">
+				<h2><span class="glyphicon {{create_new_glyphicon}}"></span> Was möchtest du erstellen? </h2>
 
-			<div class="form-group">
-				<label>Titel:</label>
-				<input name="title" type="text" placeholder="Leistungsstarkes Stromaggregat..." class="form-control">
-			</div>
-            {% if category_list %}
-			    <label>Kategorie:</label><br />
+				<div class="form-group">
+					<label>Titel:</label>
+					<input name="title" type="text" placeholder="Leistungsstarkes Stromaggregat..." class="form-control">
+				</div>
+				{% if category_list and show_categorys %}
+				<label>Kategorie:</label><br />
 
-			    {% for category_glyphicon, category_name in category_list%}
-			        <div class="radio">
-			        	<label>
-			                <input type="radio" id="radio_{{category_name}}" name="category"  value="{{category_name}}">
-			                <span class="{{category_glyphicon}}"></span> {{category_name}}
-			            </label>
-			        </div>
-                {% endfor %}
-            {% endif %}
+				{% for category_glyphicon, category_name in category_list%}
+				<div class="radio">
+					<label>
+						<input type="radio" id="radio_{{category_name}}" name="category"  value="{{category_name}}">
+						<span class="{{category_glyphicon}}"></span> {{category_name}}
+					</label>
+				</div>
+				{% endfor %}
+				{% endif %}
 
-			<div class="form-group">
-				<label>Bild:</label><input type="file">
-            </div>
+				<div class="form-group">
+					<label>Bild:</label><input type="file">
+				</div>
 
-			<div class="form-group">
-				<label>Kurzbeschreibung:</label>
-				<textarea name="description" class="form-control" rows="5" id="description" placeholder="Nenne hier wichtige Details."></textarea>
-			</div>
+				<div class="form-group">
+					<label>Kurzbeschreibung:</label>
+					<textarea name="description" class="form-control" rows="5" id="description" placeholder="Nenne hier wichtige Details."></textarea>
+				</div>
 
-			<div class="form-group">
-				<label>Standort:</label>
-				<input name="location" type="text" class="form-control" id="inputlg" placeholder="Berlin"> <!-- TODO ort über javascript finden -->
-			</div>
+				<div class="form-group">
+					<label>Standort:	<input type="button" class="btn btn-success" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
+					<div id="map" style="height:400px;width:100%"></div>
+				</div>
 
-            {% if show_radius %}
-			    <div class="form-inline">
-			    	<label for="priority">Suchradius (maximale Entfernung):</label><br />
-			    	<span class="label label-default">0km: kaum mobil</span>
-			    	<select name="radius" id="radius" class="form-control">
-			    		<option>0 km</option>
-			    		<option>1 km </option>
-			    		<option>2 km</option>
-			    		<option>5 km</option>
-			    		<option>10 km</option>
-			    		<option>20 km</option>
-			    		<option>50 km</option>
-			    		<option>100 km</option>
-			    		<option>1000 km</option>
-			    	</select>
-			    	<span class="label label-danger">1000km: keine Beschränkungen</span><br><br>
-			    </div>
-            {% endif %}
+				{% if show_radius %}
+				<div class="form-inline">
+					<label for="priority">Suchradius (maximale Entfernung):</label><br />
+					<span class="label label-default">0km: kaum mobil</span>
+					<select name="radius" id="radius" class="form-control">
+						<option>0 km</option>
+						<option>1 km </option>
+						<option>2 km</option>
+						<option>5 km</option>
+						<option>10 km</option>
+						<option>20 km</option>
+						<option>50 km</option>
+						<option>100 km</option>
+						<option>1000 km</option>
+					</select>
+					<span class="label label-danger">1000km: keine Beschränkungen</span><br><br>
+				</div>
+				{% endif %}
 
-			<div class="form-group">
-                {% csrf_token %}
-                <input type="hidden" id="catastrophe" name="good_typ" value="{{create_new_good_typ}}" />
-                <input type="hidden" id="catastrophe" name="catastrophe" value="1" /> <!-- TODO Replace with real implentation !!!! -->
-                <input type="hidden" id="locaton_x" name="location_x" value="50" /> <!-- TODO Replace with real implentation !!!! -->
-                <input type="hidden" name="location_y" value="50" /> <!-- TODO Replace with real implentation !!!! -->
-				<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
-			</div>			
-        </form>
-	  </div>	
-    </div>
+				<div class="form-group">
+					{% csrf_token %}
+					<input type="hidden" id="catastrophe" name="good_typ" value="{{create_new_good_typ}}" />
+					<input type="hidden" id="catastrophe" name="catastrophe" value="1" /> <!-- TODO Replace with real implentation !!!! -->
+					<input type="hidden" id="locaton_x" name="location_x" value="50" /> <!-- TODO Replace with real implentation !!!! -->
+					<input type="hidden" id="locaton_y" name="location_y" value="50" /> <!-- TODO Replace with real implentation !!!! -->
+					<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
+				</div>	
+
+				<script>
+
+					//set the start focus of the map
+					var map = L.map('map').setView([37.804146, -122.275045], 15);
+
+					//contributors:
+					L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+						attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+					}).addTo(map);
+
+	
+					// Add geocoding plugin etc. search bar
+					var options = {
+						bounds: true,
+						position: "topleft",
+						expanded: true
+					}
+	
+					// add search key and options to the map
+					var geocoder = L.control.geocoder('search-Hv2UM4h', options).addTo(map);
+	
+					// when we select a city wich we searched for we are putting that into the 
+					geocoder.on('select', function (e) {
+						console.log('highlight', e);
+						document.getElementById("locaton_x").value = e.latlng.lat
+						document.getElementById("locaton_y").value = e.latlng.lng
+					});
+	
+					// if the map was able to find my current location
+					map.on('locationfound', function(e){
+						marker = L.marker([e.latitude, e.longitude], { draggable: false });
+						this.addLayer(marker);
+						document.getElementById("locaton_x").value = e.latitude;
+						document.getElementById("locaton_y").value = e.longitude;
+					});
+
+					// start the location tracker
+					function getCurrentLocation(){
+						var lc = L.control.locate().addTo(map);
+						lc.start();
+					}
+
+
+				</script>
+
+</form>
+</div>	
 </div>
+</div>
+
+
 {% endif %}
 <!-- Ende des Bereiches für die Neuerstellung -->
+
 
 <!-- Anfang der Timeline -->
 {% include "dcp/design/timeline.html" %}

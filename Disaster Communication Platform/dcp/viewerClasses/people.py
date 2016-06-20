@@ -11,7 +11,7 @@ class Suchen_Personen(View):
 				all_characteristics = person.characteristics.split(";")
 				
 				for c in all_characteristics:
-					characteristicsToUser.append((c, person.title))
+					characteristicsToUser.append((c, person.id))
 
 		template = 'dcp/content/suchen/personen.html'
 		context = {'missed_people': missed_people, 'characteristicsToUser' : characteristicsToUser, 'form' : form}

@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^suchen/materielles/$', SearchMaterialView.as_view()),
     url(r'^suchen/immaterielles/$', SearchImmaterialView.as_view()),
     url(r'^suchen/personen/$', Suchen_Personen.as_view()),
+    url(r'^suchen/wortsuche/$', WordSearch.as_view(), name='WordSearch'),
 
     # Bieten
     url(r'^bieten/$', Bieten.as_view()),
@@ -34,10 +35,16 @@ urlpatterns = [
     # AdminPanel
     url(r'^administator/useroverview/$',UserAdminOverview.as_view(),name='UserAdminOverview'),
     url(r'^adminstrator/edituser/(?P<pk>\d+)/$', AdminEditUserProfileView.as_view(),name='AdminEditUserProfileView'),
-    url(r'administrator/deleteuser/(?P<pk>\d+)/$',DeleteUserView.as_view(),name='DeleteUserView'),
+    url(r'^administrator/deleteuser/(?P<pk>\d+)/$',DeleteUserView.as_view(),name='DeleteUserView'),
     url(r'^administrator/createcat/$',CreateOrEditCatastrophe.as_view(),name='CreateOrEditCatastrophe'),
     url(r'^administrator/catoverview/$',CatastropheOverview.as_view(),name='CatastropheOverview'),
     url(r'^administrator/catdelete/(?P<pk>\d+)/$',DeleteCatastropheView.as_view(),name='DeleteCatastropheView'),
+    url(r'^administrator/ngomanager/$',NgoManagerView.as_view(),name='NgoManagerView'),
+    url(r'^administrator/governmentmanager/$',GovernmentManagerView.as_view(),name='GovernmentManagerView'),
+
+    # Organisationen
+    url(r'^ngo/(?P<pk>\d+)/$', NgoView.as_view(), name='NgoView'),
+    url(r'^government/(?P<pk>\d+)/$', GovernmentView.as_view(),name='GovernmentView'),
 
 #    # Wissen
 #    url(r'^wissen/$', views.wissen),

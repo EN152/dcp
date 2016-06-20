@@ -1,7 +1,4 @@
-# imports
 from dcp.importUrls import *
-
-
 
 class Chat(View):
     form_class = sendMessage
@@ -44,7 +41,7 @@ class Chat(View):
         """
         messages = Message.objects.filter(Conversation=self.conversation)
         form = self.form_class()
-        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template,context={'message_list':messages,'otherUser':self.otherUser,'currentUser':self.currentUser,'form':form})
+        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template,params={'message_list':messages,'otherUser':self.otherUser,'currentUser':self.currentUser,'form':form})
     
     def post(self,request):
         form = self.form_class(request.POST)

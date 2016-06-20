@@ -1,4 +1,4 @@
-{% load staticfiles %}
+﻿{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="de">
 
@@ -19,7 +19,12 @@
 	<link href="{% static 'sb-admin/bower_components/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 	<link href="{% static 'dataTables/jquery.dataTables.min.css' %}" rel="stylesheet">
-	<!-- SCRIPTS werden am Ende geladen: siehe unten! -->
+	
+	<!-- Please leave them here because, if you move them to the end of the page the map site won't work -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	
+		<!-- SCRIPTS werden am Ende geladen: siehe unten! -->
 </head>
 
 <body>
@@ -43,10 +48,24 @@
 						{{ catChoiceForm }}
 					</form>
 
+					<!---
+
 					<form role="search" method="POST" style ="float: left; padding: 5px;">{% csrf_token %}
 						<input type="text" name="search" class="form-control" placeholder="Was brauchst du?">
 						<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Suchen</button>
 					</form>
+
+				-->
+
+					<form role="search" method="GET" action="{% url "dcp:WordSearch" %}">
+	          <div class="form-group">
+            	<input type="text" name="searchText" class="form-control" placeholder="Was brauchst du?">
+          	</div>
+         			<button type="submit" class="btn btn-default">
+         				<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Suchen
+         			</button>
+       		</form>
+
 				</div>
 
 
@@ -150,15 +169,22 @@
 									<a href="/profil/daten/"><span class="glyphicon glyphicon-th-list"></span> Persönliche Daten</a>
 								</li>
 								<li>
-									<a href="/nachrichten/"><span class="glyphicon glyphicon-envelope"></span> Nachrichten</a></li-->
+									<a href="/nachrichten/"><span class="glyphicon glyphicon-envelope"></span> Nachrichten</a>
 								</li>
-								<li>
-									<a href="/profil/netzwerke/"><span class="glyphicon glyphicon-retweet"></span> Netzwerke</a>
-								</li>
+                                {% if user.profile.ngo != None %}
+                                    <li>
+                                        <a href="{% url 'dcp:NgoView' user.profile.ngo.id%}"><i class="fa fa-users" aria-hidden="true"></i> {{user.profile.ngo.name_short}}</a>
+                                    </li>
+                                
+                                {% elif user.profile.goverment != None %}
+                                    <li>
+                                        <a href="{% url 'dcp:GovermentView' user.profile.goverment.id%}"><i class="fa fa-globe" aria-hidden="true"></i> {{user.profile.goverment.name_short}}</a>
+                                    </li>
+                                {% endif %}
 							</ul>
 						</li>
 
-						{% if request.user.is_superuser %}
+						{% if user.is_superuser %}
 						<li>
 							<a href="/admin/"><span class="glyphicon glyphicon-cog"></span> <b> Administration</b><span class="fa arrow"></span></a>
 							<ul class="nav nav-second-level">
@@ -167,6 +193,13 @@
 								</li> 
 								<li>
 									<a href="{% url 'dcp:UserAdminOverview' %}"><span class="glyphicon glyphicon-user"></span> Benutzer</a>
+								</li>
+             
+								<li>
+									<a href="{% url 'dcp:NgoManagerView' %}"><i class="fa fa-users" aria-hidden="true"></i> NGO</a>
+								</li>
+								<li>
+									<a href="{% url 'dcp:GovernmentManagerView' %}"><i class="fa fa-globe" aria-hidden="true"></i> Staat</a>
 								</li>
 							</ul>
 						</li>
@@ -197,8 +230,6 @@
 				<script src="{% static 'sb-admin/bower_components/morrisjs/morris.min.js' %}"></script>
 				<script src="{% static 'sb-admin/js/morris-data.js' %}"></script>
 				<script src="{% static 'sb-admin/dist/js/sb-admin-2.js' %}"></script>
-				<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-				<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 				<script src="{% static 'dataTables/jquery.dataTables.min.js' %}"></script>
 			</body>
 			</html>
