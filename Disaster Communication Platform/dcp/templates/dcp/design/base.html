@@ -63,12 +63,11 @@
 				<!-- /.dropdown -->
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						<i class="fa fa-user fa-fw"></i> <b>{{ user.username }}</b> <i class="fa fa-caret-down"></i>
+						<i class="fa fa-user fa-fw"></i> <b>{{ user.username }}</b> <i class="fa fa-caret-down"></b></i>
 					</a>
 					<ul class="dropdown-menu dropdown-user">
 						<li><a href="/profil/"><i class="fa fa-user fa-fw"></i> Dein Profil</a>
 						</li>
-
 						<li class="divider"></li>
 						<li><a href="/abmelden/"><i class="fa fa-sign-out fa-fw"></i> Abmelden</a>
 						</li>
@@ -218,7 +217,7 @@
 							</div>
 						</li>
 						{% endif %}
-						<center><img src="{% static 'media/dcp.svg' %}" height="200px" style="padding:20px;"></center>
+						<center><img src="{% static 'media/dcp.png' %}" height="200px" style="padding:20px;"></center>
 					</nav>
 
 					<div id="page-wrapper">
@@ -230,13 +229,13 @@
 						{% block content %}{% endblock content%}
 					</div>
 
-					<div class="row" id="footer">    
+					<div class="row" id="footer">     
+					<hr>
+						<p class="text-center">&copy;  2016  &mdash;  Disaster Communication Platform  &mdash;  <a href="https://github.com/EN152/dcp/">Documentation</a></p>     
+					<hr>
+					</div> 
 
-					</div>              
-					<hr>
-					<p class="text-center">&copy;  2016  &mdash;  Disaster Communication Platform  &mdash;  <a href="https://github.com/EN152/dcp/">Documentation</a></p>               
-					<hr>
-				</div>
+			
 				<!--script>
 					$(document).ready(function(){
   						$("#").on("hide.bs.collapse", function(){
