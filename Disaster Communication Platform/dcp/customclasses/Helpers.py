@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.utils.http import urlencode
 '''
 Vincent: Resourcen Strings, für wiederverwendte Texte, Links usw.
