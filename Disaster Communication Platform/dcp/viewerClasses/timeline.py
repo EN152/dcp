@@ -67,12 +67,6 @@ class TimelineView(View):
             if postIdentifier == 'delete':
                 good = self.get_good_or_404(request)
                 if user.is_superuser or user == good.user:
-                    if good.comments is not None:
-                        good.comments.delete()
-                    if good.bumps is not None:
-                        good.bumps.delete()
-                    if good.reports is not None:
-                        good.reports.delete()
                     good.delete()
                     return HttpResponseRedirect('')
 

@@ -1,4 +1,4 @@
-
+from django.utils.http import urlencode
 '''
 Vincent: Resourcen Strings, für wiederverwendte Texte, Links usw.
 '''
@@ -26,4 +26,5 @@ def get_object_or_none(model, **kwargs):
         return model.objects.get(**kwargs)
     except model.DoesNotExist:
         return None
-
+def url_with_querystring(path, **kwargs): #TODO: Refactor nach Helpers.
+    return path + '?' + urlencode(kwargs)

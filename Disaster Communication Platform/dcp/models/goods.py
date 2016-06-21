@@ -10,11 +10,26 @@ class Goods(models.Model):
     location_x = models.FloatField(null=True)
     location_y = models.FloatField(null=True)
     created_date = models.DateTimeField(default=timezone.now)
+    image = models.ImageField(upload_to="upload/goods/")
     comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True)
     bumps = models.ForeignKey(Bump_Relation, on_delete=models.DO_NOTHING, null=True)
     reports = models.ForeignKey(Report_Relation, on_delete=models.DO_NOTHING, null=True)
     visibility = models.BooleanField(default=True)
     # Timelinevariablen müssen in jeder Subklasse neu gesetzt werden
+
+    def delete(self, using = None, keep_parents = False):
+        if good.comments is not None:
+            good.comments.delete()
+        if good.bumps is not None:
+            good.bumps.delete()
+        if good.reports is not None:
+            good.reports.delete()
+        if self.image is not None:
+            try:
+                self.image.delete()
+            except Exception:
+                pass
+        return super().delete(using, keep_parents)
 
     def __unicode__(self):
         return self.title
@@ -73,8 +88,6 @@ class Goods(models.Model):
 
 class Material_Goods(Goods):
     category = models.CharField(max_length=1, choices=Categorys.CATEGORY_TYPES)
-    # Uploadpfad muss noch generiert werden... (Useranbindung + delete on cascade ? )
-    image = models.ImageField(upload_to="upload/")
 
     def getCategoryGlyphiconAsString(self):
         return Categorys.getCategoryGlyphiconAsString(self.category)

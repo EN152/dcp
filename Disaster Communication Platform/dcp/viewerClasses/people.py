@@ -22,16 +22,16 @@ class Suchen_Personen(View):
 		if request.method == "POST":
 			form = MissedPeopleForm(request.POST)
 			if form.is_valid():
-				missed_person = MissedPeople(title=request.POST['title'], 
-					description=request.POST['description'], 
-					gender=request.POST['gender'], 
-					age=request.POST['age'], 
-					name=request.POST['name'], 
-					size=request.POST['size'], 
-					eyeColor=request.POST['eyeColor'], 
-					hairColor=request.POST['hairColor'], 
-					characteristics=request.POST['characteristics'],
-					picture=request.POST['picture'],
+				missed_person = MissedPeople(title=request.POST.get('title'), 
+					description=request.POST.get('description'), 
+					gender=request.POST.get('gender'), 
+					age=request.POST.get('age'), 
+					name=request.POST.get('name'), 
+					size=request.POST.get('size'), 
+					eyeColor=request.POST.get('eyeColor'), 
+					hairColor=request.POST.get('hairColor'), 
+					characteristics=request.POST.get('characteristics'),
+					picture=request.FILES.get('picture'),
 					user=request.user)
 					# catastrophe=Catastrophe.objects.get(id=1) # TODO: replace with real catastrophe id!
 				missed_person.save()
