@@ -1,5 +1,6 @@
 from .imports import *
 from .catastrophe import *
+from dcp.customclasses.Helpers import getInvites
 
 class Ngo(models.Model):
 	name = models.CharField(max_length=200, null=False)

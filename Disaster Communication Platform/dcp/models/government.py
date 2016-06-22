@@ -17,6 +17,7 @@ class Government(models.Model):
 		:author: Jasper
 		:return: Eine Liste mit allen Invites
 		"""
+		from dcp.customclasses.Helpers import getInvites
 		return getInvites(government=self)
 		
 	def getMembers(self):

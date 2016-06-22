@@ -2,6 +2,24 @@ from .imports import *
 from .catastrophe import *
 from .profile import *
 
+class Bump_Relation(models.Model):
+    class Meta:
+        abstract = False
+
+class Report_Relation(models.Model):
+    class Meta:
+        abstract = False
+
+class Bump(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
+    relation = models.ForeignKey(Bump_Relation, on_delete=models.CASCADE, null=False)
+    date_created = models.DateTimeField(default=timezone.now)
+
+class Report(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
+    relation = models.ForeignKey(Report_Relation, on_delete=models.CASCADE, null=False)
+    date_created = models.DateTimeField(default=timezone.now)
+
 class Goods(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
@@ -53,6 +71,7 @@ class Goods(models.Model):
         if type == 'Offer_Immaterial':
             return Offer_Immaterial.objects.get(id=id)
         return None
+
     def stringToGoodClass(type):
         if type == 'Search_Material':
             return Search_Material
