@@ -4,44 +4,61 @@ class AktionenPlanung(View):
 	def get(self, request):
 		template = 'dcp/content/aktionen/planung.html'
 
-		allEvents = Event.objects.all()
+		rawEvents = Event.objects.all()
+		# this step creates an n-tuple because range() cannot be used in template and int is not iterable
+		events = []
+		for event in rawEvents:
+			numberOfRows = max((event.numberOfUsers, event.numberOfCars, event.numberOfSpecials))
+			numberOfMembers = event.members.count()
+			
+			namesOfMembers = []
+			for member in event.members.all():
+				namesOfMembers.append(member.username)
+		
+			userIsMemberOfCurrentEvent = False
+			if request.user in event.members.all():
+				userIsMemberOfCurrentEvent = True
+		
+			nameOfCurrentUser = request.user.username	
+			events.append((event, range(numberOfRows), numberOfMembers, namesOfMembers, userIsMemberOfCurrentEvent, nameOfCurrentUser))
 
-	
-#		table_headings = []
-#		numberOfUsers = 5
-#		user_icon = 'fa fa-user'
-#
-#		numberOfCars = 2
-#		car_icon = 'fa fa-car'
-#
-#		numberOfSpecials = 2
-#		special_icon = 'fa fa-star'
-#
-#		for i in range(0,numberOfUsers):
-#			table_headings += [user_icon]
-#		
-#		for i in range(0,numberOfCars):
-#			table_headings += [car_icon]
-#
-#		for i in range(0,numberOfSpecials):
-#			table_headings += [special_icon]	
-	
-
-		context = {'events' : allEvents}
+		context = {'events' : events}
 		return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
 
 	def post(self,request):
 		template = 'dcp/content/aktionen/planung.html'
-		return HttpResponseRedirect("/aktionen/planung/")
 
-#	def addTableHeading(table_headings, nb, icon):
-#		if table_headings.size == 0 or nb == 0 or icon == '':
-#			return []
-#
-#		table_headings = table_headings
-#		for i in range(0,nb):
-#			table_headings += [icon]
-#		return table_headings			
+		if request.POST.get('post_identifier') == 'add_user' and request.user.is_active and request.user.is_authenticated():
+			event_id = request.POST.get('event_id')
+			user = request.user
+
+			event = Event.objects.get(id=event_id)
+			if event is None:
+				context = {'error': 'Da ist leider etwas schief gelaufen! :('}
+				return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
+			
+			if user in event.members.all():
+				context = {'error': 'Du hast dich bei diesem Event bereits eingetragen!'}
+				return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
+
+			event.members.add(user)
+			event.save()
+		
+		if request.POST.get('post_identifier') == 'remove_user' and request.user.is_active and request.user.is_authenticated():
+			event_id = request.POST.get('event_id')
+			user = request.user
+
+			event = Event.objects.get(id=event_id)
+			if event is None:
+				context = {'error': 'Da ist leider etwas schief gelaufen! :('}
+				return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
+			
+			event.members.remove(user)
+			event.save()
+
+		return HttpResponseRedirect('/aktionen/planung')
+
+		
 
 
 class AktionenLaufende(View):
