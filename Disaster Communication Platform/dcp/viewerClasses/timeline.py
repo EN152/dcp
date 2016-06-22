@@ -2,6 +2,8 @@
 from dcp.importUrls import *
 from django.http import Http404
 import dcp.dcpSettings
+from django.template.context_processors import request
+from django.template.backends.django import Template
 
 class TimelineView(View):
     def getCreateNew(self, request, good_typ, show_radius, show_categorys, create_new_glyphicon, page_title):
@@ -24,8 +26,23 @@ class TimelineView(View):
             'page_title': page_title,
             'show_categorys' : show_categorys,
         }
-
         return HttpResponse(template.render(context,request))
+    
+    def getTemplate(self,request):
+        goodtype = request.POST['good_type']        
+        if(goodtype == 'Search_Material'):
+            goodTemplate = "/suchen/materielles/"
+        if(goodtype == 'Offer_Material'):
+            goodTemplate = "/bieten/materielles/"
+        if(goodtype == 'Search_Immaterial'):
+            goodTemplate = "/suchen/immaterielles/"
+        if(goodtype == 'Offer_Immaterial'):
+            goodTemplate = "/bieten/immaterielles/"      
+        else:
+            goodTemplate = ''
+        return goodTemplate
+        
+            
 
     def get_good_or_404(self, request):
         good = Goods.getGood(request.POST.get('good_type'), request.POST.get('good_id'))
@@ -42,14 +59,16 @@ class TimelineView(View):
                 if form.is_valid():
                     text = request.POST.get('text')
                     if text is None or len(text) <= dcp.dcpSettings.MIN_COMMENT_LENGTH:
-                        return HttpResponseRedirect('')
+                        template = self.getTemplate(request)
+                        return HttpResponseRedirect(template)
                     good = self.get_good_or_404(request)
                     if good.comments is None:
                         good.comments = Comment_Relation.objects.create()
                         good.save()
                     relation = good.comments
                     Comment.objects.create(text=text,user=user,relation=relation)
-                    return HttpResponseRedirect('')
+                    template = self.getTemplate(request)
+                    return HttpResponseRedirect(template)
 
             if postIdentifier == 'contact_form':
                 good = self.get_good_or_404(request)
@@ -68,7 +87,8 @@ class TimelineView(View):
                 good = self.get_good_or_404(request)
                 if user.is_superuser or user == good.user:
                     good.delete()
-                    return HttpResponseRedirect('')
+                    template = self.getTemplate(request)
+                    return HttpResponseRedirect(template)
 
             if postIdentifier == 'bump':
                 good = self.get_good_or_404(request)
@@ -78,10 +98,12 @@ class TimelineView(View):
                 else:
                     already_exists = Bump.objects.filter(relation = good.bumps, user = user)
                     if already_exists:
-                        return HttpResponseRedirect('')
+                        template = self.getTemplate(request)
+                        return HttpResponseRedirect(template)
                 relation = good.bumps
                 Bump.objects.create(user=user,relation=relation)
-                return HttpResponseRedirect('')
+                template = self.getTemplate(request)
+                return HttpResponseRedirect(template)
 
             if postIdentifier == 'report':
                 good = self.get_good_or_404(request)
@@ -94,9 +116,11 @@ class TimelineView(View):
                 else:
                     already_exists = Report.objects.filter(relation = good.reports, user = user)
                     if already_exists:
-                        return HttpResponseRedirect('')
+                        template = self.getTemplate(request)
+                        return HttpResponseRedirect(template)
                 relation = good.reports
                 Report.objects.create(user=user,relation=relation)
-                return HttpResponseRedirect('')
+                template = self.getTemplate(request)
+                return HttpResponseRedirect(template)
 
         return HttpResponse(status=403)
