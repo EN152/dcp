@@ -26,7 +26,7 @@ class Government(models.Model):
 		:author: Jasper
 		:return: Eine Liste mit allen Mitgliedern
 		"""
-		return User.objects.filter(govenment=self)
+		return User.objects.filter(government=self)
 
 	def isInArea(self, good):
 		distance = distance.calculateDistanceClass.calculate_distance(self.location_x, self.location_y, good.location_x, good.location_y)
