@@ -18,12 +18,12 @@ class Goods(models.Model):
     # Timelinevariablen müssen in jeder Subklasse neu gesetzt werden
 
     def delete(self, using = None, keep_parents = False):
-        if good.comments is not None:
-            good.comments.delete()
-        if good.bumps is not None:
-            good.bumps.delete()
-        if good.reports is not None:
-            good.reports.delete()
+        if self.comments is not None:
+            self.comments.delete()
+        if self.bumps is not None:
+            self.bumps.delete()
+        if self.reports is not None:
+            self.reports.delete()
         if self.image is not None:
             try:
                 self.image.delete()
