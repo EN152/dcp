@@ -1,6 +1,5 @@
 from .imports import *
 from .catastrophe import *
-from .profile import *
 
 class Ngo(models.Model):
 	name = models.CharField(max_length=200, null=False)
@@ -22,6 +21,7 @@ class Ngo(models.Model):
 		:return: Eine Liste mit allen Mitgliedern
 		"""
 		users = []
+		from .profile import Profile
 		for profile in Profile.objects.filter(ngo=self):
 			users.append(profile.user)
 		return  sorted(users, key=lambda u: u.profile.date_joined_organization, reverse=True)
@@ -32,7 +32,7 @@ class Ngo(models.Model):
 		:author: Jasper
 		:return: Eine Liste mit allen Gebieten
 		"""
-		return Ngo_Area.ojects.filter(ngo=self)
+		return Ngo_Area.objects.filter(ngo=self)
 
 	def isInArea(self, good):
 		for area in self.getAreas():
