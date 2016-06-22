@@ -8,7 +8,7 @@
                   <b>Beitrittszeitpunkt:</b> vor {{ organization.created_date|timesince }}
                 </p>
               
-                {% if user.profile.organization == organization %}
+                {% if user.profile.getOrganization == organization %}
                   <form class="form-inline" role="form" id="inviteUserSearch" method="post">
     			      <div class="input-group">  
                           {% csrf_token %}

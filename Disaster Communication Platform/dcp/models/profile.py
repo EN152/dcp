@@ -44,6 +44,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         if ngo is None or invite is None:
             return False
         else:
+            self.resetOrganization()
             self.government = None
             self.ngo = ngo
             self.isOrganziationAdmin = False
@@ -70,6 +71,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         if government is None or invite is None:
             return False
         else:
+            self.resetOrganization()
             self.government = government
             self.ngo = None
             self.isOrganziationAdmin = False
