@@ -10,15 +10,15 @@
         });
     </script>
 
-    {% if user.is_superuser or user.profile.organization == organization and user.profile.is_organization_admin %}
+    {% if user.is_superuser or user.profile.getOrganization == organization and user.profile.is_organization_admin %}
     <!-- Anfang für die Benutzereinladung -->
     <div class="panel panel-default">
         <div class="panel-heading" id="suchFormularHeading" {% if usernameSearchString != None %} style="display: none;" {% endif %}>
-            <button class="btn btn-success btn-lg" id="newInvite"><i class="fa fa-envelope" {% if usernameSearchString != None %} aria-hidden="true" {% endif %}></i> Nutzer zur NGO einladen</button></div>
+            <button class="btn btn-success btn-lg" id="newInvite"><i class="fa fa-envelope" {% if usernameSearchString != None %} aria-hidden="true" {% endif %}></i> Nutzer einladen</button></div>
 
             <div class="panel-body" id="suchFormular" {% if usernameSearchString == None %}style="display: none;" {% endif %}>
                 <div class="col-sm-12">
-                    <h2>Welchen Nutzer willst du der NGO hinzufügen?</h2>
+                    <h2>Welchen Nutzer willst du hinzufügen?</h2>
 			            <form class="form-horizontal" role="form" id="inviteUserSearch" method="post">
     				        <div class="input-group">  
                                 {% csrf_token %}

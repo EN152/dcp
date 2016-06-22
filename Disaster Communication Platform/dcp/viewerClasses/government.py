@@ -1,14 +1,34 @@
 from dcp.importUrls import *
+from dcp.viewerClasses.organization import OrganizationView
 
-class GovernmentView(View):
-    """description of class"""
+class GovernmentView(dcp.viewerClasses.organization.OrganizationView):
     def get(self, request, pk, usernameSearchString=None):
         templatePath= 'dcp/content/organization/government.html'
-        template = loader.get_template(templatePath)
+        government = get_object_or_404(Government, id=pk)
 
-        context = {}
+        return super().get(request, government, templatePath, usernameSearchString=usernameSearchString)
+        
 
-        return HttpResponse(template.render(context,request))
+    def post(self, request, pk):
+        government = get_object_or_404(Government, id=pk)
+        superReturn = super().post(request, government, Invite_Government)
+        if superReturn == True:
+            return self.get(request, pk, request.POST.get('usernameSearchString'))
+        elif superReturn is not None:
+            return superReturn
+
+#       post_identifier = request.POST.get('post_identifier')
+        user = request.user
+
+        # Abfragen sind aus zukünftige Gründen (Erweiterung) so seltsam aufgebaut
+        if not (user.is_active and user.is_authenticated() and (user.profile.government == government or user.is_superuser)):        
+            return HttpResponseForbidden("Insufficent rights")
+        if not (user.is_superuser or user.profile.is_organization_admin):
+           return HttpResponseForbidden("Insufficent rights")
+        if not (user.is_superuser):
+           return HttpResponseForbidden("Insufficent rights")
+
+        raise Http404
 
 class GovernmentManagerView(View):
     """description of class"""
