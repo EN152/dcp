@@ -96,7 +96,7 @@ class Goods(models.Model):
         return listOfGoods
 
     def isSearchedForByString(self, searchString):
-        if searchString in self.description or searchString in self.title:
+        if searchString.upper() in self.description.upper() or searchString.upper() in self.title.upper():
             return True
         else:
             return False
