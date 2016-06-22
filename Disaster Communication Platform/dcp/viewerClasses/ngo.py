@@ -43,7 +43,7 @@ class NgoView(View):
         usernameSearchList = zip(usernameSearchListUser, usernameSearchListInvited, usernameSearchListMember)
 
         context = {
-            'ngo': ngo,
+            'organization': ngo,
             'usernameSearchString': usernameSearchString,
             'usernameSearchList': usernameSearchList
         }
