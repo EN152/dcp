@@ -1,0 +1,131 @@
+﻿<div class="col-lg-12">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#newInvite").click(function(){
+                $("#suchFormular").toggle();
+                $("#suchFormularHeading").hide();
+            });
+        });
+    </script>
+
+    {% if user.is_superuser or user.profile.organization == organization and user.profile.is_organization_admin %}
+    <!-- Anfang für die Benutzereinladung -->
+    <div class="panel panel-default">
+        <div class="panel-heading" id="suchFormularHeading" {% if usernameSearchString != None %} style="display: none;" {% endif %}>
+            <button class="btn btn-success btn-lg" id="newInvite"><i class="fa fa-envelope" {% if usernameSearchString != None %} aria-hidden="true" {% endif %}></i> Nutzer zur NGO einladen</button></div>
+
+            <div class="panel-body" id="suchFormular" {% if usernameSearchString == None %}style="display: none;" {% endif %}>
+                <div class="col-sm-12">
+                    <h2>Welchen Nutzer willst du der NGO hinzufügen?</h2>
+			            <form class="form-horizontal" role="form" id="inviteUserSearch" method="post">
+    				        <div class="input-group">  
+                                {% csrf_token %}
+                                <input name="usernameSearchString" {% if usernameSearchString %}value="{{usernameSearchString}}" {% endif %}id="UserSearchBox" type="text" class="form-control input-sm" maxlength="500" placeholder="Benutzername..." />
+                                
+                                <span class="input-group-btn">
+                                    <button class="btn btn-warning btn-sm" id="btn-chat" type="submit" name="post_identifier" value="inviteUserSearch">
+                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Suchen
+                                    </button>
+                                </span>
+    				        </div>
+                        </form>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%">Person</th>
+                                                <th>Aktionen</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for userfound, invited, member in usernameSearchList %}
+                                                <tr>
+                                                    <td><b>{{userfound}}</b> {% if invited %} (Eingeladen){% elif member %} (Mitglied){% endif %}</td>
+                                                    <td>
+                                                        <form class="form-horizontal" role="form" id="inviteUserForm" method="post">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="user_invite_id" value="{{userfound.id}}" />
+                                                            {% if not invited and not member %}
+                                                                <button type="submit" class="btn btn-success" name="post_identifier" value="sendInvite"><i class="fa fa-envelope" aria-hidden="true"></i> Person einladen</button>
+                                                            {% else %}
+                                                                <button type="button" class="btn btn-success disabled"><i class="fa fa-envelope" aria-hidden="true"></i> Person einladen</button>
+                                                            {% endif %}
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            <!-- Beispiel Element
+                                            <tr>
+                                                <td><b>Mark Otto</b></td>
+                                                <td>
+                                                    <button type="submit" class="btn btn-primary"><i class="fa fa-user" aria-hidden="true"></i> Profil ansehen</button>
+                                                    <button type="submit" class="btn btn-success"><i class="fa fa-envelope" aria-hidden="true"></i> Person einladen</button>
+                                                </td>
+                                            </tr>
+                                            -->
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                </div>
+            </div>
+        </div>
+        <!-- Ende für die Benutzereinladung -->
+        
+        <!-- Anfang für alle Einladungen-->
+        {% if organization.getInvites %}
+        <div class="panel panel-yellow">
+          <div class="panel-heading">
+              <b>Übersicht laufender Einladungen</b>
+          </div>
+          <div class="panel-body">
+
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="25%">Person</th>
+                                <th width="15%">Einladung</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if organization.getInvites %}
+                            {% for invite in organization.getInvites %}
+                                <tr>
+                                    <td>{{invite.user}}</td>
+                                    <td>vor {{invite.date_created|timesince}}</td>
+                                    <td>
+                                        <form class="form-horizontal" role="form" id="inviteUserSearch" method="post">
+    				                        <div class="input-group">  
+                                                {% csrf_token %}
+                                                <input type="hidden" name="invite_id" value="{{invite.id}}" />
+                                                    
+                                                <button type="submit" class="btn btn-danger"name="post_identifier" value="discardInvite"><i class="fa fa-times"></i> Verwerfen</button>
+                                            </div>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {%endif%}
+                             
+                            <!-- Beispiel  
+                            <tr>
+                                <td>Euro Otto</td>
+                                <td>vor 3 Minuten</td>
+                                <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i> Verwerfen</button></td>
+                            </tr>
+                            -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <!-- Ende aller Einladungen -->
+   {% endif %}
+</div>
