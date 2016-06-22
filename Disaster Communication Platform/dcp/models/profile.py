@@ -44,6 +44,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         if ngo is None or invite is None:
             return False
         else:
+            self.resetOrganization()
             self.government = None
             self.ngo = ngo
             self.isOrganziationAdmin = False
@@ -62,7 +63,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         if governmentId is None: # Mache nichts
             return False
         try:
-            governmentId = int(GovernmentId)
+            governmentId = int(governmentId)
         except ValueError: #  ngoId kein Int
             return False
         government = get_object_or_none(Government,id=governmentId)
@@ -70,6 +71,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         if government is None or invite is None:
             return False
         else:
+            self.resetOrganization()
             self.government = government
             self.ngo = None
             self.isOrganziationAdmin = False
@@ -86,6 +88,14 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         """
         from dcp.customclasses.Helpers import getInvites
         return getInvites(user=self.user)
+    
+    def getOrganization(self):
+        if self.ngo is not None:
+            return self.ngo
+        elif self.government is not None:
+            return self.government
+        else:
+            return None
 
     def setCatastropheById(self,catId):
         """
