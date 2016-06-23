@@ -1,5 +1,6 @@
 from django.forms import CharField, TextInput, ModelForm
 from dcp.models.categorysGoods import CategorysGoods
+
 class CategorysGoodsForms(ModelForm):
     """description of class"""
     name = CharField(required=True, label='Name', widget=TextInput(attrs={'palcehoder': 'Lebensmittel'}))

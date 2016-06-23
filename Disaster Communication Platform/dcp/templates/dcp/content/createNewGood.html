@@ -62,7 +62,7 @@
 				{% csrf_token %}
 				
                 <button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
-            </form>
+            
             <script>
 
 					//set the start focus of the map
@@ -87,16 +87,16 @@
 					// when we select a city wich we searched for we are putting that into the 
 					geocoder.on('select', function (e) {
 						console.log('highlight', e);
-						document.getElementById("locaton_x").value = e.latlng.lat
-						document.getElementById("locaton_y").value = e.latlng.lng
+						document.getElementById("id_locaton_x").value = e.latlng.lat
+						document.getElementById("id_locaton_y").value = e.latlng.lng
 					});
 	
 					// if the map was able to find my current location
 					map.on('locationfound', function(e){
 						marker = L.marker([e.latitude, e.longitude], { draggable: false });
 						this.addLayer(marker);
-						document.getElementById("locaton_x").value = e.latitude;
-						document.getElementById("locaton_y").value = e.longitude;
+						document.getElementById("id_locaton_x").value = e.latitude;
+						document.getElementById("id_locaton_y").value = e.longitude;
 					});
 
 					// start the location tracker
@@ -107,6 +107,7 @@
 
 
 				</script>
+          </form>
         </div>	
     </div>
 </div>
