@@ -19,5 +19,4 @@ from .forms import *
 from django.core.urlresolvers import reverse,reverse_lazy
 from django.db import IntegrityError
 from django.contrib import messages
-from dcp.customclasses.categorys import *
 from django.http import HttpResponseForbidden

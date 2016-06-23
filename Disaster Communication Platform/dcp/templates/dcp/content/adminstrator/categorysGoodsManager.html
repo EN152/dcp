@@ -1,0 +1,85 @@
+﻿{% extends "dcp/design/base.html" %}}
+
+{% block title %} Kategorien Manager Güter {% endblock %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<!-- Script: Aufklappen des Bereiches für eine neue Erstellung-->
+<script>
+	$(document).ready(function(){
+		$("#newCategory").click(function(){
+			$("#governmentFormular").toggle();
+			$("#governmentFormularHeading").hide();
+		});
+	});
+</script>
+
+<!-- Anfang des Bereich für die Neuerstellung -->
+{% if user.is_active and user.is_superuser %}
+<div class="panel panel-default">
+    <div class="panel-heading" id="governmentFormularHeading"{% if invalidInput %} style="display: none;" {% endif %}><button class="btn btn-primary btn-lg" id="newCategory"><span class="glyphicon glyphicon-retweet"></span> Neu</button></div>
+    <div class="panel-body" id="governmentFormular" {% if not invalidInput %} style="display: none;" {% endif %}>
+	    <div class="col-sm-6">
+		    <form method="POST">
+		        <h2><span class="glyphicon glyphicon-retweet"></span> Neue Kategorie </h2>
+                {% for error in create_new_form.errors %}
+                   error <br/>
+                {% endfor %}
+
+                {% load bootstrap3 %}
+                {% bootstrap_form create_new_form %}
+				{% csrf_token %}
+
+                <!-- Keine 3 Buchstaben als Kürzel-->
+		    	<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
+            </form>
+	    </div>	
+    </div>
+</div>
+{% endif %}
+<!-- Ende des Bereiches für die Neuerstellung -->
+
+<!-- Aufzählung von allen Govermentss-->
+{% if category_list %}
+    <div class="table-responsive">          
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Glyphicon</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for category in category_list %}
+                <tr>
+                  <td>{{forloop.counter}}</td>
+                  <td>{{category.name}}</td>
+                  <td><span class="{{category.glyphiconString}}"></span> {{category.glyphiconString}}</td>
+                  <td>
+                      {% if user.is_active and user.is_superuser %}
+                        <form action="" role="form" id="delete_form" method="post" style="display: inline;">
+                           {% csrf_token %}
+                           <input type="hidden" name="category_name" value="{{category.name}}" />
+                           <button type="submit" class="btn btn-danger" name="post_identifier" value="delete" style="margin-top: 10px; margin-bottom: 10px;">
+    					         <span class="glyphicon glyphicon-trash"></span> 
+    					        Löschen
+                            </button>
+                        </form>
+                      {% endif %}
+                  </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% else %}
+    <center>
+        <h3>Keine Kategorien gefunden</h3>
+    </center>
+{% endif %}
+<!-- Ende der Aufzählung von allen Kategorien-->
+
+{% endblock content %}

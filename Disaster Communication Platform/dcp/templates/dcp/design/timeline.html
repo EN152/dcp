@@ -32,11 +32,14 @@
     							<div class="panel-body">
     								<p><div><!--Abstand--></div>
     									<span class="{{good.getCategoryGlyphiconAsString}}"></span> {{good.getCategoryNameAsString}}<br>
+                                        {% if good.location_x and good.location_y %}
     									<span class="glyphicon glyphicon-map-marker"></span> {{ good.location_x }}, {{ good.location_y}}
+                                        {% endif %}
     								</p>
     							</div>	
     
     							<!-- Karte: -->
+                                {% if good.location_x and good.location_y %}
 								<div id="mapid{{ good.id }}" style="width:100%; height:150px;"></div>
 								<script>
 									var mymap = L.map('mapid{{ good.id }}').setView(["{{ good.location_x }}".replace(",","."), "{{ good.location_y}}".replace(",",".")],13);
@@ -51,6 +54,7 @@
 									L.marker(["{{ good.location_x }}".replace(",","."), "{{ good.location_y}}".replace(",",".")]).addTo(mymap).bindPopup("<b>{{ good.title }}</b>");
 									var popup = L.popup();
 								</script>
+                                {% endif %}
     
                                 {% if user.is_active %}
                                 <!-- TODO Button werden nicht richtig angezeigt -->
