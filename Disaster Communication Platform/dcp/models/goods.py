@@ -103,7 +103,6 @@ class Goods(models.Model):
         else:
             return False
 
-
     class Meta:
         abstract = True
 
@@ -111,10 +110,10 @@ class Material_Goods(Goods):
     category = models.ForeignKey(CategorysGoods, on_delete=models.CASCADE, null=True)
 
     def getCategoryGlyphiconAsString(self):
-        return Categorys.getCategoryGlyphiconAsString(self.category)
+        return self.category.glyphiconString
 
     def getCategoryNameAsString(self):
-        return Categorys.getCategoryNameAsString(self.category)
+        return self.category.name
 
     class Meta:
         abstract = True
