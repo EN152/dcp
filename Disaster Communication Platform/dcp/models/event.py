@@ -1,15 +1,26 @@
 from .imports import *
 
+class Car(models.Model):
+	description = models.CharField(max_length=200, null=False)
+	owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
+
+class Special(models.Model):
+	description = models.CharField(max_length=200, null=False)
+	owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
+
 class Event(models.Model):
-    title = models.CharField(max_length=200, null=False)
-    description = models.CharField(max_length=5000, null=False)
-    created_date = models.DateTimeField(default=timezone.now)
+	title = models.CharField(max_length=200, null=False)
+	description = models.CharField(max_length=5000, null=False)
+	created_date = models.DateTimeField(default=timezone.now)
+	begin_date = models.DateTimeField(null=True)
 
-    members = models.ManyToManyField(User)
+	numberOfUsers = models.PositiveSmallIntegerField(default=2, validators=[MinValueValidator(2), MaxValueValidator(100)])
+	numberOfCars = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+	numberOfSpecials = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
-    numberOfUsers = models.PositiveSmallIntegerField(default=2, validators=[MinValueValidator(2), MaxValueValidator(100)])
-    numberOfCars = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    numberOfSpecials = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+	members = models.ManyToManyField(User)
+	cars = models.ManyToManyField(Car, blank=True)
+	specials = models.ManyToManyField(Special, blank=True)
 
-    def __unicode__(self):
-        return self.title
+	def __unicode__(self):
+		return self.title
