@@ -74,29 +74,7 @@
 					</ul>
 				</li>
 
-				<div class="navbar-form">
-					<form role="filter" method="GET" style="float: left; padding: 5px;" action="None">
-						 <div class="checkbox">
-  						<label><input type="checkbox" value="">  Lebensmittel  </label>
-						 </div>
-						 <div class="checkbox">
-							<label><input type="checkbox" value="">  Infrastruktur  </label>
-						 </div>
-						 <div class="checkbox">
-  						<label><input type="checkbox" value="">  Werkzeuge  </label>
-						 </div>
-						 <div class="checkbox">
-							<label><input type="checkbox" value="">  Medikamente  </label>
-						 </div>
-						 <div class="checkbox">
-  						<label><input type="checkbox" value="">  Sonstige  </label>
-						 </div>
-						 <label><input type="number" id="radius" name="radius" value="2">  km  </label>
-						 <button type="submit" class="btn btn-default">
-							<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Filtern
-						 </button>
-					</form> 
-				</div>
+				{% include 'dcp/design/filters.html' %}
 
 			</ul>
 
