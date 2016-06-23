@@ -16,3 +16,4 @@ from dcp.viewerClasses.people import *
 from dcp.viewerClasses.wordsearch import *
 from dcp.viewerClasses.government import *
 from dcp.viewerClasses.ngo import *
+from dcp.viewerClasses.categorysGoods import *

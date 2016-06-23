@@ -4,27 +4,21 @@ from django.http import Http404
 import dcp.dcpSettings
 from django.template.context_processors import request
 from django.template.backends.django import Template
+from django.forms import *
 
 class TimelineView(View):
-    def getCreateNew(self, request, good_typ, show_radius, show_categorys, create_new_glyphicon, page_title):
+    def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ):
         templatePath = 'dcp/content/createNewGood.html'
         goods_list = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
         goods_list = filter(lambda x: type(x) is eval(good_typ), goods_list)
-
-        category_glyphicon_list = Categorys.getCategoryListAsGlyphiconString()
-        category_name_list = Categorys.getCategoryListAsNameString()
-
-        category_list = zip(category_glyphicon_list, category_name_list)
             
         template = loader.get_template(templatePath)
         context = {
-            'goods_list': goods_list,
-            'category_list' : category_list,
-            'show_radius' : show_radius,
-            'create_new_good_typ' : good_typ,
             'create_new_glyphicon': create_new_glyphicon,
+            'create_new_button' : create_new_button,
             'page_title': page_title,
-            'show_categorys' : show_categorys,
+            'create_new_form' : create_new_form,
+            'goods_list' : goods_list
         }
         return HttpResponse(template.render(context,request))
     
@@ -41,14 +35,23 @@ class TimelineView(View):
         else:
             goodTemplate = ''
         return goodTemplate
-        
-            
 
     def get_good_or_404(self, request):
         good = Goods.getGood(request.POST.get('good_type'), request.POST.get('good_id'))
         if good is None:
            raise Http404
         return good
+
+    def createNewGood(self, request, form):
+        if form.is_valid():
+            newGood = form.save(commit=False)
+            newGood.user = request.user
+            if newGood.location_x == 0 and newGood.location_y == 0:
+                newGood.location_x = None
+                newGood.location_y = None
+            newGood.save()
+            return HttpResponseRedirect('')
+        raise Http404
 
     def post(self, request):
         user = request.user

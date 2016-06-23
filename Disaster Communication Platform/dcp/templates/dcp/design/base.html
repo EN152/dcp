@@ -1,4 +1,4 @@
-{% load staticfiles %}
+﻿{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="de">
 
@@ -203,7 +203,7 @@
 								<ul class="nav nav-second-level">
 									<li>
 										<a href="{% url 'dcp:CatastropheOverview' %}"><span class="glyphicon glyphicon-fire"></span> Katastrophen</a>
-									</li> 
+									</li>
 									<li>
 										<a href="{% url 'dcp:UserAdminOverview' %}"><span class="glyphicon glyphicon-user"></span> Benutzer</a>
 									</li>
@@ -213,6 +213,9 @@
 									<li>
 										<a href="{% url 'dcp:GovernmentManagerView' %}"><i class="fa fa-globe" aria-hidden="true"></i> Staat</a>
 									</li>
+                                    <li>
+                                        <a href="{% url 'dcp:CategoryGoodManagerView' %}"><i class="glyphicon glyphicon-link" aria-hidden="true"></i> Kategorien</a>
+                                    </li>
 								</ul>
 							</div>
 						</li>

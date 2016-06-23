@@ -47,73 +47,23 @@
 <!-- Anfang des Bereich für die Neuerstellung -->
 {% if user.is_active %}
 <div class="panel panel-default">
-	<div class="panel-heading" id="suchFormularHeading"><button class="btn btn-primary btn-lg" id="newSearch"><span class="glyphicon {{create_new_glyphicon}}"></span> Neu</button></div>
+	<div class="panel-heading" id="suchFormularHeading"><button class="btn {{create_new_button}} btn-lg" id="newSearch"><span class="glyphicon {{create_new_glyphicon}}"></span> Neu</button></div>
 	<div class="panel-body" id="suchFormular" style="display: none;">
 		<div class="col-sm-6">
 			<form method="POST" enctype="multipart/form-data">
 				<h2><span class="glyphicon {{create_new_glyphicon}}"></span> Was möchtest du erstellen? </h2>
 
-				<div class="form-group">
-					<label>Titel:</label>
-					<input name="title" type="text" placeholder="Leistungsstarkes Stromaggregat..." class="form-control">
-				</div>
-				{% if category_list and show_categorys %}
-				<label>Kategorie:</label><br />
+                {% for error in create_new_form.errors %}
+                   error <br/>
+                {% endfor %}
 
-				{% for category_glyphicon, category_name in category_list%}
-				<div class="radio">
-					<label>
-						<input type="radio" id="radio_{{category_name}}" name="category"  value="{{category_name}}">
-						<span class="{{category_glyphicon}}"></span> {{category_name}}
-					</label>
-				</div>
-				{% endfor %}
-				{% endif %}
-
-				<div class="form-group">
-					<label>Bild:</label>
-                    <input type="file" id="upload_image" name="upload_image">
-				</div>
-
-				<div class="form-group">
-					<label>Kurzbeschreibung:</label>
-					<textarea name="description" class="form-control" rows="5" id="description" placeholder="Nenne hier wichtige Details."></textarea>
-				</div>
-
-				<div class="form-group">
-					<label>Standort:	<input type="button" class="btn btn-success" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
-					<div id="map" style="height:400px;width:100%"></div>
-				</div>
-
-				{% if show_radius %}
-				<div class="form-inline">
-					<label for="priority">Suchradius (maximale Entfernung):</label><br />
-					<span class="label label-default">0km: kaum mobil</span>
-					<select name="radius" id="radius" class="form-control">
-						<option>0 km</option>
-						<option>1 km </option>
-						<option>2 km</option>
-						<option>5 km</option>
-						<option>10 km</option>
-						<option>20 km</option>
-						<option>50 km</option>
-						<option>100 km</option>
-						<option>1000 km</option>
-					</select>
-					<span class="label label-danger">1000km: keine Beschränkungen</span><br><br>
-				</div>
-				{% endif %}
-
-				<div class="form-group">
-					{% csrf_token %}
-					<input type="hidden" id="catastrophe" name="good_typ" value="{{create_new_good_typ}}" />
-					<input type="hidden" id="catastrophe" name="catastrophe" value="1" /> <!-- TODO Replace with real implentation !!!! -->
-					<input type="hidden" id="locaton_x" name="location_x" value="50" /> <!-- TODO Replace with real implentation !!!! -->
-					<input type="hidden" id="locaton_y" name="location_y" value="50" /> <!-- TODO Replace with real implentation !!!! -->
-					<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
-				</div>	
-
-				<script>
+                {% load bootstrap3 %}
+                {% bootstrap_form create_new_form %}
+				{% csrf_token %}
+				
+                <button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
+            </form>
+            <script>
 
 					//set the start focus of the map
 					var map = L.map('map').setView([37.804146, -122.275045], 15);
@@ -157,16 +107,11 @@
 
 
 				</script>
-
-</form>
-</div>	
+        </div>	
+    </div>
 </div>
-</div>
-
-
 {% endif %}
 <!-- Ende des Bereiches für die Neuerstellung -->
-
 
 <!-- Anfang der Timeline -->
 {% include "dcp/design/timeline.html" %}
