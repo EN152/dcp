@@ -55,6 +55,14 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'dcpcontainer.urls'
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "dcpcontainer.routing.channel_routing",
+    },
+}
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

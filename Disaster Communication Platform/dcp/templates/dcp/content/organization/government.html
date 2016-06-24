@@ -1,26 +1,10 @@
 {% extends "dcp/design/base.html" %}
 
-{% block title %} Staat/governmental organization {% endblock title %}
+{% block title %} Überblick: {{ organization.name}} {% endblock title %}
 
 {% block content %}
 
-<div class="col-lg-12">
-
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="col-sm-12">
-                <h2>Deutschland</h2>
-                <p>
-                  <b>Kürzel:</b> GER<br>
-                  <b>Mitglied seit:</b> 12 Tagen
-              </p>
-              <p>
-                 <button type="button" class="btn btn-primary">Bearbeiten</button>
-             </p>
-         </div>
-     </div>
- </div>
-</div>
+{% include "dcp/content/organization/header.html" %}
 
 <div class="col-lg-12">
     <div class="panel panel-primary">
@@ -28,10 +12,6 @@
           <b>Zugeordnetes Gebiet</b>
       </div>
       <div class="panel-body">
-
-        <div class="panel-body">
-
-         
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -45,176 +25,13 @@
                     </div>
                 </div>
             </div>
-
-</div>
-
-
-
-
-<div class="col-lg-12">
-    <div class="panel panel-default">
-
-
-        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-        <script>
-            $(document).ready(function(){
-                $("#overviewMembers").click(function(){
-                    $("#overviewMembersAll").toggle();
-                    $("#overviewMembers").hide();
-                });
-            });
-        </script>
-
-
-        <div class="panel-heading" id="membersHeading">
-            <button class="btn btn-success btn-lg" id="overviewMembers"><i class="fa fa-envelope" aria-hidden="true"></i> Regierungsmitglieder anzeigen</button></div>
-
-            <div class="panel panel-green" id="overviewMembersAll" style="display: none;">
-              <div class="panel-heading">
-                  <b>Übersicht aller Regierungsmitglieder</b>
-              </div>
-              <div class="panel-body">
-
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th width="25%">Person</th>
-                                    <th width="15%">Zeitpunkt der Mitgliedschaft</th>
-                                    <th>Aktionen</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Euro Otto</td>
-                                    <td>vor 3 Minuten</td>
-                                    <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i> Mitgliedschaft beenden</button></td>
-                                </tr>
-                                <tr>
-                                    <td>Henning Sprekeler</td>
-                                    <td>vor 35 Tagen</td>
-                                    <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i> Mitgliedschaft beenden</button></td>
-                                </tr>
-                                <tr>
-                                    <td>Martin Kuhnert</td>
-                                    <td>vor 3 Jahren</td>
-                                    <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i> Mitgliedschaft beenden</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+         </div>
     </div>
 </div>
 
 
-<div class="col-lg-12">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $("#newInvite").click(function(){
-                $("#suchFormular").toggle();
-                $("#suchFormularHeading").hide();
-            });
-        });
-    </script>
+{% include "dcp/content/organization/userOverview.html" %}
 
-    <div class="panel panel-default">
-        <div class="panel-heading" id="suchFormularHeading">
-            <button class="btn btn-success btn-lg" id="newInvite"><i class="fa fa-envelope" aria-hidden="true"></i> Nutzer der Regierung hinzufügen</button></div>
+{% include "dcp/content/organization/invites.html" %}
 
-            <div class="panel-body" id="suchFormular" style="display: none;">
-                <div class="col-sm-12">
-                    <form method="POST">
-                        <h2>Welchen Nutzer willst du der Regierung von Deutschland hinzufügen?</h2>
-
-
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th width="20%">Person</th>
-                                        <th>Aktionen</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><b>Mark Otto</b></td>
-                                        <td>
-                                            <button type="submit" class="btn btn-primary"><i class="fa fa-user" aria-hidden="true"></i> Profil ansehen</button>
-                                            <button type="submit" class="btn btn-success"><i class="fa fa-envelope" aria-hidden="true"></i> Person einladen</button>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td><b>Euro Otto</b> (eingeladen)</td>
-                                        <td>
-                                            <button type="submit" class="btn btn-primary"><i class="fa fa-user" aria-hidden="true"></i> Profil ansehen</button>
-                                            <button type="submit" class="btn btn-success disabled"><i class="fa fa-envelope" aria-hidden="true"></i> Person einladen</button>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td><b>Dollar Otto</b></td>
-                                        <td>
-                                            <button type="submit" class="btn btn-primary"><i class="fa fa-user" aria-hidden="true"></i> Profil ansehen</button>
-                                            <button type="submit" class="btn btn-success"><i class="fa fa-envelope" aria-hidden="true"></i> Person einladen</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-
-
-        <div class="panel panel-yellow">
-          <div class="panel-heading">
-              <b>Übersicht laufender Einladungen</b>
-          </div>
-          <div class="panel-body">
-
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th width="25%">Person</th>
-                                <th width="15%">Einladung</th>
-                                <th>Aktionen</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Euro Otto</td>
-                                <td>vor 3 Minuten</td>
-                                <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i> Verwerfen</button></td>
-                            </tr>
-                            <tr>
-                                <td>Henning Sprekeler</td>
-                                <td>vor 35 Tagen</td>
-                                <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i> Verwerfen</button></td>
-                            </tr>
-                            <tr>
-                                <td>Martin Kuhnert</td>
-                                <td>vor 3 Jahren</td>
-                                <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i> Verwerfen</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-</div>
 {% endblock content %}

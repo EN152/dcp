@@ -10,4 +10,5 @@ from .chat import *
 from .missedPeople import *
 from .government import *
 from .ngo import *
+from .categorysGoods import *
 from .event import *

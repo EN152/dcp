@@ -7,6 +7,9 @@ from django.forms.models import ModelForm
 from django.forms.models import *
 from django.db.models.fields import CharField
 from django.core.validators import MaxLengthValidator, MinLengthValidator
+
+import dcp.dcpSettings
+
 from django.contrib.admin.widgets import AdminDateWidget 
 
 class Offer_Form(ModelForm):
@@ -32,11 +35,6 @@ class Comment_Form(ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
-
-class Search_Material_Form(ModelForm):
-    class Meta:
-        model = Search_Material
-        fields = ['title', 'description', 'location_x', 'location_y', 'radius', 'catastrophe', 'category']
 
 class CatastropheForm(forms.ModelForm):
     Title = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Katastrophentext eingeben'}))
@@ -75,7 +73,7 @@ class MissedPeopleForm(forms.ModelForm):
 class EventPlanningForm(forms.ModelForm):
     title = forms.CharField(max_length=200, required=True, label='Aktionsname',widget=forms.TextInput(attrs={'placeholder': 'Marchstraße aufräumen'}))
     description = forms.CharField(max_length=5000, required=False, label='Nähere Informationen',widget=forms.Textarea(attrs={'placeholder' : 'Insgesamt werden 42 Personen mit 7 Fahrzeugen gebraucht. Speziell gesucht wird Kaffee in Thermoskannen. Vielen Dank für Eure Mithilfe!'}))
-    begin_date = forms.DateField(required=True, label='Beginn', widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    begin_date = forms.DateField(required=True, label='Beginn', widget=forms.TextInput(attrs={'class': 'datepicker', 'placeholder' : '2016-03-04 12:00' }))
     #begin_date = DateField(widget = AdminDateWidget)
     numberOfUsers = forms.IntegerField(required=True, label="maximale Personenzahl", widget=forms.NumberInput())
     numberOfCars = forms.IntegerField(required=True, label="maximale Fahrzeuganzahl", widget=forms.NumberInput())

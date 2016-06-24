@@ -33,10 +33,10 @@ class MyProfile(View):
                 url += str(organization_id)
                 return HttpResponseRedirect(url)
 
-            elif invite_type == 'Invite_Goverment':
-                if not user.profile.acceptGovermentInviteById(organization_id):
+            elif invite_type == 'Invite_Government':
+                if not user.profile.acceptGovernmentInviteById(organization_id):
                     raise Http404
-                url = '/goverment/' # TODO Probleme mit Reverse von Urls
+                url = '/government/' # TODO Probleme mit Reverse von Urls
                 url += str(organization_id)
                 return HttpResponseRedirect(url)
             else:

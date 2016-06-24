@@ -13,17 +13,12 @@ class Index(TimelineView):
 		# user = request.user und irgendwas wie .filter(user=user) fehlt noch...
 		goods_list = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
 		goods_list = filter(lambda x: x.user==request.user, goods_list)
-		category_glyphicon_list = Categorys.getCategoryListAsGlyphiconString()
-		category_name_list = Categorys.getCategoryListAsNameString()
-
-		category_list = zip(category_glyphicon_list, category_name_list)
 
 		panel_title = "Übersicht  deiner erstellten Gesuche und Angebote"
 
 		template = 'dcp/index.html'
 		params = {
 				'goods_list': goods_list,
-				'category_list' : category_list,
 				'countSearch': countSearch,
 				'countOffer': countOffer,
 				'countInformation': countInformation,

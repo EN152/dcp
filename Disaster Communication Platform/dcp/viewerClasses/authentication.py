@@ -20,7 +20,7 @@ class Register(View):
 
                 for users in User.objects.all():
                     if username == users.username:
-                         return render(request, self.template, {'notVaild': valid})
+                         return render(request, self.template, {'notAvailable': valid})
 
 
                 user = User.objects.create_user(username, email, password)
@@ -54,7 +54,7 @@ class Login(View):
                else:
                    return HttpResponse("Inactive user.")
            else:
-               return render(request, self.template, {'notVaild': valid})
+               return render(request, self.template, {'notValid': valid})
        return render(request, self.template, {})
 
 class Logout(View):

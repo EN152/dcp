@@ -25,6 +25,11 @@ class AktionenLaufende(View):
 
 		rawEvents = Event.objects.all()
 		
+		if len(rawEvents) == 0:
+			error = 'Leider gibt es noch keine Aktionen! :('
+			context = {'error' : error }
+			return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
+
 		# this step creates an n-tuple because range() cannot be used in template
 		# and many-to-many objects are not iterable...and I didn't want to pass >10 single objects...
 		

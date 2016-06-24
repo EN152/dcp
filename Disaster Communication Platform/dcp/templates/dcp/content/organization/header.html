@@ -1,0 +1,33 @@
+﻿<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-sm-12">
+                <h2>{{organization.name}}</h2>
+                <p>
+                  <b>Kürzel:</b> {{ organization.name_short }}<br>
+                  <b>Beitrittszeitpunkt:</b> vor {{ organization.created_date|timesince }}
+                </p>
+              
+                {% if user.profile.getOrganization == organization %}
+                  <form class="form-inline" role="form" id="inviteUserSearch" method="post">
+    			      <div class="input-group">  
+                          {% csrf_token %}
+                          <input type="hidden" name="member_id" value="{{user.id}}" />
+
+                            <button type="submit" name="post_identifier" value="endMembership" class="btn btn-danger"><i class="fa fa-times"></i>  {{ organization.name }} verlassen</button>
+                      </div>
+                   </form>
+                {% endif %}
+                <br>
+                {% if user.is_superuser %}
+                  <form class="form-inline" role="form" id="inviteUserSearch" method="post">
+    			   <div class="input-group">
+                          {% csrf_token %}
+                          <button type="submit" name="post_identifier" value="deleteOrganization" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> {{organization.name}} löschen</button>
+                      </div>
+                  </form>
+                {% endif %}
+         </div>
+    </div>
+  </div>
+</div>

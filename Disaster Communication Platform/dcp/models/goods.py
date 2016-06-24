@@ -1,29 +1,49 @@
 from .imports import *
 from .catastrophe import *
 from .profile import *
+from .categorysGoods import *
+import dcp.dcpSettings
+
+class Bump_Relation(models.Model):
+    class Meta:
+        abstract = False
+
+class Report_Relation(models.Model):
+    class Meta:
+        abstract = False
+
+class Bump(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
+    relation = models.ForeignKey(Bump_Relation, on_delete=models.CASCADE, null=False)
+    date_created = models.DateTimeField(default=timezone.now)
+
+class Report(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
+    relation = models.ForeignKey(Report_Relation, on_delete=models.CASCADE, null=False)
+    date_created = models.DateTimeField(default=timezone.now)
 
 class Goods(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=True)
     catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
     title = models.CharField(max_length=100, null=False)
-    description = models.TextField(max_length=500, null=True)
+    description = models.TextField(max_length=500, null=True, blank=True)
     location_x = models.FloatField(null=True)
     location_y = models.FloatField(null=True)
-    created_date = models.DateTimeField(default=timezone.now)
-    image = models.ImageField(upload_to="upload/goods/")
-    comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True)
-    bumps = models.ForeignKey(Bump_Relation, on_delete=models.DO_NOTHING, null=True)
-    reports = models.ForeignKey(Report_Relation, on_delete=models.DO_NOTHING, null=True)
-    visibility = models.BooleanField(default=True)
+    created_date = models.DateTimeField(default=timezone.now, blank=True)
+    image = models.ImageField(upload_to=dcp.dcpSettings.GOODS_IMAGE_UPLOADPATH, null=True, blank=True)
+    comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
+    bumps = models.ForeignKey(Bump_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
+    reports = models.ForeignKey(Report_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
+    visibility = models.BooleanField(default=True, blank=True)
     # Timelinevariablen müssen in jeder Subklasse neu gesetzt werden
 
     def delete(self, using = None, keep_parents = False):
-        if good.comments is not None:
-            good.comments.delete()
-        if good.bumps is not None:
-            good.bumps.delete()
-        if good.reports is not None:
-            good.reports.delete()
+        if self.comments is not None:
+            self.comments.delete()
+        if self.bumps is not None:
+            self.bumps.delete()
+        if self.reports is not None:
+            self.reports.delete()
         if self.image is not None:
             try:
                 self.image.delete()
@@ -53,6 +73,7 @@ class Goods(models.Model):
         if type == 'Offer_Immaterial':
             return Offer_Immaterial.objects.get(id=id)
         return None
+
     def stringToGoodClass(type):
         if type == 'Search_Material':
             return Search_Material
@@ -77,23 +98,22 @@ class Goods(models.Model):
         return listOfGoods
 
     def isSearchedForByString(self, searchString):
-        if searchString in self.description or searchString in self.title:
+        if searchString.upper() in self.description.upper() or searchString.upper() in self.title.upper():
             return True
         else:
             return False
-
 
     class Meta:
         abstract = True
 
 class Material_Goods(Goods):
-    category = models.CharField(max_length=1, choices=Categorys.CATEGORY_TYPES)
+    category = models.ForeignKey(CategorysGoods, on_delete=models.CASCADE, null=True)
 
     def getCategoryGlyphiconAsString(self):
-        return Categorys.getCategoryGlyphiconAsString(self.category)
+        return self.category.glyphiconString
 
     def getCategoryNameAsString(self):
-        return Categorys.getCategoryNameAsString(self.category)
+        return self.category.name
 
     class Meta:
         abstract = True
@@ -103,7 +123,7 @@ class Immaterial_Goods(Goods):
         abstract = True
 
 class Search_Material(Material_Goods):
-    radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
+    radius = models.PositiveSmallIntegerField(default=0, choices=dcp.dcpSettings.RADIUS_CHOICES_GOODS)
     timeline_badge_color = models.CharField(max_length=100, null=False, default='blue')
     timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-search')
 
@@ -118,7 +138,7 @@ class Offer_Material(Material_Goods):
         return 'Offer_Material'
 
 class Search_Immaterial(Immaterial_Goods):
-    radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000)])
+    radius = models.PositiveSmallIntegerField(default=0, choices=dcp.dcpSettings.RADIUS_CHOICES_GOODS)
     timeline_badge_color = models.CharField(max_length=100, null=False, default='blue')
     timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-search')
 

@@ -44,6 +44,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         if ngo is None or invite is None:
             return False
         else:
+            self.resetOrganization()
             self.government = None
             self.ngo = ngo
             self.isOrganziationAdmin = False
@@ -62,7 +63,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         if governmentId is None: # Mache nichts
             return False
         try:
-            governmentId = int(GovernmentId)
+            governmentId = int(governmentId)
         except ValueError: #  ngoId kein Int
             return False
         government = get_object_or_none(Government,id=governmentId)
@@ -70,6 +71,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         if government is None or invite is None:
             return False
         else:
+            self.resetOrganization()
             self.government = government
             self.ngo = None
             self.isOrganziationAdmin = False
@@ -84,7 +86,16 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         :author: Jasper
         :return: Eine Liste mit allen Invites
         """
+        from dcp.customclasses.Helpers import getInvites
         return getInvites(user=self.user)
+    
+    def getOrganization(self):
+        if self.ngo is not None:
+            return self.ngo
+        elif self.government is not None:
+            return self.government
+        else:
+            return None
 
     def setCatastropheById(self,catId):
         """
@@ -167,32 +178,6 @@ class Invite_Government(models.Model):
     def getInviteType(self):
         return 'Invite_Government'
 
-def getInvites(user=None, ngo=None, government=None):
-    """
-    Liste von den gewünschten Invites, wobei immer nur der erste Parameter ausgeführt wird
-    :author: Jasper
-    :param user: User für den die Invites zurückgebenen werden sollen
-    :param ngo: NGO für den die Invites zurückgebenen werden sollen
-    :param government: Government für den die Invites zurückgebenen werden sollen
-    :return: Liste von allen gefunden Invites
-    """
-    invites = []
-    if user != None:
-        for invite in Invite_Ngo.objects.filter(user = user):
-            invites.append(invite)
-        for invite in Invite_Government.objects.filter(user = user):
-            invites.append(invite)
-    elif ngo != None:
-        invites = Invite_Ngo.objects.filter(organization = ngo)
-    elif government != None:
-        invites = Invite_Government.objects.filter(organization = government)
-    else:
-        for invite in Invite_Ngo.objects.all():
-            invites.append(invite)
-        for invite in Invite_Government.objects.all():
-            invites.append(invite)
-    return sorted(invites, key=lambda i: i.date_created, reverse=True)
-
 class Comment_Relation(models.Model):
     class Meta:
         abstract = False
@@ -205,21 +190,3 @@ class Comment(models.Model):
 
     def __unicode__(self):
         return self.text
-
-class Bump_Relation(models.Model):
-    class Meta:
-        abstract = False
-
-class Report_Relation(models.Model):
-    class Meta:
-        abstract = False
-
-class Bump(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
-    relation = models.ForeignKey(Bump_Relation, on_delete=models.CASCADE, null=False)
-    date_created = models.DateTimeField(default=timezone.now)
-
-class Report(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
-    relation = models.ForeignKey(Report_Relation, on_delete=models.CASCADE, null=False)
-    date_created = models.DateTimeField(default=timezone.now)

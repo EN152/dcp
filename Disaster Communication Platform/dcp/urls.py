@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^administrator/catdelete/(?P<pk>\d+)/$',DeleteCatastropheView.as_view(),name='DeleteCatastropheView'),
     url(r'^administrator/ngomanager/$',NgoManagerView.as_view(),name='NgoManagerView'),
     url(r'^administrator/governmentmanager/$',GovernmentManagerView.as_view(),name='GovernmentManagerView'),
+    url(r'^administrator/categorygoodmanager/$',CategorysGoodsMangerView.as_view(),name='CategoryGoodManagerView'),
 
     # Organisationen
     url(r'^ngo/(?P<pk>\d+)/$', NgoView.as_view(), name='NgoView'),

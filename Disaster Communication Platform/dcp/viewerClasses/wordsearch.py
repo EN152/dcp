@@ -1,4 +1,5 @@
-# imports
+# -*- coding: utf-8 -*-
+
 from dcp.importUrls import *
 
 class WordSearch(View):

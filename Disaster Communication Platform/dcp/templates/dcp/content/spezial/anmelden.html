@@ -21,8 +21,12 @@
 			else $('head > link').filter(':first').replaceWith(defaultCSS);
 		}
 
-		function emptyError(){
-			document.getElementById("inVaildAlert").innerHTML = '';
+		function usernameNotAvailableError(){
+			document.getElementById("notAvailableAlert").innerHTML = '';
+		}
+
+		function notValidError(){
+			document.getElementById("notValidAlert").innertHTML = '';
 		}
 
 		$( document ).ready(function() {
@@ -41,10 +45,10 @@
 					<div class="panel-heading">
 						<div class="row">
 							<div class="col-xs-6">
-								<a href="#" class="active" id="login-form-link">Anmelden</a>
+								<a href="#" class="active" id="login-form-link" onClick="notValidError()">Anmelden</a>
 							</div>
 							<div class="col-xs-6">
-								<a href="#" id="register-form-link" onClick="emptyError();">Registrieren</a>
+								<a href="#" id="register-form-link" onClick="usernameNotAvailableError();">Registrieren</a>
 							</div>
 						</div>
 						<hr>
@@ -77,9 +81,21 @@
 									</div>
 								</form>
 
+								<div id="notValidAlert">
+									{% if notValid == false %}
+									{% else %}
+									<div class='alert alert-danger alert-dismissible' role='alert'>
+										<button type='button' class='close' data-dismiss='alert'>
+											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
+										</button>
+										Überprüfe bitte, ob du deinen Usernamen und Passwort richtig geschrieben hast!
+									</div>
+									{% endif %}
+								</div>
 
-								<div id="inVaildAlert">
-									{% if notVaild == false %}
+
+								<div id="notAvailableAlert">
+									{% if notAvailable == false %}
 									{% else %}
 									<div class='alert alert-danger alert-dismissible' role='alert'>
 										<button type='button' class='close' data-dismiss='alert'>

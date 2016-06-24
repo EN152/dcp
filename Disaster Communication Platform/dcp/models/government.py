@@ -1,6 +1,5 @@
 from .imports import *
 from .catastrophe import*
-from .profile import*
 
 class Government(models.Model):
 	name = models.CharField(max_length=200, null=False)
@@ -18,6 +17,7 @@ class Government(models.Model):
 		:author: Jasper
 		:return: Eine Liste mit allen Invites
 		"""
+		from dcp.customclasses.Helpers import getInvites
 		return getInvites(government=self)
 		
 	def getMembers(self):
@@ -26,7 +26,11 @@ class Government(models.Model):
 		:author: Jasper
 		:return: Eine Liste mit allen Mitgliedern
 		"""
-		return User.objects.filter(govenment=self)
+		users = []
+		from .profile import Profile
+		for profile in Profile.objects.filter(government=self):
+			users.append(profile.user)
+		return  sorted(users, key=lambda u: u.profile.date_joined_organization, reverse=True)
 
 	def isInArea(self, good):
 		distance = distance.calculateDistanceClass.calculate_distance(self.location_x, self.location_y, good.location_x, good.location_y)
