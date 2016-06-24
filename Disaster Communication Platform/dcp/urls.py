@@ -54,7 +54,12 @@ urlpatterns = [
 #    url(r'^wissen/fragen/$', views.wissen_fragen),
 #    url(r'^wissen/abstimmungen/$', views.wissen_abstimmungen),
 #    url(r'^wissen/archiv/$', views.wissen_archiv),
-#
+
+    # Aktionen
+    url(r'^aktionen/planung/$', AktionenPlanung.as_view()),
+    url(r'^aktionen/laufende/$', AktionenLaufende.as_view()),
+
+
 #    # Orte
 #    url(r'^orte/$', views.orte),
 #    url(r'^orte/anlaufstellen/$', views.orte_anlaufstellen),

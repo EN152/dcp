@@ -1,7 +1,5 @@
-# library imports
 from dcp.importUrls import *
 
-# our own classes
 from dcp.viewerClasses.authentication import *
 from dcp.viewerClasses.profile import *
 from dcp.viewerClasses.maps import *
@@ -17,3 +15,4 @@ from dcp.viewerClasses.wordsearch import *
 from dcp.viewerClasses.government import *
 from dcp.viewerClasses.ngo import *
 from dcp.viewerClasses.categorysGoods import *
+from dcp.viewerClasses.events import *

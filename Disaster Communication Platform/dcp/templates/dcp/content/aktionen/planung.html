@@ -1,0 +1,27 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %} Aktion planen {% endblock %}
+
+{% block content %}
+{% load bootstrap3 %}
+
+ <script>
+  $(function() {
+    $(".datepicker").datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1950:2050",
+      // You can put more options here.
+
+    });
+  });
+  </script>
+
+
+<form method="POST" enctype="multipart/form-data">
+	<h2><span class="glyphicon glyphicon-calendar"></span> Welche Veranstaltung planst Du? </h2>
+		{% csrf_token %}	
+		{% bootstrap_form form %}
+    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span> Veranstaltung hinzufügen</button>
+</form>
+{% endblock content %}
