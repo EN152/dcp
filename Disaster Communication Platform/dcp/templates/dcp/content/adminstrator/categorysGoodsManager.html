@@ -1,6 +1,6 @@
 ﻿{% extends "dcp/design/base.html" %}}
 
-{% block title %} Kategorien Manager Güter {% endblock %}
+{% block title %} Kategorien für Güter festlegen {% endblock %}
 
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
@@ -40,7 +40,7 @@
 {% endif %}
 <!-- Ende des Bereiches für die Neuerstellung -->
 
-<!-- Aufzählung von allen Govermentss-->
+<!-- Aufzählung aller Governments-->
 {% if category_list %}
     <div class="table-responsive">          
       <table class="table">
@@ -77,7 +77,7 @@
     </div>
 {% else %}
     <center>
-        <h3>Keine Kategorien gefunden</h3>
+        <h3>(bisher keine Kategorien gefunden)</h3>
     </center>
 {% endif %}
 <!-- Ende der Aufzählung von allen Kategorien-->
