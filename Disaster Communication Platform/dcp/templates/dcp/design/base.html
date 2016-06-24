@@ -17,12 +17,14 @@
 	<link href="{% static 'sb-admin/dist/css/sb-admin-2.css' %}" rel="stylesheet">
 	<link href="{% static 'sb-admin/bower_components/morrisjs/morris.css' %}" rel="stylesheet">
 	<link href="{% static 'sb-admin/bower_components/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 	<link href="{% static 'dataTables/jquery.dataTables.min.css' %}" rel="stylesheet">
 	
+	
 	<!-- Please leave them here because, if you move them to the end of the page the map site won't work -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script> <!-- Wird auf fast jeder Subseite verwendet -->
+    <!-- Leaflet imports-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"/>
 	
 		<!-- SCRIPTS werden am Ende geladen: siehe unten! -->
 </head>

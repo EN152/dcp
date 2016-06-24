@@ -5,12 +5,10 @@ from .categorysGoods import *
 import dcp.dcpSettings
 
 class Bump_Relation(models.Model):
-    class Meta:
-        abstract = False
+    pass
 
 class Report_Relation(models.Model):
-    class Meta:
-        abstract = False
+    pass
 
 class Bump(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
@@ -119,8 +117,7 @@ class Material_Goods(Goods):
         abstract = True
 
 class Immaterial_Goods(Goods):
-    class Meta:
-        abstract = True
+    pass
 
 class Search_Material(Material_Goods):
     radius = models.PositiveSmallIntegerField(default=0, choices=dcp.dcpSettings.RADIUS_CHOICES_GOODS)
