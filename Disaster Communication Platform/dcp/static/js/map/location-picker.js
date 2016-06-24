@@ -15,7 +15,8 @@ function newMapScriptPicker(divMapId, valueLocationXId, valueLocationYId) {
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
     }).addTo(map);
-    map.on
+
+    map.on('click', eventToMapCreateMaker);
     
     // Add geocoding plugin etc. search bar
     var options = {
@@ -28,17 +29,13 @@ function newMapScriptPicker(divMapId, valueLocationXId, valueLocationYId) {
     // add search key and options to the map
     var geocoder = L.control.geocoder('search-Hv2UM4h', options).addTo(map);
     // when we select a city wich we searched for we are putting that into the 
-    geocoder.on('select', function (e) {
-        changeMapCreateMarker(e.latlng);
-    });
+    geocoder.on('select', eventToMapCreateMaker);
     
     // if the map was able to find my current location
-    map.on('locationfound', function (e) {
-
-        changeMapCreateMarker(e.latlng);
-    });
-    
-    // start the location tracker
+    map.on('locationfound', eventToMapCreateMaker);
+}
+function eventToMapCreateMaker(e) {
+    changeMapCreateMarker(e.latlng);
 }
 function getCurrentLocation() {
     map.locate({
