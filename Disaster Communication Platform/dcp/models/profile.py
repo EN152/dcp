@@ -1,7 +1,7 @@
 from .imports import *
+from django.db import models
 from .catastrophe import *
-from .government import *
-from .ngo import *
+from .organizations import *
 
 class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschrieben wird:https://docs.djangoproject.com/en/1.8/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User)
@@ -9,7 +9,9 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
     ngo = models.ForeignKey(Ngo, on_delete=models.DO_NOTHING, null=True)
     government = models.ForeignKey(Government, on_delete=models.DO_NOTHING, null=True)
     is_organization_admin = models.BooleanField(default=False, null=False)
-    date_joined_organization = models.DateTimeField(default=timezone.now)
+    date_joined_organization = models.DateTimeField(default=timezone.now, null=False, editable=False)
+    show_map = models.BooleanField(default=True, null=False)
+    show_picture = models.BooleanField(default=True, null=False)
 
     def setOrganizationAdmin(self, organitationAdmin):
         self.is_organization_admin = organitationAdmin
@@ -179,8 +181,7 @@ class Invite_Government(models.Model):
         return 'Invite_Government'
 
 class Comment_Relation(models.Model):
-    class Meta:
-        abstract = False
+    pass
 
 class Comment(models.Model):
     relation = models.ForeignKey(Comment_Relation, on_delete=models.CASCADE, null=False)

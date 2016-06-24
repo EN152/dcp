@@ -1,0 +1,28 @@
+﻿<!-- for the search engine -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.js"></script>
+
+{% load static %}
+<script src="{% static 'js/map/location-picker.js' %}"></script>
+
+<style>
+	.leaflet-control-locate.active.following a {
+	display:none;
+	}
+	
+	.leaflet-control-locate.active a {
+	display:none;
+	}
+
+	.leaflet-control-locate.leaflet-bar.leaflet-control.requesting{
+	display:none;
+	}
+</style>
+
+<div class="form-group">
+    <label><input type="button" class="btn btn-success" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
+    <div id="mapCreateNew" style="height:400px"></div>               
+    <script>
+        newMapScriptPicker("mapCreateNew", "{{id_location_x}}", "{{id_location_y}}")
+    </script>
+</div>

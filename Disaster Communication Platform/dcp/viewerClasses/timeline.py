@@ -23,7 +23,7 @@ class TimelineView(View):
         return HttpResponse(template.render(context,request))
     
     def getTemplate(self,request):
-        goodtype = request.POST['good_type']        
+        goodtype = request.POST.get('good_type')        
         if(goodtype == 'Search_Material'):
             goodTemplate = "/suchen/materielles/"
         if(goodtype == 'Offer_Material'):

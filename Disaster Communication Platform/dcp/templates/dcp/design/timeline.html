@@ -1,3 +1,8 @@
+{% if user.profile.show_map %}
+    {% load static %}
+    <script src="{% static 'js/map/show-map.js' %}"></script>
+{% endif%}
+
 <div class="timeline">
     <div class="panel panel-default">
     	<div class="panel-heading"><i class="fa fa-th-list"></i><b> Überblick | {{ page_title }}</b></div>
@@ -14,7 +19,7 @@
     
     			    <div class="timeline-panel">
     
-                        {% if good.image.url != None %}
+                        {% if good.image.url != None and user.profile.show_picture %}
     				        <img src="{{ good.image.url }}" width="150" style="float:right;" class="img-thumbnail">
                         {% endif %}
     
@@ -39,21 +44,12 @@
     							</div>	
     
     							<!-- Karte: -->
-                                {% if good.location_x and good.location_y %}
-								<div id="mapid{{ good.id }}" style="width:100%; height:150px;"></div>
-								<script>
-									var mymap = L.map('mapid{{ good.id }}').setView(["{{ good.location_x }}".replace(",","."), "{{ good.location_y}}".replace(",",".")],13);
+                                {% if good.location_x and good.location_y and user.profile.show_map %}
+								    <div id="mapid_{{good.id}}{{good.location_x}}{{good.location_y}}" style="width:100%; height:150px;"></div>
 
-									L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
-										maxZoom: 18,
-										attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-														'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-															'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-										id: 'mapbox.streets'
-									}).addTo(mymap);
-									L.marker(["{{ good.location_x }}".replace(",","."), "{{ good.location_y}}".replace(",",".")]).addTo(mymap).bindPopup("<b>{{ good.title }}</b>");
-									var popup = L.popup();
-								</script>
+								    <script>
+                                        initialMap("mapid_{{good.id}}{{good.location_x}}{{good.location_y}}", "{{good.location_x}}","{{good.location_y}}","{{good.title}}")
+								    </script>
                                 {% endif %}
     
                                 {% if user.is_active %}
@@ -131,24 +127,10 @@
     
     							<div class="panel-body" id="kommentare_{{good.id}}" style="display: none;">
                                     <ul class="chat">
-                                        <!-- Anfang Beispiel Kommentar
-    									<li class="left clearfix">
-    										<div class="header">
-    											<span class="glyphicon glyphicon-user"></span> <a href="#">Lea Meier</a>
-    											<small class="pull-right text-muted">
-    												<i class="fa fa-clock-o fa-fw"></i> 26.05.2016: <b>12:36 Uhr</b>
-    											</small>
-    										</div>
-    										<p>
-    											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-    										</p>
-    									</li>
-                                        <!- Ende Beispiel Kommentar -->
-    
                                            {% for comment in good.getComments %}
 
                                            <li class="left clearfix">
-    										<div class="header">
+    										 <div class="header">
     											<span class="glyphicon glyphicon-user"></span> <a href="#">{{comment.user}}</a>
     											<small class="pull-right text-muted">
     												<i class="fa fa-clock-o fa-fw"></i> vor {{comment.created_date|timesince}}
@@ -157,7 +139,7 @@
     										<p>
     											{{comment.text}}
     										</p>
-    									</li>
+    									  </li>
     
                                            {% endfor %}
     

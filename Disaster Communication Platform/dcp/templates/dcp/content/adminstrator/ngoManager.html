@@ -18,33 +18,16 @@
 <!-- Anfang des Bereich für die Neuerstellung -->
 {% if user.is_active and user.is_superuser %}
 <div class="panel panel-default">
-    <div class="panel-heading" id="ngoFormularHeading" {% if invalidInput %} style="display: none;" {% endif %}><button class="btn btn-primary btn-lg" id="newNgo"><span class="glyphicon glyphicon-retweet"></span> Neu</button></div>
-    <div class="panel-body" id="ngoFormular" {% if not invalidInput %} style="display: none;" {% endif %}>
+    <div class="panel-heading" id="ngoFormularHeading" {% if create_new_form.errors %} style="display: none;" {% endif %}><button class="btn btn-primary btn-lg" id="newNgo"><span class="glyphicon glyphicon-retweet"></span> Neu</button></div>
+    <div class="panel-body" id="ngoFormular" {% if not create_new_form.errors %} style="display: none;" {% endif %}>
 	    <div class="col-sm-6">
 		    <form method="POST">
 		        <h2><span class="glyphicon glyphicon-retweet"></span> Neue NGO </h2>
-                {% csrf_token %}
-		    	<div class="form-group">
-		    		<label>Name:</label>
-		    		<input name="name" type="text" placeholder="NGO Name..." class="form-control">
-		    	</div>
 
-		    	<div class="form-group">
-		    		<label>Kurzname:</label>
-		    		<input name="name_short" type="text" placeholder="3 Buchstaben als Kürzel..." class="form-control">
-		    	</div>
+                {% load bootstrap3 %}
+                {% bootstrap_form create_new_form %}
+				{% csrf_token %}
 
-                <!-- Keine 3 Buchstaben als Kürzel-->
-                {% if invalidInput %}
-                    <div id="inVaildAlert">
-				    	<div class='alert alert-danger alert-dismissible' role='alert'>
-				    		<button type='button' class='close' data-dismiss='alert'>
-				    			<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
-				    		</button>
-				    		Genau 3 Buchstaben als Kurzname.
-				    	</div>
-				    </div>
-                {% endif %}
 		    	<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
             </form>
 	    </div>	
