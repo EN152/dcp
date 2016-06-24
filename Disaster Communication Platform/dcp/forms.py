@@ -4,8 +4,10 @@ from django import forms
 import datetime
 from django.contrib.auth.models import User
 from django.forms.models import ModelForm
+from django.forms.models import *
 from django.db.models.fields import CharField
 from django.core.validators import MaxLengthValidator, MinLengthValidator
+from django.contrib.admin.widgets import AdminDateWidget 
 
 class Offer_Form(ModelForm):
 	class Meta:
@@ -69,3 +71,16 @@ class MissedPeopleForm(forms.ModelForm):
     class Meta:
         model = MissedPeople
         fields = ['title', 'description', 'gender', 'age', 'name',  'size', 'eyeColor', 'hairColor', 'characteristics', 'picture']
+
+class EventPlanningForm(forms.ModelForm):
+    title = forms.CharField(max_length=200, required=True, label='Aktionsname',widget=forms.TextInput(attrs={'placeholder': 'Marchstraße aufräumen'}))
+    description = forms.CharField(max_length=5000, required=False, label='Nähere Informationen',widget=forms.Textarea(attrs={'placeholder' : 'Insgesamt werden 42 Personen mit 7 Fahrzeugen gebraucht. Speziell gesucht wird Kaffee in Thermoskannen. Vielen Dank für Eure Mithilfe!'}))
+    begin_date = forms.DateField(required=True, label='Beginn', widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    #begin_date = DateField(widget = AdminDateWidget)
+    numberOfUsers = forms.IntegerField(required=True, label="maximale Personenzahl", widget=forms.NumberInput())
+    numberOfCars = forms.IntegerField(required=True, label="maximale Fahrzeuganzahl", widget=forms.NumberInput())
+    numberOfSpecials = forms.IntegerField(required=True, label="maximale Spezialdinge", widget=forms.NumberInput())
+
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'begin_date', 'numberOfUsers', 'numberOfCars', 'numberOfSpecials']
