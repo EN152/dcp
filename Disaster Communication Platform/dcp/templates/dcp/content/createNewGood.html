@@ -53,10 +53,6 @@
 			<form method="POST" enctype="multipart/form-data">
 				<h2><span class="glyphicon {{create_new_glyphicon}}"></span> Was möchtest du erstellen? </h2>
 
-                {% for error in create_new_form.errors %}
-                   error <br/>
-                {% endfor %}
-
                 {% load bootstrap3 %}
                 {% bootstrap_form create_new_form %}
 				{% csrf_token %}

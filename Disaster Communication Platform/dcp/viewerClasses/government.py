@@ -1,7 +1,12 @@
-from dcp.importUrls import *
+from django.views.generic import View
+from django.views.static import loader
+from django.shortcuts import get_object_or_404
 from dcp.viewerClasses.organization import OrganizationView
+from dcp.models.organizations import Government
+from dcp.customForms.organizationForms import GovernmentForm
+from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 
-class GovernmentView(dcp.viewerClasses.organization.OrganizationView):
+class GovernmentView(OrganizationView):
     def get(self, request, pk, usernameSearchString=None):
         templatePath= 'dcp/content/organization/government.html'
         government = get_object_or_404(Government, id=pk)
@@ -33,7 +38,7 @@ class GovernmentView(dcp.viewerClasses.organization.OrganizationView):
 class GovernmentManagerView(View):
     """description of class"""
 
-    def get(self, request, invalidInput=False):
+    def get(self, request, invalidInput=False, create_new_form=GovernmentForm):
         templatePath = 'dcp/content/adminstrator/governmentManager.html'
         template = loader.get_template(templatePath)
         user = request.user
@@ -41,7 +46,8 @@ class GovernmentManagerView(View):
 
         context = {
             'government_list': government_list,
-            'invalidInput': invalidInput
+            'invalidInput': invalidInput,
+            'create_new_form' : create_new_form
         }
         if user.is_authenticated() and user.is_active and user.is_superuser:
             return HttpResponse(template.render(context, request))
@@ -51,25 +57,12 @@ class GovernmentManagerView(View):
         if not(user.is_authenticated() and user.is_active and user.is_superuser):
             return HttpResponse(status=403)
 
-        name = request.POST.get('name')
-        name_short = request.POST.get('name_short')
-        position_x = request.POST.get('position_x')
-        position_y = request.POST.get('position_y')
-        radius = request.POST.get('radius')
+        form = GovernmentForm(request.POST)
+        if form.is_valid():
+            government = form.save()
+        else:
+            self.get(request, create_new_form=form)
 
-        if not(name and name_short and position_x and position_y and radius):
-            return self.get(request, invalidInput=True)
-        try:
-            position_x = float(position_x)
-            position_y = float(position_y)
-            radius = int(radius)
-        except:
-            return self.get(request, invalidInput=True)
-
-        if len(name_short) != 3 or len(name) <= 3:
-            return self.get(request, invalidInput=True)
-
-        ngo = Government.objects.create(name=name, name_short=name_short, location_x= position_x, location_y = position_y, radius=radius)
-        url = '/government/' # Probleme mit Reverse von Urls
-        url += str(ngo.id)
+        url = '/government/' # TODO Probleme mit Reverse von Urls 
+        url += str(goverment.id)
         return HttpResponseRedirect(url)

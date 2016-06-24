@@ -1,9 +1,11 @@
-from dcp.importUrls import *
-from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponseForbidden
+from django.views.generic import View
+from django.views.static import loader
 from dcp.viewerClasses.organization import OrganizationView
+from dcp.models.organizations import Ngo
+from dcp.customForms.organizationForms import NgoForm
+from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 
-class NgoView(dcp.viewerClasses.organization.OrganizationView):
+class NgoView(OrganizationView):
     """description of class"""
     def get(self, request, pk, usernameSearchString=None):
         templatePath= 'dcp/content/organization/ngo.html'
@@ -37,7 +39,7 @@ class NgoView(dcp.viewerClasses.organization.OrganizationView):
 class NgoManagerView(View):
     """description of class"""
 
-    def get(self, request, invalidInput=False):
+    def get(self, request, create_new_form=NgoForm):
         templatePath = 'dcp/content/adminstrator/ngoManager.html'
         template = loader.get_template(templatePath)
         user = request.user
@@ -45,7 +47,7 @@ class NgoManagerView(View):
 
         context = {
             'ngo_list': ngo_list,
-            'invalidInput': invalidInput
+            'create_new_form' : create_new_form
         }
         if not(user.is_authenticated() and user.is_active and user.is_superuser):
             return HttpResponseForbidden("Insufficent rights")
@@ -55,17 +57,14 @@ class NgoManagerView(View):
     def post(self, request):
         user = request.user
         if not(user.is_authenticated() and user.is_active and user.is_superuser):
-            return HttpResponseForbidden("Insufficent rights")
+            raise HttpResponseForbidden()
+        form = NgoForm(request.POST)
 
-        name = request.POST.get('name')
-        name_short = request.POST.get('name_short')
+        if form.is_valid():
+            form.save()
+        else:
+            return self.get(request, create_new_form=form)
 
-        if not(name and name_short):
-            raise Http404
-        if len(name_short) != 3:
-            return self.get(request, invalidInput=True)
-
-        ngo = Ngo.objects.create(name=name, name_short=name_short)
-        url = '/ngo/' # Probleme mit Reverse von Urls
+        url = '/ngo/' # Probleme mit Reverse von Urls TODO
         url += str(ngo.id)
         return HttpResponseRedirect(url)

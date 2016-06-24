@@ -57,7 +57,7 @@ class OrganizationView(View):
                 return None # TODO
 
             if post_identifier =='endMembership':
-                member = get_object_or_404(User, id = request.POST.get('member_id'))
+                member = get_object_or_404(User.objects.select_related('profile'), id = request.POST.get('member_id'))
                 if not (member == user or user.profile.is_organization_admin or user.is_superuser):
                     return HttpResponseForbidden("Insufficent rights")
                 member.profile.resetOrganization()

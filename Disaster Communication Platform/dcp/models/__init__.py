@@ -8,7 +8,6 @@ from .profile import *
 from .goods import *
 from .chat import *
 from .missedPeople import *
-from .government import *
-from .ngo import *
+from .organizations import *
 from .categorysGoods import *
 from .event import *
