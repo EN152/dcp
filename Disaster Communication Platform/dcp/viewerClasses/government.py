@@ -12,7 +12,6 @@ class GovernmentView(OrganizationView):
         government = get_object_or_404(Government, id=pk)
 
         return super().get(request, government, templatePath, usernameSearchString=usernameSearchString)
-        
 
     def post(self, request, pk):
         government = get_object_or_404(Government, id=pk)

@@ -8,31 +8,7 @@
 
 {% block content %}
 
-<!-- for the search engine -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 
-<!-- css and js for the current location -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://domoritz.github.io/leaflet-locatecontrol/dist/L.Control.Locate.min.css" />
-<script src="https://domoritz.github.io/leaflet-locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
-
-<style>
-	.leaflet-control-locate.active.following a {
-	display:none;
-	}
-	
-	.leaflet-control-locate.active a {
-	display:none;
-	}
-
-	.leaflet-control-locate.leaflet-bar.leaflet-control.requesting{
-	display:none;
-	}
-</style>
 
 <!-- Script: Aufklappen des Bereiches für eine neue Erstellung-->
 <script>
@@ -56,58 +32,10 @@
                 {% load bootstrap3 %}
                 {% bootstrap_form create_new_form %}
 				{% csrf_token %}
+                {% include "dcp/design/locationPicker.html" with id_location_x="id_location_x" id_location_y="id_location_y" %}
 
-                <div class="form-group">
-					<label>Standort:	<input type="button" class="btn btn-success" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
-					<div id="map" style="height:400px;width:100%"></div>
-				</div>
-				
                 <button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
-            
-            <script>
 
-					//set the start focus of the map
-					var map = L.map('map').setView([37.804146, -122.275045], 15);
-
-					//contributors:
-					L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-						attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-					}).addTo(map);
-
-	
-					// Add geocoding plugin etc. search bar
-					var options = {
-						bounds: true,
-						position: "topleft",
-						expanded: true
-					}
-	
-					// add search key and options to the map
-					var geocoder = L.control.geocoder('search-Hv2UM4h', options).addTo(map);
-	
-					// when we select a city wich we searched for we are putting that into the 
-					geocoder.on('select', function (e) {
-						console.log('highlight', e);
-						document.getElementById("id_location_x").value = e.latlng.lat
-						document.getElementById("id_location_y").value = e.latlng.lng
-					});
-	
-					// if the map was able to find my current location
-					map.on('locationfound', function(e){
-						marker = L.marker([e.latitude, e.longitude], { draggable: false });
-						this.addLayer(marker);
-						document.getElementById("id_location_x").value = e.latitude;
-						document.getElementById("id_location_y").value = e.longitude;
-					});
-
-					// start the location tracker
-					function getCurrentLocation(){
-						var lc = L.control.locate().addTo(map);
-						lc.start();
-					}
-
-
-				</script>
           </form>
         </div>	
     </div>

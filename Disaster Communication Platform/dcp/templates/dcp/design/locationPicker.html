@@ -1,0 +1,36 @@
+﻿<!-- for the search engine -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.js"></script>
+
+<!-- css and js for the current location -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://domoritz.github.io/leaflet-locatecontrol/dist/L.Control.Locate.min.css" />
+<script src="https://domoritz.github.io/leaflet-locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+
+{% load static %}
+<script src="{% static 'js/map/location-picker.js' %}"></script>
+
+<style>
+	.leaflet-control-locate.active.following a {
+	display:none;
+	}
+	
+	.leaflet-control-locate.active a {
+	display:none;
+	}
+
+	.leaflet-control-locate.leaflet-bar.leaflet-control.requesting{
+	display:none;
+	}
+</style>
+
+<div class="form-group">
+    <label><input type="button" class="btn btn-success" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
+    <div id="mapCreateNew" style="height:400px;width:100%"></div>               
+    <script>
+        newMapScriptPicker("mapCreateNew", "{{id_location_x}}", "{{id_location_y}}")
+    </script>
+</div>
