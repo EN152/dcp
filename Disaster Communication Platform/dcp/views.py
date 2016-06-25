@@ -16,3 +16,4 @@ from dcp.viewerClasses.government import *
 from dcp.viewerClasses.ngo import *
 from dcp.viewerClasses.categorysGoods import *
 from dcp.viewerClasses.events import *
+from dcp.viewerClasses.areas import *

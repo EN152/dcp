@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^administrator/governmentmanager/$',GovernmentManagerView.as_view(),name='GovernmentManagerView'),
     url(r'^administrator/categorygoodmanager/$',CategorysGoodsMangerView.as_view(),name='CategoryGoodManagerView'),
     url(r'^administrator/gebiete/$', AreaOverview.as_view(), name='AreaOverview'),
+    url(r'^administrator/gebiet/$', AreaSingle.as_view(), name='AreaSingle'), #(?P<pk>\d+)/ fehlt natürlich...
 
     # Organisationen
     url(r'^ngo/(?P<pk>\d+)/$', NgoView.as_view(), name='NgoView'),

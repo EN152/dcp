@@ -1,0 +1,11 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %} Überblick aller Gebiete {% endblock title %}
+
+{% block content %}
+{% load bootstrap3 %}
+
+		{% csrf_token %}	
+		{% bootstrap_form form %}
+
+{% endblock %}		
