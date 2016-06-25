@@ -4,8 +4,9 @@ var circle;
 var valueLocationXId;
 var valueLocationYId;
 var radius = 0;
-var staticMarkers;
-var staticCircles;
+var staticMarkers = [];
+var staticCircles = [];
+var redIcon;
 
 function newMapScriptPicker(divMapId, valueLocationXId, valueLocationYId) {
     //set the start focus of the map
@@ -34,6 +35,14 @@ function newMapScriptPicker(divMapId, valueLocationXId, valueLocationYId) {
     geocoder.on('select', eventToMapCreateMaker);
     
     map.on('locationfound', eventToMapCreateMaker);
+
+    // Create Red Icon
+    var RedIcon = L.Icon.Default.extend({
+        options: {
+            iconUrl: '/static/leafletjs/marker-icon-red.png'
+        }
+    });
+    this.redIcon = new RedIcon();
 }
 // Fuktionen für den Neuerstellungsmaker
 function eventToMapCreateMaker(e) {
@@ -55,6 +64,9 @@ function changeMapCreateMarker(latlng) {
         changeValuesMapCreate(marker.getLatLng());
         changeCircleCreateNew();
     });
+    marker.on('drag', function (e) {
+        changeCircleCreateNew();
+    })
 }
 function changeValuesMapCreate(latlng) {
     document.getElementById(valueLocationXId).value = latlng.lat;
@@ -81,28 +93,25 @@ function changeRadiusOnMap(radius) {
 
 // Anfang für statische Elemente
 function addToStaticMarkers(location_x, location_y, title) {
-    if (this.staticMarkers == undefined) {
-        staticMarkers = [];
-    }
-    staticMarkers.push((L.marker([location_x.replace(",", "."), location_y.replace(",", ".")], { draggable: false })).bindPopup(title));
+    staticMarkers.push((L.marker([location_x.replace(",", "."), location_y.replace(",", ".")], {
+        draggable: false,
+        icon : redIcon
+    })).bindPopup(title));
 }
 function addToStaticCircles(location_x, location_y, radius, title) {
-    if (this.staticCircles == undefined) {
-        staticCircles = [];
-    }
-    staticCircles.push((L.circle([location_x.replace(",", "."), location_y.replace(",", ".")], radius, {
+    staticCircles.push((L.circle([location_x.replace(",", "."), location_y.replace(",", ".")], (radius.replace(",", ".") * 1000), {
         color: 'red',
         fillColor: '#f03',
         fillOpacity: 0.2,
         clickable: true
-    })).addPopup(title));
+    })).bindPopup(title));
 }
 function showStaticMarkers() {
     staticMarkers.forEach(function(entry) {
         map.addLayer(entry);
     });
 }
-function showStaticCircls() {
+function showStaticCircles() {
     staticCircles.forEach(function(entry) {
         map.addLayer(entry);
     });
@@ -112,7 +121,7 @@ function hideStaticMarkers() {
         map.removeLayer(entry);
     });
 }
-function hideStaticCircls() {
+function hideStaticCircles() {
     staticCircles.forEach(function (entry) {
         map.removeLayer(entry);
     });

@@ -19,13 +19,14 @@ class AreaAdminView(LoginRequiredMixin,View):
         user = request.user
         catastrophe = user.profile.currentCatastrophe
         if not user.is_superuser:
-            HttpResponseForbidden
+            return HttpResponseForbidden("Insufficent rights")
         templatePath = 'dcp/content/organization/areaAdmin.html'
         template = loader.get_template(templatePath)
         if catastrophe is not None:
-            area_list = Area.objects.filter(catastrophe=catastrophe).select_related('catastrophe_set').prefetch_related('ngo_set','government_set')
+            area_list = Area.objects.filter(catastrophe=catastrophe).order_by('created_date').reverse().select_related('catastrophe_set').prefetch_related('ngo_set','government_set').reverse()
         else: 
-            area_list = Area.objects.all().select_related('catastrophe').prefetch_related('ngo_set','government_set')
+            area_list = Area.objects.all().order_by('created_date').reverse().select_related('catastrophe').prefetch_related('ngo_set','government_set')
+
 
         context = {
             'area_list': area_list,
@@ -36,7 +37,7 @@ class AreaAdminView(LoginRequiredMixin,View):
     def post(self, request):
         user = request.user
         if not user.is_superuser:
-            HttpResponseForbidden
+            return HttpResponseForbidden("Insufficent rights")
         
         form = AreaForm(request.POST)
         if form.is_valid():

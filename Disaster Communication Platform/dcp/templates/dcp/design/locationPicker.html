@@ -21,8 +21,46 @@
 
 <div class="form-group">
     <label><input type="button" class="btn btn-success" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
+    {%if staticElements %} <label><input type="button" class="btn btn-primary" value="Zeige Marker" onClick="showStaticMarkers();"/></label> {% endif %}
+    {%if staticElements %} <label><input type="button" class="btn btn-warning" value="Verberge Marker" onClick="hideStaticMarkers();"/></label> {% endif %}
+    {%if staticElements %} <label><input type="button" class="btn btn-primary" value="Zeige Radius" onClick="showStaticCircles();"/></label> {% endif %}
+    {%if staticElements %} <label><input type="button" class="btn btn-warning" value="Verberge Radius" onClick="hideStaticCircles();"/></label> {% endif %}
     <div id="mapCreateNew" style="height:400px"></div>               
     <script>
         newMapScriptPicker("mapCreateNew", "{{id_location_x}}", "{{id_location_y}}")
     </script>
+    {% for staticElement in staticElements %}
+        {% if staticElement.title %}
+            <script>
+                addToStaticMarkers("{{staticElement.location_x}}", "{{staticElement.location_y}}", "{{staticElement.title}}")
+            </script>
+            {% if staticElement.radius %}    
+                <script>
+                    addToStaticCircles("{{staticElement.location_x}}", "{{staticElement.location_y}}", {{staticElement.radius}}, "{{staticElement.title}}")
+                </script>
+            {% endif %}
+        {% elif staticElement.locationString %}
+            <script>
+                addToStaticMarkers("{{staticElement.location_x}}", "{{staticElement.location_y}}", "{{staticElement.locationString}}")
+            </script>
+            {% if staticElement.radius %}
+                <script>
+                    addToStaticCircles("{{staticElement.location_x}}", "{{staticElement.location_y}}", "{{staticElement.radius}}", "{{staticElement.locationString}}")
+                </script>
+            {% endif %}
+        {% endif %}    
+    {% endfor %}
+    {% if staticElements %}
+        <script>
+            showStaticMarkers();
+            showStaticCircles();
+        </script>
+    {% endif %}
+
+    {% if catastrophe %}
+        <script>
+
+        </script>
+    {% endif %}
+
 </div>
