@@ -6,10 +6,11 @@ from dcp.models.organizations import *
 from dcp.customForms.organizationForms import AreaForm
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from geopy.geocoders import Nominatim
 
 class AreaView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        template = 
+        template = 'dcp/content/organization/area.html'
         area = get_object_or_404(Area, id=pk)
 
 
@@ -40,6 +41,11 @@ class AreaAdminView(LoginRequiredMixin,View):
         form = AreaForm(request.POST)
         if form.is_valid():
             area = form.save(commit=False)
+
+            geolocator = Nominatim()
+            location = geolocator.reverse(str(area.location_x) + " , " + str(area.location_y))
+            area.locationString = location.address
+
             area.save()
 
             ngos = Ngo.objects.filter(id__in=request.POST.getlist('ngos'))
