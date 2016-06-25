@@ -1,6 +1,6 @@
 ﻿{% extends "dcp/design/base.html" %}}
 
-{% block title %} NGO Manager {% endblock %}
+{% block title %} NGO-Manager {% endblock %}
 
 {% block content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
@@ -18,15 +18,15 @@
 <!-- Anfang des Bereich für die Neuerstellung -->
 {% if user.is_active and user.is_superuser %}
 <div class="panel panel-default">
-    <div class="panel-heading" id="ngoFormularHeading" {% if create_new_form.errors %} style="display: none;" {% endif %}><button class="btn btn-primary btn-lg" id="newNgo"><span class="glyphicon glyphicon-retweet"></span> Neu</button></div>
+    <div class="panel-heading" id="ngoFormularHeading" {% if create_new_form.errors %} style="display: none;" {% endif %}><button class="btn btn-primary btn-lg" id="newNgo"><span class="glyphicon glyphicon-plus"></span> Neue NGO</button></div>
     <div class="panel-body" id="ngoFormular" {% if not create_new_form.errors %} style="display: none;" {% endif %}>
-	    <div class="col-sm-6">
+	    <div class="col-sm-8">
 		    <form method="POST">
-		        <h2><span class="glyphicon glyphicon-retweet"></span> Neue NGO </h2>
+		        <h2><i class="fa fa-users"></i> Neue Non-governmental organization anlegen</h2>
 
                 {% load bootstrap3 %}
                 {% bootstrap_form create_new_form %}
-				{% csrf_token %}
+				        {% csrf_token %}
 
 		    	<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
             </form>
@@ -62,7 +62,7 @@
     </div>
 {% else %}
     <center>
-        <h3>Keine NGOs gefunden</h3>
+        <h3>(keine NGOs gefunden)</h3>
     </center>
 {% endif %}
 <!-- Ende der Aufzählung von allen NGOs-->
