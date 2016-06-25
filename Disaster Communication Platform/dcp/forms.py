@@ -37,11 +37,13 @@ class Comment_Form(ModelForm):
         fields = ['text']
 
 class CatastropheForm(forms.ModelForm):
-    Title = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Katastrophentext eingeben'}))
-    Location = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Ort der Katastrophe eingeben'}))
+    title = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Katastrophentext eingeben'}))
+    radius = forms.FloatField(min_value=0, max_value=10000, required=True)
+    location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
+    location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     class Meta:
         model = Catastrophe
-        fields = ["Title", "Location"]
+        fields = ["title", "radius", "location_x", "location_y"]
 
 class CatastropheModelChoiceField(forms.ModelChoiceField):
     """
@@ -50,10 +52,10 @@ class CatastropheModelChoiceField(forms.ModelChoiceField):
     Siehe hier:https://docs.djangoproject.com/en/1.9/ref/forms/fields/#django.forms.ModelChoiceField
     """
     def label_from_instance(self,obj: Catastrophe):
-        return obj.Title + " in " + obj.Location
+        return obj.title + " in " + obj.locationString
 
 class CatastropheChoice(forms.Form):
-    catastrophe = CatastropheModelChoiceField(queryset=Catastrophe.objects.all().order_by('Title'),empty_label='Katastrophe auswählen...',widget=forms.Select(attrs={'class':'form-control','onChange':'this.form.submit()'}),label='')
+    catastrophe = CatastropheModelChoiceField(queryset=Catastrophe.objects.all().order_by('title'),empty_label='Katastrophe auswählen...',widget=forms.Select(attrs={'class':'form-control','onChange':'this.form.submit()'}),label='')
 
 class MissedPeopleForm(forms.ModelForm):
     title = forms.CharField(required=True,label='Überschrift',widget=forms.TextInput(attrs={'placeholder': 'Lisa, 24 Jahre, Wedding'}))
