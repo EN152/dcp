@@ -4,6 +4,8 @@ var circle;
 var valueLocationXId;
 var valueLocationYId;
 var radius = 0;
+var staticMarkers;
+var staticCircles;
 
 function newMapScriptPicker(divMapId, valueLocationXId, valueLocationYId) {
     //set the start focus of the map
@@ -31,9 +33,9 @@ function newMapScriptPicker(divMapId, valueLocationXId, valueLocationYId) {
     // when we select a city wich we searched for we are putting that into the 
     geocoder.on('select', eventToMapCreateMaker);
     
-    // if the map was able to find my current location
     map.on('locationfound', eventToMapCreateMaker);
 }
+// Fuktionen für den Neuerstellungsmaker
 function eventToMapCreateMaker(e) {
     changeMapCreateMarker(e.latlng);
 }
@@ -67,13 +69,51 @@ function changeCircleCreateNew() {
     }
 
     this.circle = L.circle(marker.getLatLng(), radius, {
-        color: 'red',
-        fillColor: '#f03',
-        fillOpacity: 0.3,
+        fillOpacity: 0.5,
         clickable: false
     }).addTo(map);
 }
 function changeRadiusOnMap(radius) {
     this.radius = 1000 * radius;
     changeCircleCreateNew();
+}
+// Ende der Funktionen für den Neuerstellungsmarker
+
+// Anfang für statische Elemente
+function addToStaticMarkers(location_x, location_y, title) {
+    if (this.staticMarkers == undefined) {
+        staticMarkers = [];
+    }
+    staticMarkers.push((L.marker([location_x.replace(",", "."), location_y.replace(",", ".")], { draggable: false })).bindPopup(title));
+}
+function addToStaticCircles(location_x, location_y, radius, title) {
+    if (this.staticCircles == undefined) {
+        staticCircles = [];
+    }
+    staticCircles.push((L.circle([location_x.replace(",", "."), location_y.replace(",", ".")], radius, {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.2,
+        clickable: true
+    })).addPopup(title));
+}
+function showStaticMarkers() {
+    staticMarkers.forEach(function(entry) {
+        map.addLayer(entry);
+    });
+}
+function showStaticCircls() {
+    staticCircles.forEach(function(entry) {
+        map.addLayer(entry);
+    });
+}
+function hideStaticMarkers() {
+    staticMarkers.forEach(function (entry) {
+        map.removeLayer(entry);
+    });
+}
+function hideStaticCircls() {
+    staticCircles.forEach(function (entry) {
+        map.removeLayer(entry);
+    });
 }

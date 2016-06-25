@@ -81,16 +81,19 @@ class Ngo(Organization):
         	users.append(profile.user)
         return  sorted(users, key=lambda u: u.profile.date_joined_organization, reverse=True)
 
-class GovernmentArea(models.Model):
-    government = models.ForeignKey(Government, on_delete=models.CASCADE, null=False)
+class AreaRealtion(models.Model):
     area = models.ForeignKey(Area, on_delete=models.CASCADE, null=False)
+    canDeleteElements = models.BooleanField(null=False, default=False)
     created_date = models.DateTimeField(default=timezone.now, null=False, editable=False)
+    class Meta:
+        abstract = True
+
+class GovernmentArea(AreaRealtion):
+    government = models.ForeignKey(Government, on_delete=models.CASCADE, null=False)
+    canCreateNgoArea = models.BooleanField(null=False, default=False)
     canAddNgo = models.BooleanField(null=False, default=False)
     canDeleteNgo = models.BooleanField(null=False, default=False)
-    canDeleteElements = models.BooleanField(null=False, default=False)
 
-class NgoArea(models.Model):
+
+class NgoArea(AreaRealtion):
     ngo = models.ForeignKey(Ngo, on_delete=models.CASCADE, null=False)
-    area = models.ForeignKey(Area, on_delete=models.CASCADE, null=False)
-    created_date = created_date = models.DateTimeField(default=timezone.now, null=False, editable=False)
-    canDeleteElements = models.BooleanField(null=False, default=False)

@@ -16,3 +16,15 @@ class NgoForm(forms.ModelForm):
     class Meta:
         model = Ngo
         fields = ["name", "name_short"]
+
+class AreaForm(forms.ModelForm):
+    ngos = forms.ModelMultipleChoiceField(queryset=Ngo.objects.all(), required=False, label='NGOs')
+    goverments = forms.ModelMultipleChoiceField(queryset=Government.objects.all(), required=False, label='Governments')
+    catastrophe = forms.ModelChoiceField(queryset=Catastrophe.objects.all(), required=True, label='Katastrophe')
+    radius = forms.IntegerField(min_value=0, max_value=10000, required=True)
+    location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
+    location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
+    
+    class Meta:
+        model = Area
+        fields = ["ngos", "goverments", "catastrophe", "radius", "location_x", "location_y"]

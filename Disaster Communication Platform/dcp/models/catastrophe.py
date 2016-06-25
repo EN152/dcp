@@ -1,9 +1,13 @@
 from .imports import *
+from dcp import dcpSettings
 
 class Catastrophe(models.Model):
     Title = models.CharField(max_length=200)
     Location = models.CharField(max_length=100) # Soll das so? Nicht per Map Anzeigen?r
     PubDate = models.DateTimeField('date published', default=timezone.now)
+    location_x = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])
+    location_y = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])
+    radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(dcpSettings.ORGANIZATIONS_AREA_MAX_RADIUS)])
 
     def __unicode__(self):
         return self.Title
