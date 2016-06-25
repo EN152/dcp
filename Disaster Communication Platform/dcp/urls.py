@@ -42,11 +42,12 @@ urlpatterns = [
     url(r'^administrator/ngomanager/$',NgoManagerView.as_view(),name='NgoManagerView'),
     url(r'^administrator/governmentmanager/$',GovernmentManagerView.as_view(),name='GovernmentManagerView'),
     url(r'^administrator/categorygoodmanager/$',CategorysGoodsMangerView.as_view(),name='CategoryGoodManagerView'),
-    url(r'^administrator/areaadministrator/$',AreaAdminView.as_view(),name='CategoryGoodManagerView'),
+    url(r'^administrator/areaadministrator/$',AreaAdminView.as_view(),name='AreaAdministratorView'),
 
     # Organisationen
     url(r'^ngo/(?P<pk>\d+)/$', NgoView.as_view(), name='NgoView'),
     url(r'^government/(?P<pk>\d+)/$', GovernmentView.as_view(),name='GovernmentView'),
+    url(r'^area/(?P<pk>\d+)/$', AreaView.as_view(),name='AreaView'),
 
 #    # Wissen
 #    url(r'^wissen/$', views.wissen),

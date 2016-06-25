@@ -4,6 +4,8 @@ from dcp.viewerClasses.organization import OrganizationView
 from dcp.models.organizations import Ngo
 from dcp.customForms.organizationForms import NgoForm
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from dcp.models.profile import Invite_Ngo
 
 class NgoView(OrganizationView):
     """description of class"""
@@ -61,7 +63,7 @@ class NgoManagerView(View):
         form = NgoForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            ngo = form.save()
         else:
             return self.get(request, create_new_form=form)
 

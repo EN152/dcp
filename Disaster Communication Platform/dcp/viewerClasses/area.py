@@ -5,28 +5,54 @@ from dcp.viewerClasses.organization import OrganizationView
 from dcp.models.organizations import *
 from dcp.customForms.organizationForms import AreaForm
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class AreaView(View):
+class AreaView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        user = request.user
-        if not(user.is_authenticated() and user.is_active):
-            HttpResponseRedirect('/')
+        template = 
         area = get_object_or_404(Area, id=pk)
 
 
-class AreaAdminView(View):
+class AreaAdminView(LoginRequiredMixin,View):
     def get(self, request, create_new_form=AreaForm):
         user = request.user
-        if not(user.is_authenticated() and user.is_active):
-            HttpResponseRedirect('/')
+        catastrophe = user.profile.currentCatastrophe
         if not user.is_superuser:
             HttpResponseForbidden
         templatePath = 'dcp/content/organization/areaAdmin.html'
         template = loader.get_template(templatePath)
-        area_list = Area.objects.all()
+        if catastrophe is not None:
+            area_list = Area.objects.filter(catastrophe=catastrophe).select_related('catastrophe_set').prefetch_related('ngo_set','government_set')
+        else: 
+            area_list = Area.objects.all().select_related('catastrophe').prefetch_related('ngo_set','government_set')
 
         context = {
             'area_list': area_list,
             'create_new_form' : create_new_form
         }
         return HttpResponse(template.render(context, request))
+
+    def post(self, request):
+        user = request.user
+        if not user.is_superuser:
+            HttpResponseForbidden
+        
+        form = AreaForm(request.POST)
+        if form.is_valid():
+            area = form.save(commit=False)
+            area.save()
+
+            ngos = Ngo.objects.filter(id__in=request.POST.getlist('ngos'))
+            createNgoAreas = []
+            for ngo in ngos:
+                createNgoAreas.append(NgoArea(ngo=ngo, area=area))
+
+            governments = Government.objects.filter(id__in=request.POST.getlist('governments'))
+            createGovernmentsAreas = []
+            for government in governments:
+                createGovernmentsAreas.append(GovernmentArea(government=government, area=area))
+            NgoArea.objects.bulk_create(createNgoAreas)
+            GovernmentArea.objects.bulk_create(createGovernmentsAreas)
+            return HttpResponseRedirect('')
+        else:
+            return self.get(request, create_new_form=form)

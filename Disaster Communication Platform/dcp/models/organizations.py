@@ -14,10 +14,17 @@ class Organization(models.Model):
     class Meta:
         abstract = True
 
+    def __unicode__(self):
+        return self.name
+
+    def __str__(self):
+        return self.name
+
 class Area(models.Model):
     catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True, blank=True)
     created_date = models.DateTimeField(default=timezone.now, null=False, editable=False)
     # Sollte durch Polygone für die Grenzen ersetzt werden
+    locationString = models.CharField(default='', max_length=200, null=True)
     location_x = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])
     location_y = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])
     radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(dcpSettings.ORGANIZATIONS_AREA_MAX_RADIUS)])

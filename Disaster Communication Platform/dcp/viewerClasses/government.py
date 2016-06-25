@@ -5,6 +5,7 @@ from dcp.viewerClasses.organization import OrganizationView
 from dcp.models.organizations import Government
 from dcp.customForms.organizationForms import GovernmentForm
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from dcp.models.profile import Invite_Government
 
 class GovernmentView(OrganizationView):
     def get(self, request, pk, usernameSearchString=None):
@@ -63,5 +64,5 @@ class GovernmentManagerView(View):
             self.get(request, create_new_form=form)
 
         url = '/government/' # TODO Probleme mit Reverse von Urls 
-        url += str(goverment.id)
+        url += str(government.id)
         return HttpResponseRedirect(url)
