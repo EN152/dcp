@@ -37,8 +37,8 @@
     							<div class="panel-body">
     								<p><div><!--Abstand--></div>
     									<span class="{{good.getCategoryGlyphiconAsString}}"></span> {{good.getCategoryNameAsString}}<br>
-                                        {% if good.location_x and good.location_y %}
-    									<span class="glyphicon glyphicon-map-marker"></span> {{ good.location_x }}, {{ good.location_y}}
+                                        {% if good.locationString %}
+    									    <span class="glyphicon glyphicon-map-marker"></span> {{good.locationString}}
                                         {% endif %}
     								</p>
     							</div>	

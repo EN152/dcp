@@ -16,12 +16,14 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="dataTable_wrapper">
-                                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <table width="100%" class="table table-striped table-bordered table-hover table-responsive" id="dataTables-catastrophes">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
                                             <th>Ort</th>
                                             <th>Datum</th>
+                                            <th>Radius</th>
+                                            <th>Manager</th>
                                             <th>Aktionen</th>
                                             <th></th>
 
@@ -31,9 +33,23 @@
                                     {% if catastrophes %}
                                     {% for c in catastrophes %}
                                         <tr class="gradeA">
-                                            <td>{{ c.Title }}</td>
-                                            <td>{{ c.Location }}</td>
-                                            <td>{{ c.PubDate }}</td>
+                                            <td>{{ c.title }}</td>
+                                            <td>{{ c.locationString }}</td>
+                                            <td>{{ c.date_created }}</td>
+                                            <td>{{ c.radius }}</td>
+                                            <td>
+                                                {% if not c.ngo_set.all and not c.government_set.all %}
+                                                    Superuser
+                                                
+                                                {% else %}
+                                                    {% for ngo in c.ngo_set.all %}
+                                                        <a href="{% url 'dcp:NgoView' ngo.id %}">{{ngo.name}}</a>
+                                                    {% endfor %}
+                                                    {% for government in c.government_set.all %}
+                                                        <a href="{% url 'dcp:GovernmentView' government.id %}">{{government.name}}</a>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </td>
                                             <td><center><a href="{% url 'dcp:CreateOrEditCatastrophe' %}?catid={{ c.id }}"><button type="button" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Bearbeiten</button></a></center></td>
                                             <td><center><a href="{% url "dcp:DeleteCatastropheView" pk=c.id %}"><button type="button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> Löschen</button></a></center></td>
 

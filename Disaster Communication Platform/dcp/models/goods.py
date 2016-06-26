@@ -25,6 +25,7 @@ class Goods(models.Model):
     catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
     title = models.CharField(max_length=100, null=False)
     description = models.TextField(max_length=500, null=True, blank=True)
+    locationString = models.CharField(default='', max_length=200, null=True)
     location_x = models.FloatField(null=True)
     location_y = models.FloatField(null=True)
     created_date = models.DateTimeField(default=timezone.now, blank=True)

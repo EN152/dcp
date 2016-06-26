@@ -21,7 +21,53 @@
 </div>
 
 
-{% if inviteList %}
+{% if inviteNgoList %}
+    <h3>Einladungen NGOs</h3>
+    <div class="table-responsive">          
+      <table class="table">
+        <thead>
+          <tr>
+            <th width="5%">#</th>
+            <th width="10%">Name</th>
+            <th width="7%">Kurzname</th>
+            <th width="5%">Mitglieder</th>
+            <th width="10%">Datum</th>
+            <th width="63%">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for invite in inviteNgoList %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{invite.organization.name}}</td>
+                    <td>{{invite.organization.name_short}}</td>
+                    <td>{{invite.organization.getMembers|length}}</td>
+                    <td>vor {{invite.created_date|timesince}}</td>
+                    <td>
+                        <form class="form-horizontal" role="form" id="accept_invite" method="post">
+    					    <div class="input-group">         
+                                {% csrf_token %}
+                                <input type="hidden" name="invite_id" value="{{invite.id}}" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success" id="btn-chat" type="submit" name="post_identifier" value="acceptNgoInvite">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Akzeptieren
+                                    </button>
+                               
+                                    <button class="btn btn-danger" id="btn-chat" type="submit" name="post_identifier" value="declineNgoInvite">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ablehnen
+                                    </button>
+                                </span>
+    					    </div>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% endif %}
+
+{% if inviteGovernmentList %}
     <h3>Einladungen</h3>
     <div class="table-responsive">          
       <table class="table">
@@ -36,26 +82,24 @@
           </tr>
         </thead>
         <tbody>
-            {% for invite in inviteList %}
+            {% for invite in inviteGovernmentList %}
                 <tr>
                     <td>{{forloop.counter}}</td>
                     <td>{{invite.organization.name}}</td>
                     <td>{{invite.organization.name_short}}</td>
                     <td>{{invite.organization.getMembers|length}}</td>
-                    <td>{{invite.date_created}}</td>
+                    <td>vor {{invite.created_date|timesince}}</td>
                     <td>
                         <form class="form-horizontal" role="form" id="accept_invite" method="post">
     					    <div class="input-group">         
                                 {% csrf_token %}
-                                <input type="hidden" name="invite_type" value="{{invite.getInviteType}}" />
                                 <input type="hidden" name="invite_id" value="{{invite.id}}" />
-                                <input type="hidden" name="organization_id" value="{{invite.organization.id}}" />
                                 <span class="input-group-btn">
-                                    <button class="btn btn-success" id="btn-chat" type="submit" name="post_identifier" value="accept_invite">
+                                    <button class="btn btn-success" id="btn-chat" type="submit" name="post_identifier" value="acceptGovernmentInvite">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Akzeptieren
                                     </button>
                                
-                                    <button class="btn btn-danger" id="btn-chat" type="submit" name="post_identifier" value="decline_invite">
+                                    <button class="btn btn-danger" id="btn-chat" type="submit" name="post_identifier" value="declineGovernmentInvite">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ablehnen
                                     </button>
                                 </span>
@@ -68,5 +112,6 @@
       </table>
     </div>
 {% endif %}
+
 
 {% endblock content %}

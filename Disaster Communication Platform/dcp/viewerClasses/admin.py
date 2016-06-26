@@ -12,19 +12,6 @@ class UserAdminOverview(views.SuperuserRequiredMixin,View):
         userList = User.objects.all()
         return render(request,self.template,context={'users': userList})
 
-class CatastropheOverview(views.SuperuserRequiredMixin,View):
-    template = 'dcp/content/adminstrator/catastropheOverview.html'
-    def get(self,request):
-        """
-        :author Vincent
-        Gibt eine Liste an Katastrohpen aus, mit der Möglichkeit Einträge zu löschen, Namen zu editieren und Katastrophen
-        hinzuzufügen
-        :param request:
-        :return:
-        """
-        catastropheList = Catastrophe.objects.all()
-        return render(request,self.template,context={'catastrophes':catastropheList})
-
 class AdminEditUserProfileView(views.SuperuserRequiredMixin,UpdateView):
     fields = ['first_name', 'last_name', 'email']
     template_name = 'dcp/content/spezial/profilBearbeiten.html'

@@ -5,99 +5,11 @@ from .organizations import *
 
 class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschrieben wird:https://docs.djangoproject.com/en/1.8/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User)
-    currentCatastrophe = models.ForeignKey(Catastrophe,related_name='currentCatastrophe',null=True,blank=True) # TODO: Kaskade?
-    ngo = models.ForeignKey(Ngo, on_delete=models.DO_NOTHING, null=True)
-    government = models.ForeignKey(Government, on_delete=models.DO_NOTHING, null=True)
-    is_organization_admin = models.BooleanField(default=False, null=False)
-    date_joined_organization = models.DateTimeField(default=timezone.now, null=False, editable=False)
+    currentCatastrophe = models.ForeignKey(Catastrophe, related_name='currentCatastrophe', null=True,blank=True)
+    ngo = models.ManyToManyField(Ngo, through='NgoMember')
+    government = models.ManyToManyField(Government, through='GovernmentMember')
     show_map = models.BooleanField(default=True, null=False)
     show_picture = models.BooleanField(default=True, null=False)
-
-    def setOrganizationAdmin(self, organitationAdmin):
-        self.is_organization_admin = organitationAdmin
-        self.save()
-
-    def resetOrganization(self):
-        """
-        Setzt NGO und Government auf null zurück
-        :author: Jasper
-        :return: False falls nicht erfolgreich, True falls erfolgreich
-        """
-        self.ngo = None
-        self.government = None
-        self.is_organization_admin = False
-        self.save()
-
-    def acceptNgoInviteById(self, ngoId):
-        """
-        Setzt eine neue Ngo
-        :author: Jasper
-        :param ngoId: Die Id der neuen Ngo
-        :return: False falls nicht erfolgreich, True falls erfolgreich
-        """
-        if ngoId is None: # Mache nichts
-            return False
-        try:
-            ngoId = int(ngoId)
-        except ValueError: #  ngoId kein Int
-            return False
-        ngo = get_object_or_none(Ngo,id=ngoId)
-        invite = get_object_or_none(Invite_Ngo,user=self.user,organization=ngo)
-        if ngo is None or invite is None:
-            return False
-        else:
-            self.resetOrganization()
-            self.government = None
-            self.ngo = ngo
-            self.isOrganziationAdmin = False
-            self.date_joined_organization = timezone.now()
-            self.save()
-            invite.delete()
-            return True
-
-    def acceptGovernmentInviteById(self, governmentId):
-        """
-        Setzt ein neues Government
-        :author: Jasper
-        :param ngoId: Die Id des neuen Government
-        :return: False falls nicht erfolgreich, True falls erfolgreich
-        """
-        if governmentId is None: # Mache nichts
-            return False
-        try:
-            governmentId = int(governmentId)
-        except ValueError: #  ngoId kein Int
-            return False
-        government = get_object_or_none(Government,id=governmentId)
-        invite = get_object_or_none(Invite_Government,user=self.user,organization=government)
-        if government is None or invite is None:
-            return False
-        else:
-            self.resetOrganization()
-            self.government = government
-            self.ngo = None
-            self.isOrganziationAdmin = False
-            self.date_joined_organization = timezone.now()
-            self.save()
-            invite.delete()
-            return True
-
-    def getInvites(self):
-        """
-        Gibt eine Liste von den Invites zurück
-        :author: Jasper
-        :return: Eine Liste mit allen Invites
-        """
-        from dcp.customclasses.Helpers import getInvites
-        return getInvites(user=self.user)
-    
-    def getOrganization(self):
-        if self.ngo is not None:
-            return self.ngo
-        elif self.government is not None:
-            return self.government
-        else:
-            return None
 
     def setCatastropheById(self,catId):
         """
@@ -164,21 +76,32 @@ def create_profile(sender, **kwargs):
         user_profile.save()
 post_save.connect(create_profile, sender=User)
 
-class Invite_Ngo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+class Invite(models.Model):
+    created_date = models.DateTimeField(default=timezone.now)
+
+class NgoInvite(Invite):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=False)
     organization = models.ForeignKey(Ngo, on_delete=models.CASCADE, null=False)
-    date_created = models.DateTimeField(default=timezone.now)
 
-    def getInviteType(self):
-        return 'Invite_Ngo'
+    def acceptInvite(self):
+        membership, created = NgoMember.objects.get_or_create(profile=self.profile, ngo=self.organization)
+        self.delete()
+        return membership
 
-class Invite_Government(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    class Meta:
+         unique_together = ('profile','organization')
+
+class GovernmentInvite(Invite):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=False)
     organization = models.ForeignKey(Government, on_delete=models.CASCADE, null=False)
-    date_created = models.DateTimeField(default=timezone.now)
 
-    def getInviteType(self):
-        return 'Invite_Government'
+    def acceptInvite(self):
+        membership, created = GovernmentMember.objects.get_or_create(profile=self.profile, government=self.organization)
+        self.delete()
+        return membership
+
+    class Meta:
+         unique_together = ('profile','organization')
 
 class Comment_Relation(models.Model):
     pass
@@ -191,3 +114,28 @@ class Comment(models.Model):
 
     def __unicode__(self):
         return self.text
+
+    def __str__(self):
+        return self.text
+
+class Member(models.Model):
+    isOrganizationAdmin = models.BooleanField(default=False, null=False)
+    isAreaAdmin = models.BooleanField(default=False, null=False)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        abstract = False
+
+class NgoMember(Member):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=False)
+    ngo = models.ForeignKey(Ngo, on_delete=models.CASCADE, null=False)
+
+    class Meta:
+         unique_together = ('profile','ngo')
+
+class GovernmentMember(Member):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=False)
+    government = models.ForeignKey(Government, on_delete=models.CASCADE, null=False)
+
+    class Meta:
+         unique_together = ('profile','government')

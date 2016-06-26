@@ -1,63 +1,51 @@
 # imports
 from dcp.importUrls import *
-from django.http import Http404
+from django.http import Http404, HttpResponse
+from dcp.models.profile import NgoInvite, GovernmentInvite, Invite
+from dcp.models.organizations import Ngo, Organization
+from django.views.generic import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404
 
-class MyProfile(View):
-    template = 'dcp/content/spezial/profil.html'
-
-           
+class MyProfile(LoginRequiredMixin, View):
     def get(self, request):
+        templatePath = 'dcp/content/spezial/profil.html'
+        template = loader.get_template(templatePath)
         user = request.user
-        inviteList = user.profile.getInvites()
+        inviteNgoList = NgoInvite.objects.filter(profile=user.profile).select_related('organization')
+        inviteGovernmentList = GovernmentInvite.objects.filter(profile=user.profile).select_related('organization')
         context = {
-            'inviteList': inviteList
+            'inviteNgoList': inviteNgoList,
+            'inviteGovernmentList': inviteGovernmentList
         }
-        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template, context)
+        return HttpResponse(template.render(context, request))
 
     def post(self, request):
         post_identifier = request.POST.get('post_identifier')
         user = request.user
-        if post_identifier == 'accept_invite':
-            if not(user.is_authenticated() and user.is_active):
-                return HttpResponse(status=403)
-            invite_type = request.POST.get('invite_type')
-            invite_id = request.POST.get('invite_id')
-            organization_id = request.POST.get('organization_id')
-            print(invite_id)
-            if invite_type is None or invite_id is None or organization_id is None:
-                raise Http404
-            if invite_type == 'Invite_Ngo':
-                if not user.profile.acceptNgoInviteById(organization_id):
-                    raise Http404
-                url = '/ngo/' # TODO Probleme mit Reverse von Urls
-                url += str(organization_id)
-                return HttpResponseRedirect(url)
+        if post_identifier == 'acceptNgoInvite':
+            invite = invite = get_object_or_404(NgoInvite, id=request.POST.get('invite_id'), profile=user.profile)
+            membership = invite.acceptInvite()
+            return HttpResponseRedirect(reverse('dcp:NgoView', kwargs={'pk':membership.ngo.id}))
 
-            elif invite_type == 'Invite_Government':
-                if not user.profile.acceptGovernmentInviteById(organization_id):
-                    raise Http404
-                url = '/government/' # TODO Probleme mit Reverse von Urls
-                url += str(organization_id)
-                return HttpResponseRedirect(url)
-            else:
-                raise Http404
+        elif post_identifier == 'acceptGovernmentInvite':
+            invite = invite = get_object_or_404(GovernmentInvite, id=request.POST.get('invite_id'), profile=user.profile)
+            membership = invite.acceptInvite()
+            return HttpResponseRedirect(reverse('dcp:GovernmentView', kwargs={'pk':membership.government.id}))
         
-        if post_identifier == 'decline_invite':
-            if not(user.is_authenticated() and user.is_active):
-                return HttpResponse(status=403)
-            invite_type = request.POST.get('invite_type')
-            invite_id = request.POST.get('invite_id')
-            if invite_type is None or invite_id is None:
-                raise Http404
-            if invite_type == 'Invite_Ngo':
-                Invite_Ngo.objects.get(id=invite_id).delete()
-                return self.get(request)
-            elif invite_type == 'Invite_Goverment':
-                Invite_Goverment.objects.get(id=invite_id).delete()
-                return self.get(request)
-            else:
-                raise Http404
+        elif post_identifier == 'declineNgoInvite':
+            invite = get_object_or_404(NgoInvite, id=request.POST.get('invite_id'), profile=user.profile)
+            invite.delete()
+            return HttpResponseRedirect(reverse('dcp:ProfileView'))
+
+        elif post_identifier == 'declineGovernmentInvite':
+            invite = get_object_or_404(GovernmentInvite, id=request.POST.get('invite_id'), profile=user.profile)
+            invite.delete()
+            return HttpResponseRedirect(reverse('dcp:ProfileView'))
+
         raise Http404
+        
 
 class EditProfile(View):
     template = 'dcp/content/spezial/profilBearbeiten.html'
@@ -66,9 +54,7 @@ class EditProfile(View):
         form = UserForm(initial={'email' : user.email,'first_name': user.first_name,'last_name':user.last_name,'password':''})
         return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template, {'form': form})
     def post(self,request):
-        if request.method == "POST":
-
-                    
+        if request.method == "POST":  
             form = UserForm(request.POST)
             if form.is_valid():
                 user = User.objects.get(username=request.user.username)

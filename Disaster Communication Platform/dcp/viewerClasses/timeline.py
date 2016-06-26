@@ -5,6 +5,7 @@ import dcp.dcpSettings
 from django.template.context_processors import request
 from django.template.backends.django import Template
 from django.forms import *
+from geopy.geocoders import Nominatim
 
 class TimelineView(View):
     def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ):
@@ -49,6 +50,10 @@ class TimelineView(View):
             if newGood.location_x == 0 and newGood.location_y == 0:
                 newGood.location_x = None
                 newGood.location_y = None
+            else:
+                geolocator = Nominatim()
+                location = geolocator.reverse(str(newGood.location_x) + " , " + str(newGood.location_y))
+                newGood.locationString = location.address
             newGood.save()
             return HttpResponseRedirect('')
         raise Http404

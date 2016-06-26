@@ -37,9 +37,8 @@
 <!-- Ende des Bereiches für die Neuerstellung -->
 
 <!-- Aufzählung von allen Govermentss-->
-{% if government_list %}
-    <div class="table-responsive">          
-      <table class="table">
+{% if government_list %}       
+      <table class="table table-responsive table-hover">
         <thead>
           <tr>
             <th>#</th>
@@ -54,12 +53,11 @@
                   <td>{{forloop.counter}}</td>
                   <td><a href="{% url 'dcp:GovernmentView' government.id %}">{{government.name}}</a></td>
                   <td>{{government.name_short}}</td>
-                  <td>{{government.getMembers|length}}</td>
+                  <td>{{government.profile_set|length}}</td>
                 </tr>
             {% endfor %}
         </tbody>
       </table>
-    </div>
 {% else %}
     <center>
         <h3>(keine Staaten gefunden)</h3>

@@ -229,16 +229,17 @@
 									<li>
 										<a href="/nachrichten/"><span class="glyphicon glyphicon-envelope"></span> Nachrichten</a>
 									</li>
-	                                {% if user.profile.ngo != None %}
+	                                {% for ngo in user.profile.ngo.all  %}
 	                                    <li>
-	                                        <a href="{% url 'dcp:NgoView' user.profile.ngo.id%}"><i class="fa fa-users" aria-hidden="true"></i> {{user.profile.ngo.name_short}}</a>
+	                                        <a href="{% url 'dcp:NgoView' ngo.id%}"><i class="fa fa-users" aria-hidden="true"></i> {{ngo.name_short}}</a>
 	                                    </li>
+                                    {% endfor %}
 	                                
-	                                {% elif user.profile.government != None %}
+	                                {% for government in user.profile.government.all %}
 	                                    <li>
-	                                        <a href="{% url 'dcp:GovernmentView' user.profile.government.id%}"><i class="fa fa-globe" aria-hidden="true"></i> {{user.profile.government.name_short}}</a>
+	                                        <a href="{% url 'dcp:GovernmentView' government.id %}"><i class="fa fa-globe" aria-hidden="true"></i> {{government.name_short}}</a>
 	                                    </li>
-	                                {% endif %}
+	                                {% endfor %}
 								</ul>
 							</div>
 						</li>

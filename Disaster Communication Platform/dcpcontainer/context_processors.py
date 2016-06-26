@@ -11,9 +11,6 @@ def catForm(request):
     if request.method == 'GET':
         if request.user.is_anonymous():
             return {'catChoiceForm': CatastropheChoice()}
-        print("###")
-        print(request.user)
-        print("##")
         currentProfile= Profile.get_profile_or_create(request.user)
         currentCat = currentProfile.currentCatastrophe
         if currentCat!=None:
@@ -30,9 +27,6 @@ def catForm(request):
         if request.user.is_anonymous():
             return {'catChoiceForm': CatastropheChoice()}
         result = p.setCatastropheById(newCatId)
-        print("### Katastrophe ###")
-        print(request.user.profile.currentCatastrophe)
-        print("##")
 
         if result == True: # Valid Katastrophen ID
             return {

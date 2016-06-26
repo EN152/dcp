@@ -36,16 +36,18 @@ urlpatterns = [
     url(r'^administator/useroverview/$',UserAdminOverview.as_view(),name='UserAdminOverview'),
     url(r'^adminstrator/edituser/(?P<pk>\d+)/$', AdminEditUserProfileView.as_view(),name='AdminEditUserProfileView'),
     url(r'^administrator/deleteuser/(?P<pk>\d+)/$',DeleteUserView.as_view(),name='DeleteUserView'),
-    url(r'^administrator/createcat/$',CreateOrEditCatastrophe.as_view(),name='CreateOrEditCatastrophe'),
+    url(r'^administrator/createcat/$',CreateCatastrophe.as_view(),name='CreateOrEditCatastrophe'),
     url(r'^administrator/catoverview/$',CatastropheOverview.as_view(),name='CatastropheOverview'),
     url(r'^administrator/catdelete/(?P<pk>\d+)/$',DeleteCatastropheView.as_view(),name='DeleteCatastropheView'),
     url(r'^administrator/ngomanager/$',NgoManagerView.as_view(),name='NgoManagerView'),
     url(r'^administrator/governmentmanager/$',GovernmentManagerView.as_view(),name='GovernmentManagerView'),
     url(r'^administrator/categorygoodmanager/$',CategorysGoodsMangerView.as_view(),name='CategoryGoodManagerView'),
+    url(r'^administrator/areaadministrator/$',AreaAdminView.as_view(),name='AreaAdministratorView'),
 
     # Organisationen
     url(r'^ngo/(?P<pk>\d+)/$', NgoView.as_view(), name='NgoView'),
     url(r'^government/(?P<pk>\d+)/$', GovernmentView.as_view(),name='GovernmentView'),
+    url(r'^area/(?P<pk>\d+)/$', AreaView.as_view(),name='AreaView'),
 
 #    # Wissen
 #    url(r'^wissen/$', views.wissen),
@@ -67,7 +69,7 @@ urlpatterns = [
 #    url(r'^orte/fotos/$', views.orte_fotos),
 
     #Profil
-    url(r'^profil/$', MyProfile.as_view()),
+    url(r'^profil/$', MyProfile.as_view(), name='ProfileView'),
     url(r'^profil/bearbeiten/$', EditProfile.as_view()),
 ]
 
