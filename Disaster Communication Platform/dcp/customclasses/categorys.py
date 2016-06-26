@@ -28,6 +28,18 @@ class Categorys(object):
         	return "glyphicon glyphicon-plus"
            # Default
         return "glyphicon glyphicon-question-sign"
+
+    def getCategoryFilterClassAsString(category):
+        if category == '1':
+            return "food_filter_class"
+        if category == '2':
+            return "infra_filter_class"
+        if category == '3':
+            return "tool_filter_class"
+        if category == '4':
+            return "medic_filter_class"
+           # Default
+        return "misc_filter_class"
     
     def getCategoryNameAsString(category):
     	if category == '1':

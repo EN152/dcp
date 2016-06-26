@@ -114,6 +114,9 @@ class Material_Goods(Goods):
     def getCategoryNameAsString(self):
         return Categorys.getCategoryNameAsString(self.category)
 
+    def getCategoryFilterClassAsString(self):
+        return Categorys.getCategoryFilterClassAsString(self.category)
+
     class Meta:
         abstract = True
 

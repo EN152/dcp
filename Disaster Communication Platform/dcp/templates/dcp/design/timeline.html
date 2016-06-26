@@ -1,18 +1,36 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script>
+
+function toggle(className, obj) {
+    var $input = $(obj);
+    if ($input.prop('checked')) $(className).hide();
+    else $(className).show();
+}
+
+
+</script>
+
+
+
 <div class="timeline">
-    <div class="panel panel-default">
-    	<div class="panel-heading"><i class="fa fa-th-list"></i><b> Überblick | {{ page_title }}</b></div>
-    
+
+        {% include 'dcp/design/filters.html' %}
+
     	<div class="panel-body">
+
+            
+
     		<ul class="timeline">   
     			{% if goods_list %}
     			{% for good in goods_list %}
-    
+
                 <!-- Beginn eines Elements -->
                 {% load mathfilters %}
     			<li {% if forloop.counter|mod:2 == 0 %}class="timeline-inverted"{% endif %}>
-    			    <div class="timeline-badge {{good.timeline_badge_color}}"> <span class="glyphicon {{good.timeline_glyphicon}}"></span></div>
+
+    			    <div class="timeline-badge {{good.timeline_badge_color}} {{good.getCategoryFilterClassAsString}}"> <span class="glyphicon {{good.timeline_glyphicon}}"></span></div>
     
-    			    <div class="timeline-panel">
+    			    <div class="timeline-panel {{good.getCategoryFilterClassAsString}}">
     
                         {% if good.image.url != None %}
     				        <img src="{{ good.image.url }}" width="150" style="float:right;" class="img-thumbnail">
@@ -187,6 +205,8 @@
                        </div>
                    </li>
                 <!-- Ende eines Elements -->
+
+            
     
     			{% endfor %}
     			{% endif %}
