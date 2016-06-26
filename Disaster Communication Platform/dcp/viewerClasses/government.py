@@ -6,6 +6,7 @@ from dcp.models.organizations import Government
 from dcp.customForms.organizationForms import GovernmentForm, MembershipForm
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, Http404
 from dcp.models.profile import GovernmentInvite, GovernmentMember
+from django.core.urlresolvers import reverse
 
 class GovernmentView(OrganizationView):
     def get(self, request, pk, usernameSearchString=None):

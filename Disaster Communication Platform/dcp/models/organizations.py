@@ -23,8 +23,10 @@ class Organization(models.Model):
         return self.name
 
 class Area(models.Model):
-    catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True, blank=True)
+    catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False, blank=False)
     created_date = models.DateTimeField(default=timezone.now, null=False, editable=False)
+    parrent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
+    maxOutsideRadius = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])
     # Sollte durch Polygone für die Grenzen ersetzt werden
     locationString = models.CharField(default='', max_length=200, null=True)
     location_x = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])
@@ -38,6 +40,37 @@ class Area(models.Model):
         if (distance <= self.radius):
         	return True;
         return False
+    
+    # TODO Query Optimization
+    def getGoods(self):
+        from dcp.models.goods import Goods
+        list = []
+        for good in Goods.getAllGoods():
+            if self.isInArea(good):
+                list.append(good)
+        return list
+
+    def getOffers(self):
+        from dcp.models.goods import Goods
+        list = []
+        for good in Goods.getAllOffers():
+            if self.isInArea(good):
+                list.append(good)
+        return list
+
+    def getSearches(self):
+        from dcp.models.goods import Goods
+        list = []
+        for good in Goods.getAllSearches():
+            if self.isInArea(good):
+                list.append(good)
+        return list
+    # Haben keine Location
+    def getMissingPersons():
+        pass
+    # TODO, wo ist das Model?
+    def getEvents():
+        pass
 
 class Government(Organization):
     areas = models.ManyToManyField(Area, through='GovernmentArea')
@@ -65,6 +98,7 @@ class Ngo(Organization):
 
 class AreaRelation(models.Model):
     area = models.ForeignKey(Area, on_delete=models.CASCADE, null=False)
+    isFullAdmin = models.BooleanField(null=False, default=False)
     canDeleteElements = models.BooleanField(null=False, default=False)
     created_date = models.DateTimeField(default=timezone.now, null=False, editable=False)
     class Meta:
@@ -73,8 +107,7 @@ class AreaRelation(models.Model):
 class GovernmentArea(AreaRelation):
     government = models.ForeignKey(Government, on_delete=models.CASCADE, null=False)
     canCreateNgoArea = models.BooleanField(null=False, default=False)
-    canAddNgo = models.BooleanField(null=False, default=False)
-    canDeleteNgo = models.BooleanField(null=False, default=False)
+    canManageNgo = models.BooleanField(null=False, default=False)
 
 
 class NgoArea(AreaRelation):

@@ -1,4 +1,25 @@
-﻿<!-- for the search engine -->
+﻿<!-- Kleine API
+    Beachte, dass die Karte neu geladen werden muss, falls sich ihre Größe verändert. Z. B.  durch das Einblenden eines divs
+        Die Methode "newMapCreateRender();" erzwingt ein neuladen der Karte
+
+    Enthalten bedeutet "entity.x"; Soll heißen, müssen über den '.' zugreifbar sein
+
+    id_location_x = Die ID des HTML Elements, in welcher die X-Kordinate gespeichert wird
+    id_location_y = Die ID des HTML Elements, in welcher die Y-Kordinate gespeichert wird
+    id_radius = Die ID des HTML Elements, in welcher der Radius gespeichert wird; Dieses Element wird auf Änderungen überwacht (OPTIONAL)
+
+    staticElements = Eine Liste von Element, die "location_x", "location_y" enthalten und ggf. "radius" (OPTIONAL)
+        staticElements lassen seperat den den Marker und den Radius über Button ausblenden
+        Popups werden über "title" bezogen, alternativ wird "locationString" genutzt; Wenn kein Titel gefunden wird, wird der Marker nicht hinzugefügt
+
+    staticMarker = Ein Element, welches dauerhaft angezeigt wird und in genauso wie die staticElements angesprochen wird (OPTIONAL)
+        staticElement lässt kein ausblende über Button zu 
+    
+    Für Beispiele siehe: Area(admin), Katastrophe, createNewGood
+-->
+
+<!-- Mapzen Imports für die Suche über Namen -->
+<!-- Lefleat und JQuery Imports auf der base html, weil diese auch von anderen js-datein verwendet werden -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.js"></script>
 
@@ -25,42 +46,72 @@
     {%if staticElements %} <label><input type="button" class="btn btn-warning" value="Verberge Marker" onClick="hideStaticMarkers();"/></label> {% endif %}
     {%if staticElements %} <label><input type="button" class="btn btn-primary" value="Zeige Radius" onClick="showStaticCircles();"/></label> {% endif %}
     {%if staticElements %} <label><input type="button" class="btn btn-warning" value="Verberge Radius" onClick="hideStaticCircles();"/></label> {% endif %}
-    <div id="mapCreateNew" style="height:400px"></div>               
-    <script>
-        newMapScriptPicker("mapCreateNew", "{{id_location_x}}", "{{id_location_y}}")
-    </script>
-    {% for staticElement in staticElements %}
-        {% if staticElement.title %}
-            <script>
-                addToStaticMarkers("{{staticElement.location_x}}", "{{staticElement.location_y}}", "{{staticElement.title}}")
-            </script>
-            {% if staticElement.radius %}    
-                <script>
-                    addToStaticCircles("{{staticElement.location_x}}", "{{staticElement.location_y}}", {{staticElement.radius}}, "{{staticElement.title}}")
-                </script>
-            {% endif %}
-        {% elif staticElement.locationString %}
-            <script>
-                addToStaticMarkers("{{staticElement.location_x}}", "{{staticElement.location_y}}", "{{staticElement.locationString}}")
-            </script>
-            {% if staticElement.radius %}
-                <script>
-                    addToStaticCircles("{{staticElement.location_x}}", "{{staticElement.location_y}}", "{{staticElement.radius}}", "{{staticElement.locationString}}")
-                </script>
-            {% endif %}
-        {% endif %}    
-    {% endfor %}
-    {% if staticElements %}
-        <script>
-            showStaticMarkers();
-            showStaticCircles();
-        </script>
-    {% endif %}
 
-    {% if catastrophe %}
-        <script>
-
-        </script>
-    {% endif %}
-
+    <div id="mapCreateNew" style="height:400px"></div>
+     
 </div>
+
+<script>
+    newMapScriptPicker("mapCreateNew", "{{id_location_x}}", "{{id_location_y}}")
+</script>
+
+{% for staticElement in staticElements %}
+    {% if staticElement.title %}
+        <script>
+            addToStaticMarkers("{{staticElement.location_x}}", "{{staticElement.location_y}}", "{{staticElement.title}}")
+        </script>
+        {% if staticElement.radius %}    
+            <script>
+                addToStaticCircles("{{staticElement.location_x}}", "{{staticElement.location_y}}", {{staticElement.radius}}, "{{staticElement.title}}")
+            </script>
+        {% endif %}
+    {% elif staticElement.locationString %}
+        <script>
+            addToStaticMarkers("{{staticElement.location_x}}", "{{staticElement.location_y}}", "{{staticElement.locationString}}")
+        </script>
+        {% if staticElement.radius %}
+            <script>
+                addToStaticCircles("{{staticElement.location_x}}", "{{staticElement.location_y}}", "{{staticElement.radius}}", "{{staticElement.locationString}}")
+            </script>
+        {% endif %}
+    {% endif %}    
+{% endfor %}
+
+{% if staticElements %}
+    <script>
+        showStaticMarkers();
+        showStaticCircles();
+    </script>
+{% endif %}
+
+{% if id_radius %}
+   <script>
+      $(document).ready(function(){
+          $({{id_radius}}).change(function() {
+              radius = $({{id_radius}}).val()
+              changeRadiusOnMap(radius);
+        });
+     });
+   </script>
+{% endif %}
+
+{% if staticMarker.title %}
+    <script>
+          addToStaticMarker("{{staticMarker.location_x}}", "{{staticMarker.location_y}}", "{{staticMarker.title}}")
+    </script>
+    {% if staticMarker.radius %}    
+         <script>
+              addToStaticCircle("{{staticMarker.location_x}}", "{{staticMarker.location_y}}", {{staticMarker.radius}}, "{{staticMarker.title}}")
+          </script>
+      {% endif %}
+{% elif staticMarker.locationString %}
+      <script>
+          addStaticMarker("{{staticMarker.location_x}}", "{{staticMarker.location_y}}", "{{staticMarker.locationString}}")
+      </script>
+      {% if staticMarker.radius %}
+          <script>
+              addStaticCircle("{{staticMarker.location_x}}", "{{staticMarker.location_y}}", "{{staticMarker.radius}}", "{{staticMarker.locationString}}")
+          </script>
+      {% endif %}
+{% endif %}
+

@@ -23,12 +23,13 @@ class AreaForm(forms.ModelForm):
     governments = forms.ModelMultipleChoiceField(queryset=Government.objects.all(), required=False, label='Governments')
     catastrophe = forms.ModelChoiceField(required=True, queryset=Catastrophe.objects.all(), label='Katastrophe', empty_label=None)
     radius = forms.FloatField(min_value=0, max_value=10000, required=True)
+    maxOutsideRadius = forms.FloatField(min_value=0, max_value=1000, initial=0, required=True, label='Maximal Radius auserhalb Subkategorien')
     location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     
     class Meta:
         model = Area
-        fields = ["ngos", "governments", "catastrophe", "radius", "location_x", "location_y"]
+        fields = ["ngos", "governments", "catastrophe", "radius", "maxOutsideRadius", "location_x", "location_y"]
 
 class MembershipForm(forms.Form):
     membership = forms.ModelChoiceField(queryset=None, required=True, label='Membership',widget=forms.HiddenInput(),empty_label=None)
@@ -64,3 +65,73 @@ class MembershipForm(forms.Form):
             pass
         super(MembershipForm, self).__init__(*args, **kwargs)
         self.fields['membership'].queryset = membershipQuery
+
+
+class NgoAreaForm(forms.Form):
+    """
+    First invisable field will be identified as NgoArea.id
+    """
+    ngoArea = forms.ModelChoiceField(queryset=None, required=True, label='ngoArea', widget=forms.HiddenInput(), empty_label=None)
+    isFullAdmin = forms.BooleanField(required=False, label='Full Admin')
+    canDeleteElements = forms.BooleanField(required=False, label='Kann Elemente löschen')
+
+    class Meta:
+        fields = ["ngoArea", "isFullAdmin", "canDeleteElements"]
+
+    def __init__(self, *args, **kwargs):
+        ngoAreaQuery = kwargs.get('ngoAreaQuery')
+        ngoArea = kwargs.get('ngoArea')
+        
+        if ngoArea is not None :
+            isFullAdmin = ngoArea.isFullAdmin
+            canDeleteElements = ngoArea.canDeleteElements
+            kwargs.update(initial={
+                'ngoArea' : ngoArea,
+                'isFullAdmin' : isFullAdmin,
+                'canDeleteElements' : canDeleteElements,
+            })
+        try :
+            del kwargs['ngoAreaQuery']
+            del kwargs['ngoArea']
+        except :
+            pass
+        super(NgoAreaForm, self).__init__(*args, **kwargs)
+        self.fields['ngoArea'].queryset = ngoAreaQuery
+
+
+class GovernmentAreaForm(forms.Form):
+    """
+    First invisable field will be identified as GovernmentArea.id
+    """
+    governmentArea = forms.ModelChoiceField(queryset=None, required=True, label='governmentArea', widget=forms.HiddenInput(), empty_label=None)
+    isFullAdmin = forms.BooleanField(required=False, label='Full Admin')
+    canDeleteElements = forms.BooleanField(required=False, label='Kann Elemente löschen')
+    canManageNgo = forms.BooleanField(required=False, label='Kann eine NGO in das Gebiet aufnehmen')
+    canCreateNgoArea = forms.BooleanField(required=False, label='Kann ein NGO-Gebiet erstellen')
+
+    class Meta:
+        fields = ["governmentArea", "isFullAdmin", "canDeleteElements", "canManageNgo", "canCreateNgoArea"]
+
+    def __init__(self, *args, **kwargs):
+        governmentAreaQuery = kwargs.get('governmentAreaQuery')
+        governmentArea = kwargs.get('governmentArea')
+        
+        if governmentArea is not None :
+            isFullAdmin = governmentArea.isFullAdmin
+            canDeleteElements = governmentArea.canDeleteElements
+            canManageNgo = governmentArea.canManageNgo
+            canCreateNgoArea = governmentArea.canCreateNgoArea
+            kwargs.update(initial={
+                'governmentArea' : governmentArea,
+                'isFullAdmin' : isFullAdmin,
+                'canDeleteElements' : canDeleteElements,
+                'canManageNgo' : canManageNgo,
+                'canCreateNgoArea' : canCreateNgoArea
+            })
+        try :
+            del kwargs['governmentAreaQuery']
+            del kwargs['governmentArea']
+        except :
+            pass
+        super(GovernmentAreaForm, self).__init__(*args, **kwargs)
+        self.fields['governmentArea'].queryset = governmentAreaQuery

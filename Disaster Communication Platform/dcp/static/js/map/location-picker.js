@@ -126,3 +126,20 @@ function hideStaticCircles() {
         map.removeLayer(entry);
     });
 }
+// Anfang für den statischen Marker
+function addStaticMarker(location_x, location_y, title) {
+    var staticMarker = (L.marker([location_x.replace(",", "."), location_y.replace(",", ".")], {
+        draggable: false,
+        icon: redIcon
+    })).bindPopup(title)
+    map.addLayer(staticMarker);
+}
+function addStaticCircle(location_x, location_y, radius, title) {
+    var staticCircle = (L.circle([location_x.replace(",", "."), location_y.replace(",", ".")], (radius.replace(",", ".") * 1000), {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.2,
+        clickable: false
+    })).bindPopup("<br><b>" + title + "</br>Radius: </b>" + radius + " km")
+    map.addLayer(staticCircle);
+}
