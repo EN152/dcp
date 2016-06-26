@@ -10,6 +10,8 @@ class Organization(models.Model):
     name = models.CharField(max_length=200, null=False)
     name_short = models.CharField(max_length=3, null=False)
     created_date = models.DateTimeField(default=timezone.now, null=False, editable=False)
+    # Fully managing Catastrophe
+    catastrophe = models.ManyToManyField(Catastrophe)
 
     class Meta:
         abstract = True
@@ -30,6 +32,7 @@ class Area(models.Model):
     radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(dcpSettings.ORGANIZATIONS_AREA_MAX_RADIUS)])
     # ---------------------------------------------------------------------
     
+
     def isInArea(self, good):
         distance = calculateDistanceClass.calculate_distance(self.location_x, self.location_y, good.location_x, good.location_y)
         if (distance <= self.radius):
@@ -45,22 +48,8 @@ class Government(Organization):
         :author: Jasper
         :return: Eine Liste mit allen Invites
         """
-        from dcp.customclasses.Helpers import getInvites
-        
-        return getInvites(government=self)
-
-    def getMembers(self):
-        """
-        Gibt eine Liste von allen Mitgliedern zurück
-        :author: Jasper
-        :return: Eine Liste mit allen Mitgliedern
-        """
-        from .profile import Profile
-        
-        users = []
-        for profile in Profile.objects.filter(government=self).select_related('user'):
-        	users.append(profile.user)
-        return  sorted(users, key=lambda u: u.profile.date_joined_organization, reverse=True)
+        from dcp.models.profile import GovernmentInvite
+        return GovernmentInvite.objects.filter(organization=self).select_related('profile')
 
 class Ngo(Organization):
     areas = models.ManyToManyField(Area, through='NgoArea')
@@ -71,22 +60,8 @@ class Ngo(Organization):
         :author: Jasper
         :return: Eine Liste mit allen Invites
         """
-        from dcp.customclasses.Helpers import getInvites
-        
-        return getInvites(ngo=self)
-
-    def getMembers(self):
-        """
-        Gibt eine Liste von allen Mitgliedern zurück
-        :author: Jasper
-        :return: Eine Liste mit allen Mitgliedern
-        """
-        from .profile import Profile
-        
-        users = []
-        for profile in Profile.objects.filter(ngo=self).select_related('user'):
-        	users.append(profile.user)
-        return  sorted(users, key=lambda u: u.profile.date_joined_organization, reverse=True)
+        from dcp.models.profile import NgoInvite
+        return NgoInvite.objects.filter(organization=self).select_related('profile')
 
 class AreaRelation(models.Model):
     area = models.ForeignKey(Area, on_delete=models.CASCADE, null=False)

@@ -3,35 +3,62 @@ from django.views.static import loader
 from django.shortcuts import get_object_or_404
 from dcp.viewerClasses.organization import OrganizationView
 from dcp.models.organizations import Government
-from dcp.customForms.organizationForms import GovernmentForm
-from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
-from dcp.models.profile import Invite_Government
+from dcp.customForms.organizationForms import GovernmentForm, MembershipForm
+from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, Http404
+from dcp.models.profile import GovernmentInvite, GovernmentMember
 
 class GovernmentView(OrganizationView):
     def get(self, request, pk, usernameSearchString=None):
+        # TODO Permission
         templatePath= 'dcp/content/organization/government.html'
-        government = get_object_or_404(Government, id=pk)
+        template = loader.get_template(templatePath)
+        user = request.user
+        government = get_object_or_404(Government, id=pk) 
+        try:
+            membership = GovernmentMember.objects.get(profile=user.profile,government=government)
+        except GovernmentMember.DoesNotExist:
+            membership = None
 
-        return super().get(request, government, templatePath, usernameSearchString=usernameSearchString)
+        if membership is None and not user.is_superuser:
+            return HttpResponseForbidden("Insufficent rights")
+
+        usernameSearchList = self.getIniviteList(usernameSearchString,government) 
+        memberlist = government.governmentmember_set.all()
+
+        membershipFormList =[]
+        for membership in memberlist:
+            membershipForm = MembershipForm(membership=membership, membershipQuery=memberlist)
+            membershipFormList.append(membershipForm)
+
+        context = {
+            'organization': government,
+            'membershipFormList' : membershipFormList,
+            'usernameSearchString': usernameSearchString,
+            'usernameSearchList': usernameSearchList,
+            'membership' : membership
+        }
+
+        return HttpResponse(template.render(context, request))
 
     def post(self, request, pk):
         government = get_object_or_404(Government, id=pk)
-        superReturn = super().post(request, government, Invite_Government)
-        if superReturn == True:
-            return self.get(request, pk, request.POST.get('usernameSearchString'))
-        elif superReturn is not None:
-            return superReturn
-
-#       post_identifier = request.POST.get('post_identifier')
         user = request.user
 
-        # Abfragen sind aus zukünftige Gründen (Erweiterung) so seltsam aufgebaut
-        if not (user.is_active and user.is_authenticated() and (user.profile.government == government or user.is_superuser)):        
+        try:
+            membership = GovernmentMember.objects.get(profile=user.profile,government=government)
+        except GovernmentMember.DoesNotExist:
+            membership = None
+
+        if membership is None and not user.is_superuser:
             return HttpResponseForbidden("Insufficent rights")
-        if not (user.is_superuser or user.profile.is_organization_admin):
-           return HttpResponseForbidden("Insufficent rights")
-        if not (user.is_superuser):
-           return HttpResponseForbidden("Insufficent rights")
+
+        superReturn = super().post(request, government, membership, GovernmentInvite, GovernmentMember)
+        if superReturn == True:
+            return self.get(request, pk, request.POST.get('usernameSearchString'))
+        elif superReturn == False:
+            pass
+        else:
+            return superReturn
 
         raise Http404
 
@@ -42,11 +69,10 @@ class GovernmentManagerView(View):
         templatePath = 'dcp/content/adminstrator/governmentManager.html'
         template = loader.get_template(templatePath)
         user = request.user
-        government_list = Government.objects.all()
+        government_list = Government.objects.all().prefetch_related('profile_set')
 
         context = {
             'government_list': government_list,
-            'invalidInput': invalidInput,
             'create_new_form' : create_new_form
         }
         if user.is_authenticated() and user.is_active and user.is_superuser:
@@ -55,7 +81,7 @@ class GovernmentManagerView(View):
     def post(self, request):
         user = request.user
         if not(user.is_authenticated() and user.is_active and user.is_superuser):
-            return HttpResponse(status=403)
+            return HttpResponseForbidden("Insufficent rights")
 
         form = GovernmentForm(request.POST)
         if form.is_valid():
@@ -63,6 +89,4 @@ class GovernmentManagerView(View):
         else:
             self.get(request, create_new_form=form)
 
-        url = '/government/' # TODO Probleme mit Reverse von Urls 
-        url += str(government.id)
-        return HttpResponseRedirect(url)
+        return HttpResponseRedirect(reverse('dcp:GovernmentView', kwargs={'pk':government.id}))

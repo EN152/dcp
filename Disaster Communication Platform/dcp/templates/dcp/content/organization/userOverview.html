@@ -1,4 +1,5 @@
-﻿<div class="col-lg-12">
+﻿<!-- User Overview -->
+<div class="col-lg-12">
 
         <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
@@ -23,59 +24,52 @@
                 <div class="panel-body">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th width="25%">Benutzername</th>
-                                    <th width="15%">Zeitpunkt der Mitgliedschaft</th>
-                                    <th width="5%" align="center">Administator</th>
-                                    <th>Aktionen</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for member in organization.getMembers %}
-                                <tr>
-                                    <td>{% if member == user %}
-                                            {{member}}
-                                        {% else %}
-                                            <a href="{% url 'dcp:Chat'%}?userid={{member.id}}">{{member}}</a> 
-                                        {% endif %}
-                                    </td>
-                                    <td>seit {{member.profile.date_joined_organization|timesince}}</td>
-                                    <td>
-                                        {% if member.profile.is_organization_admin or member.is_superuser%}
-                                            <span class="glyphicon glyphicon-ok"></span>
-                                        {% else %}
-                                            <span class="glyphicon glyphicon-remove"></span>
-                                        {% endif %}
-                                    </td>
-                                    <td>    
-                                        <form class="form-horizontal" role="form" id="memberManager" method="post">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="member_id" value="{{member.id}}" />
-
-                                            {% if user.profile.is_organization_admin or user.is_superuser %}
-                                                {% if not member.profile.is_organization_admin and not member.is_superuser %}
-                                                    <button type="submit" name="post_identifier" value="promoteAdmin" class="btn btn-success"><i class="fa fa-times"></i> zum Admin befördern</button>
-                                                {% elif member.profile.is_organization_admin and not member.is_superuser %}
-                                                    <button type="submit" name="post_identifier" value="degrateAdmin" class="btn btn-warning"><i class="fa fa-times"></i> als Admin entfernen</button>
-                                                {% endif %}
-                                                <button type="submit" name="post_identifier" value="endMembership" class="btn btn-danger"><i class="fa fa-times"></i> Mitgliedschaft beenden</button>
+                                {% load bootstrap3 %}
+                                {% for membershipform in membershipFormList %}
+                                    {% if forloop.first %}
+                                        <thead>
+                                            <tr>
+                                                {% for field in membershipform %}
+                                                    {% if not field.is_hidden %}
+                                                        <th>{% bootstrap_label field.label %} </th>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <th>Aktionen</th>
+                                            </tr>     
+                                       </thead>
+                                        <tbody>
+                                    {% endif %}
+                                    <form method="POST">
+                                    <tr>                    
+                                        
+                                        {% csrf_token %}
+                                        {% for field in membershipform %}
+                                            {% if not field.is_hidden %}
+                                                <th>{% bootstrap_field field show_label=False %} </th>
+                                            {% elif  field.is_hidden %}
+                                                {% bootstrap_field field %}
                                             {% endif %}
-                                        </form>
-                                    </td>
-                                </tr>
-                                {%endfor%}
-                                <!--Beispieleintrag
-                                <tr>
-                                    <td>Euro Otto</td>
-                                    <td>vor 3 Minuten</td>
-                                    <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i> Mitgliedschaft beenden</button></td>
-                                </tr>
-                                -->
-                            </tbody>
+                                        {% endfor %}
+                                        <th>
+                                            {% if user.is_superuser or membership.isOrganizationAdmin %}
+                                                <button type="submit" class="btn btn-success" name="post_identifier" value="updateMembership"><span class="glyphicon glyphicon-share"></span> Update</button>
+                                                <button type="submit" class="btn btn-danger" name="post_identifier" value="updateMembership"><span class="glyphicon glyphicon-trash"></span> Mitgliedschaft beenden</button>
+                                            {% endif %}
+                                        </th>
+                                    </tr>
+                                    </form>
+
+                                     {% if forloop.last %}
+                                        </tbody>
+                                     {% endif %}
+                                {% empty %}
+                                    <thead>Keine Mitglieder gefunden</thead>
+                                {% endfor %}
                         </table>
                     </div>
+                   
                 </div>
             </div>
         </div>
 </div>
+<!-- Ende User Overview-->

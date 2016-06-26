@@ -29,31 +29,3 @@ def get_object_or_none(model, **kwargs):
         return None
 def url_with_querystring(path, **kwargs): #TODO: Refactor nach Helpers.
     return path + '?' + urlencode(kwargs)
-
-def getInvites(user=None, ngo=None, government=None):
-    """
-    Liste von den gewünschten Invites, wobei immer nur der erste Parameter ausgeführt wird
-    :author: Jasper
-    :param user: User für den die Invites zurückgebenen werden sollen
-    :param ngo: NGO für den die Invites zurückgebenen werden sollen
-    :param government: Government für den die Invites zurückgebenen werden sollen
-    :return: Liste von allen gefunden Invites
-    """
-    invites = []
-    from dcp.models.profile import Invite_Government
-    from dcp.models.profile import Invite_Ngo
-    if user != None:
-        for invite in Invite_Ngo.objects.filter(user = user):
-            invites.append(invite)
-        for invite in Invite_Government.objects.filter(user = user):
-            invites.append(invite)
-    elif ngo != None:
-        invites = Invite_Ngo.objects.filter(organization = ngo)
-    elif government != None:
-        invites = Invite_Government.objects.filter(organization = government)
-    else:
-        for invite in Invite_Ngo.objects.all():
-            invites.append(invite)
-        for invite in Invite_Government.objects.all():
-            invites.append(invite)
-    return sorted(invites, key=lambda i: i.date_created, reverse=True)

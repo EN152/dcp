@@ -22,6 +22,9 @@ class MissedPeople(models.Model):
     def __unicode__(self):
         return self.title
 
+    def __str__(self):
+        return self.title
+
     def delete(self, using = None, keep_parents = False):
         if self.picture is not None:
             try:

@@ -10,9 +10,15 @@ from geopy.geocoders import Nominatim
 
 class AreaView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        template = 'dcp/content/organization/area.html'
-        area = get_object_or_404(Area, id=pk)
-
+        user = request.user
+        # TODO Permissons
+        templatePath = 'dcp/content/organization/area.html'
+        template = loader.get_template(templatePath)
+        area = get_object_or_404(Area.objects.select_related('catastrophe').prefectch_related('NgoArea_set', 'GovernmentArea_set', 'government_set', 'ngo_set') , id=pk)
+        context = {
+            'area' : area
+        }
+        return template.render(request, context)
 
 class AreaAdminView(LoginRequiredMixin,View):
     def get(self, request, create_new_form=AreaForm):

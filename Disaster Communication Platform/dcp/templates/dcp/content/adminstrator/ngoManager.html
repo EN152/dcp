@@ -37,9 +37,8 @@
 <!-- Ende des Bereiches für die Neuerstellung -->
 
 <!-- Aufzählung von allen NGOs-->
-{% if ngo_list %}
-    <div class="table-responsive">          
-      <table class="table">
+{% if ngo_list %}       
+      <table class="table table-responsive table-hover">>
         <thead>
           <tr>
             <th>#</th>
@@ -54,12 +53,11 @@
                   <td>{{forloop.counter}}</td>
                   <td><a href="{% url 'dcp:NgoView' ngo.id %}">{{ngo.name}}</a></td>
                   <td>{{ngo.name_short}}</td>
-                  <td>{{ngo.getMembers|length}}</td>
+                  <td>{{ngo.profile_set.all|length}}</td>
                 </tr>
             {% endfor %}
         </tbody>
       </table>
-    </div>
 {% else %}
     <center>
         <h3>Keine NGOs gefunden</h3>

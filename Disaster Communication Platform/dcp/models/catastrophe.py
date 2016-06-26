@@ -7,7 +7,7 @@ class Catastrophe(models.Model):
     date_created = models.DateTimeField('date published', default=timezone.now)
     location_x = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])
     location_y = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])
-    radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(dcpSettings.ORGANIZATIONS_AREA_MAX_RADIUS)])
+    radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(dcpSettings.CATASTROPHE_MAX_RADIUS)])
 
     def __unicode__(self):
         return self.title

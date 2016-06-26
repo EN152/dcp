@@ -10,7 +10,7 @@
         });
     </script>
 
-    {% if user.is_superuser or user.profile.getOrganization == organization and user.profile.is_organization_admin %}
+    {% if user.is_superuser or membership.isOrganizationAdmin %}
     <!-- Anfang für die Benutzereinladung -->
     <div class="panel panel-default">
         <div class="panel-heading" id="suchFormularHeading" {% if usernameSearchString != None %} style="display: none;" {% endif %}>
@@ -73,6 +73,7 @@
             </div>
         </div>
         <!-- Ende für die Benutzereinladung -->
+        {% endif %}
         
         <!-- Anfang für alle Einladungen-->
         {% if organization.getInvites %}
@@ -93,11 +94,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% if organization.getInvites %}
                             {% for invite in organization.getInvites %}
                                 <tr>
-                                    <td>{{invite.user}}</td>
-                                    <td>vor {{invite.date_created|timesince}}</td>
+                                    <td>{{invite.profile.user}}</td>
+                                    <td>vor {{invite.created_date|timesince}}</td>
                                     <td>
                                         <form class="form-horizontal" role="form" id="inviteUserSearch" method="post">
     				                        <div class="input-group">  
@@ -110,22 +110,12 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                            {%endif%}
-                             
-                            <!-- Beispiel  
-                            <tr>
-                                <td>Euro Otto</td>
-                                <td>vor 3 Minuten</td>
-                                <td><button type="button" class="btn btn-danger"><i class="fa fa-times"></i> Verwerfen</button></td>
-                            </tr>
-                            -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </div>
+      </div>
     {% endif %}
     <!-- Ende aller Einladungen -->
-   {% endif %}
 </div>
