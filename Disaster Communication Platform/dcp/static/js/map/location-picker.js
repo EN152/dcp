@@ -16,7 +16,7 @@ function newMapScriptPicker(divMapId, valueLocationXId, valueLocationYId) {
     
     //contributors:
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+        attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
     map.on('click', eventToMapCreateMaker);
