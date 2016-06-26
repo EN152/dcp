@@ -33,11 +33,11 @@ class CategorysGoodsMangerView(View):
             form = CategorysGoodsForms(request.POST)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect('')
+                return redirect('dcp:CategoryGoodManagerView')
             else:
                 return self.get(request, create_new_form=form)
         if post_identifier == 'delete':
             category = get_object_or_404(CategorysGoods, name=request.POST.get('category_name'))
             category.delete()
-            return HttpResponseRedirect('')
+            return redirect('dcp:CategoryGoodManagerView')
         raise HttpResponseBadRequest()
