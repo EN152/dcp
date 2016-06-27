@@ -1,9 +1,9 @@
-from dcp.customForms.knowledgeFroms import *
+from dcp.customForms.knowledgeForms import *
 from dcp.viewerClasses.timeline import TimelineView
 from dcp.viewerClasses.authentication import getPageAuthenticated
 from dcp.views import View, LoginRequiredMixin
 
-class Wissen(View):
+class Wissen(LoginRequiredMixin,View):
     template = 'dcp/content/wissen/wissen.html'
 
     def get(self, request):

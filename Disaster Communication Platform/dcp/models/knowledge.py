@@ -54,8 +54,8 @@ class Knowledge(models.Model):
         return self.title
 
 
-  #  def getComments(self):
- #       return Comment.objects.filter(relation = self.comments)
+    def getComments(self):
+        return Comment.objects.filter(relation = self.comments)
 #
   #  def getBumps(self):
  #       return Bump.objects.filter(relation = self.bumps)
