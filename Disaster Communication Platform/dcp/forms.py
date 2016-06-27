@@ -39,6 +39,7 @@ class Comment_Form(ModelForm):
 class CatastropheForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Katastrophentext eingeben'}))
     radius = forms.FloatField(min_value=0, max_value=10000, required=True)
+    maxOutsideRadius = forms.FloatField(min_value=0, max_value=10000, initial=0, required=False, label='Maximaler Radius für außerhalb des jetzigen für Sub-Gebiete')
     location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     class Meta:

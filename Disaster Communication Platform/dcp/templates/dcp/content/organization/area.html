@@ -9,21 +9,14 @@
 {% if user.profile.show_map %}
     {% load static %}
     <script src="{% static 'js/map/show-map.js' %}"></script>
-{% endif%}
+{% endif %}
 
 <div class="panel panel-green" id="42">
       <div class="panel-heading">
         <h3><b>Gebiet in {{area.catastrophe.title}}</b></h3>
         <small style="font-size: 0.9em; font-color: #FFF;"><i class="fa fa-clock-o"></i> vor {{area.created_date|timesince}}</small>
       </div>
-
-
-
         <div class="panel-body">    
-
-		<!--h3><i><div style="color: #d9534f;"> aktueller Stand:</i> </h3-->
-
-
             <table width="100%" class="table table-striped table-bordered table-hover">
               <thead>
                 <th width="30%"><center><i class="fa fa-map-marker" style="font-size: 1.5em;" aria-hidden="true"></i></center></th>
@@ -44,6 +37,9 @@
                 <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Ort: <b>{{area.locationString}}</b><br>
                 <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Katastrophe: <b>{{area.catastrophe.title}}</b><br>
                 <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span> Radius: <b>{{area.radius}}</b> km<br>
+                {% if area.parrent %}
+                   <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Ort: <b>{{area.parrent.locationString}}</b> {{area.parrent.radius}} km<br>
+                {% endif %}
                 <i class="fa fa-globe" aria-hidden="true"></i> Staat: {% for government in area.government_set.all %}<span class="label label-primary">{{government.name}}</span> {% endfor %}<br>
                 <i class="fa fa-users" aria-hidden="true"></i> NGOs: {% for ngo in area.ngo_set.all%}<span class="label label-success">{{ngo.name}}</span> {% endfor %}<br>
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span> vermisste Personen: <b>{{area.getMissingPersons|length}}</b><br>
@@ -64,57 +60,72 @@
         </div>
 </div>
 
-<script>
-	$(document).ready(function(){
-		$("#karte").click(function(){
-			$("#karteFormular").toggle();
-			$("#karteFormularHeading").hide();
-		});
-	});
-</script>
+{% if addNgoForm or addGovernmentForm %}
+    <script>
+    	$(document).ready(function(){
+    		$("#karte").click(function(){
+    			$("#karteFormular").toggle();
+    			$("#karteFormularHeading").hide();
+    		});
+    	});
+    </script>
+    
+    <div class="panel panel-default">
+    	<div class="panel-heading" id="karteFormularHeading">
+    		<button class="btn btn-primary btn-lg" id="karte"><span class="glyphicon glyphicon-map-marker"></span> Organization hinzufügen</button></div>
+    		<div class="panel-body" id="karteFormular" style="display: none;">
+                {% if addGovernmentForm %}
+    			    <div class="col-sm-6">
+    			    	<form method="POST">
+                            {% csrf_token %}
+                            {% bootstrap_form addGovernmentForm %}
+    			    		<button type="submit" class="btn btn-success btn-lg" name="post_identifier" value="addGovernment"><span class="glyphicon glyphicon-edit"></span> Government hinufügen</button>
+    			    	</form>
+    			    </div>
+                {% endif %}
 
-<div class="panel panel-default">
-	<div class="panel-heading" id="karteFormularHeading">
-		<button class="btn btn-primary btn-lg" id="karte"><span class="glyphicon glyphicon-map-marker"></span> Organization hinzufügen</button></div>
-		<div class="panel-body" id="karteFormular" style="display: none;">
-			<div class="col-sm-6">
-				<form method="POST">
-                    {% csrf_token %}
-                    {% bootstrap_form subAreaForm %}
-					<button type="submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-edit"></span> Neues Sub-Gebiet</button>
-				</form>
-			</div>
-		</div>
-</div>	
+                {% if addNgoForm %}
+                    <div class="col-sm-6">
+    			    	<form method="POST">
+                            {% csrf_token %}
+                            {% bootstrap_form addNgoForm %}
+    			    		<button type="submit" class="btn btn-success btn-lg" name="post_identifier" value="addNgo"><span class="glyphicon glyphicon-edit"></span> Ngo hinzufügen</button>
+    			    	</form>
+    			    </div>
+                {% endif %}
+    		</div>
+    </div>
+{% endif %}
 
-
-<script>
-	$(document).ready(function(){
-		$("#ngo").click(function(){
-			$("#ngoFormular").toggle();
-			$("#ngoFormularHeading").hide();
-			newMapCreateRender();
-		});
-	});
-</script>
-
-<div class="panel panel-default">
-	<div class="panel-heading" id="ngoFormularHeading">
-		<button class="btn btn-primary btn-lg" id="ngo"><i class="fa fa-users" aria-hidden="true"></i> Neues Sub-Gebiet </button></div>
-
-		<div class="panel-body" id="ngoFormular" style="display: none;">
-			<div class="col-sm-6">
-
-				<form method="POST">
-                    {% csrf_token %}
-                    {% bootstrap_form subAreaForm %}
-                    {% include "dcp/design/locationPicker.html" with id_location_x=addNgoForm.location_x.auto_id id_location_y=addNgoForm.location_y.auto_id id_radius=addNgoForm.radius.auto_id staticMarker=area %}
-					<button type="submit" class="btn btn-success btn-lg" name="post_identifier" value="addNgo"><span class="glyphicon glyphicon-edit"></span> Neues Sub-Gebiet</button>
-				</form>
-
-			</div>
-		</div>
-</div>
+{% if subAreaForm %}
+    <script>
+    	$(document).ready(function(){
+    		$("#ngo").click(function(){
+    			$("#ngoFormular").toggle();
+    			$("#ngoFormularHeading").hide();
+    			newMapCreateRender();
+    		});
+    	});
+    </script>
+    
+    <div class="panel panel-default">
+    	<div class="panel-heading" id="ngoFormularHeading">
+    		<button class="btn btn-primary btn-lg" id="ngo"><i class="fa fa-users" aria-hidden="true"></i> Neues Sub-Gebiet </button></div>
+    
+    		<div class="panel-body" id="ngoFormular" style="display: none;">
+    			<div class="col-sm-6">
+    
+    				<form method="POST">
+                        {% csrf_token %}
+                        {% bootstrap_form subAreaForm %}
+                        {% include "dcp/design/locationPicker.html" with id_location_x=subAreaForm.location_x.auto_id id_location_y=subAreaForm.location_y.auto_id id_radius=subAreaForm.radius.auto_id staticMarker=area %}
+    					<button type="submit" class="btn btn-success btn-lg" name="post_identifier" value="addSubArea"><span class="glyphicon glyphicon-edit"></span> Neues Sub-Gebiet</button>
+    				</form>
+    
+    			</div>
+    		</div>
+    </div>
+{% endif %}
 
 <script>
 	$(document).ready(function(){
@@ -163,7 +174,7 @@
                                             {% if entry.value %}    
                                                 <button type="submit" class="btn btn-danger btn-xs" name="post_identifier" value="degrateGovernment"><i class="fa fa-times" aria-hidden="true"></i> Entziehen</button>
                                             {% else %}
-                                                <button type="submit" name="post_identifier" value="promoteGovernment" class="btn btn-success btn-xs"><i class="fa fa-check" aria-hidden="true"></i> Gewähren</button>
+                                                <button type="submit" class="btn btn-success btn-xs" name="post_identifier" value="promoteGovernment"><i class="fa fa-check" aria-hidden="true"></i> Gewähren</button>
                                             {% endif%}
                                                 <input name="{{entry.html_name}}" id="{{entry.auto_id}}" type="hidden" value="{{entry.value}}">
                                         </form>
@@ -205,9 +216,9 @@
                                             
                                             {{entry.label}}
                                             {% if entry.value %}   
-                                                <button type="submit" class="btn btn-danger btn-xs" name="post_identifier" value="degrateGovernment"><i class="fa fa-times" aria-hidden="true"></i> Entziehen</button>
+                                                <button type="submit" class="btn btn-danger btn-xs" name="post_identifier" value="degrateNgo"><i class="fa fa-times" aria-hidden="true"></i> Entziehen</button>
                                             {% else %}
-                                                <button type="submit" name="post_identifier" value="promoteGovernment" class="btn btn-success btn-xs"><i class="fa fa-check" aria-hidden="true"></i> Gewähren</button>
+                                                <button type="submit" class="btn btn-success btn-xs" name="post_identifier" value="promoteNgo"><i class="fa fa-check" aria-hidden="true"></i> Gewähren</button>
                                             {% endif%}
                                                 <input name="{{entry.html_name}}" id="{{entry.auto_id}}" type="hidden" value="{{entry.value}}">
                                         </form>

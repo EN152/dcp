@@ -28,9 +28,9 @@ def catForm(request):
             return {'catChoiceForm': CatastropheChoice()}
         result = p.setCatastropheById(newCatId)
 
-        if result == True: # Valid Katastrophen ID
-            return {
-                'catChoiceForm': CatastropheChoice(initial={'catastrophe': request.user.profile.currentCatastrophe.pk})
-            }
-        else: # Komische id, mache nichts
-            return {'catChoiceForm': CatastropheChoice()}
+        #if result == True: # Valid Katastrophen ID
+         #   return {
+         #       'catChoiceForm': CatastropheChoice(initial={'catastrophe': request.user.profile.currentCatastrophe.pk})
+         #   }
+        #else: # Komische id, mache nichts
+        return {'catChoiceForm': CatastropheChoice()}

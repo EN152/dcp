@@ -106,9 +106,15 @@ class AreaRelation(models.Model):
 
 class GovernmentArea(AreaRelation):
     government = models.ForeignKey(Government, on_delete=models.CASCADE, null=False)
-    canCreateNgoArea = models.BooleanField(null=False, default=False)
+    canCreateSubArea = models.BooleanField(null=False, default=False)
     canManageNgo = models.BooleanField(null=False, default=False)
+
+    class Meta:
+        unique_together = ('government', 'area')
 
 
 class NgoArea(AreaRelation):
     ngo = models.ForeignKey(Ngo, on_delete=models.CASCADE, null=False)
+
+    class Meta:
+        unique_together = ('ngo', 'area')

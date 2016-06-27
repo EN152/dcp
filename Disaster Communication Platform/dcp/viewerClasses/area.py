@@ -3,21 +3,47 @@ from django.views.static import loader
 from django.shortcuts import get_object_or_404
 from dcp.viewerClasses.organization import OrganizationView
 from dcp.models.organizations import *
-from dcp.customForms.organizationForms import AreaForm, NgoForm, GovernmentAreaForm, NgoAreaForm
+from dcp.customForms.organizationForms import AreaForm, NgoForm, GovernmentAreaForm, NgoAreaForm, AddNgoForm, AddGovernmentForm
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from geopy.geocoders import Nominatim
+from django.core.urlresolvers import reverse
+from dcp.customclasses.distance.distance import calculateDistanceClass
 
 class AreaView(LoginRequiredMixin, View):
-    def get(self, request, pk, addNgoForm=NgoForm, addGovernmentForm=None, subAreaForm=AreaForm):
+    def get(self, request, pk, subAreaForm=None):
         user = request.user
         # TODO Permissons
         templatePath = 'dcp/content/organization/area.html'
         template = loader.get_template(templatePath)
         area = get_object_or_404(Area.objects.select_related('catastrophe').prefetch_related('government_set', 'ngo_set', 'ngoarea_set', 'governmentarea_set') , id=pk)
 
-        # TODO 
-        canDeleteArea = False
+        if subAreaForm == None: # Add Permissions
+            subAreaForm = AreaForm
+
+        if True: # TODO Permissons
+            addNgoForm = AddNgoForm()
+            ngos = Ngo.objects.exclude(areas=area)
+            ngoChoices = []
+            for ngo in ngos:
+                ngoChoices.append((ngo.id, ngo.name))
+            addNgoForm['ngo'].field.choices = ngoChoices
+        else :
+            addNgoForm = None
+
+        if True: # TODO Permissons
+            addGovernmentForm = AddGovernmentForm()
+            governments = Government.objects.exclude(areas=area)
+            governmentChoices = []
+            for government in governments:
+                governmentChoices.append((government.id, government.name))
+            addGovernmentForm['government'].field.choices = governmentChoices
+        else:
+            addGovernmentForm = None
+
+
+        # TODO Permissions
+        canDeleteArea = True
 
         allNgoAreas = area.ngoarea_set.all()
         allGovernmentAreas = area.governmentarea_set.all()
@@ -39,12 +65,11 @@ class AreaView(LoginRequiredMixin, View):
             governmentAreaFormList.append(form)
 
         governmentAreaFormListZipped = zip(governmentAreaList, governmentAreaFormList)
-        print(len(governmentAreaFormList))
-        print(len(governmentAreaList))
 
         context = {
             'area' : area,
             'addNgoForm': addNgoForm,
+            'addGovernmentForm': addGovernmentForm,
             'subAreaForm' : subAreaForm,
             'canDeleteArea' : canDeleteArea,
             'ngoAreaFormList' : ngoAreaFormList,
@@ -52,6 +77,46 @@ class AreaView(LoginRequiredMixin, View):
             
         }
         return HttpResponse(template.render(context, request))
+
+    def post(self, request, pk):
+        # TODO Permissons
+        user = request.user
+        post_identifier = request.POST.get('post_identifier')
+        area = get_object_or_404(Area.objects.select_related('catastrophe').prefetch_related('government_set', 'ngo_set', 'ngoarea_set', 'governmentarea_set') , id=pk)
+
+        if post_identifier == 'degrateGovernment': # TODO Permissons
+            pass
+        if post_identifier == 'promoteGovernment': # TODO Permissons
+            pass
+        if post_identifier == 'degrateNgo': # TODO Permissons
+            pass
+        if post_identifier == 'promoteNgo': # TODO Permissons
+            pass
+
+        if post_identifier == 'addSubArea': # TODO Permissons
+            successCreate, obj = createArea(request, parrentArea=area)
+            if successCreate:
+                return obj
+            else:
+                return self.get(request, pk, subAreaForm=obj)
+
+        if post_identifier == 'addNgo': # TODO Permissons
+            form = AddNgoForm(request.POST)
+            if form.is_valid():
+                NgoArea.objects.create(ngo=form.cleaned_data['ngo'], area=area)
+            else:
+                print(form.errors)
+            return self.get(request, pk)
+
+        if post_identifier == 'addGovernment': # TODO Permissons
+            form = AddGovernmentForm(request.POST)
+            if form.is_valid():
+                GovernmentArea.objects.create(government=form.cleaned_data['government'], area=area)
+            return self.get(request, pk)
+
+        if post_identifier == 'deleteArea': # TODO Permissons
+            area.delete()
+            return HttpResponseRedirect('/')
 
 class AreaAdminView(LoginRequiredMixin,View):
     def get(self, request, create_new_form=AreaForm):
@@ -77,14 +142,41 @@ class AreaAdminView(LoginRequiredMixin,View):
         if not user.is_superuser:
             return HttpResponseForbidden("Insufficent rights")
         
+        successCreate, obj = createArea(request)
+        if successCreate:
+            return obj
+        else:
+            return self.get(request, create_new_form=obj)
+
+def createArea(request, parrentArea:Area=None):
         form = AreaForm(request.POST)
         if form.is_valid():
             area = form.save(commit=False)
 
-            geolocator = Nominatim()
-            location = geolocator.reverse(str(area.location_x) + " , " + str(area.location_y))
-            area.locationString = location.address
+            try :
+                geolocator = Nominatim()
+                location = geolocator.reverse(str(area.location_x) + " , " + str(area.location_y))
+                area.locationString = location.address
+            except:
+                area.locationString = " "
 
+            area.parrent = parrentArea
+            
+            # TODO Verifiziere die Distanzberechnung
+            if parrentArea:
+                parrentDistance = calculateDistanceClass.calculate_distance(parrentArea.location_x, parrentArea.location_y, area.location_x, area.location_y)
+                maxOutsideRadius = parrentArea.radius + parrentArea.maxOutsideRadius
+            else :
+                parrentDistance = calculateDistanceClass.calculate_distance(area.catastrophe.location_x, area.catastrophe.location_y, area.location_x, area.location_y)
+                maxOutsideRadius = area.catastrophe.radius + area.catastrophe.maxOutsideRadius
+
+            if (parrentDistance + area.radius) >= maxOutsideRadius:
+                form.add_error('radius', "Bitte wähle ein Gebiet näher an dem Überliegenden")
+                return (False, form)
+
+            if (parrentDistance + area.radius + area.maxOutsideRadius) >= maxOutsideRadius:
+                area.maxOutsideRadius = (maxOutsideRadius - parrentDistance)
+                
             area.save()
 
             ngos = Ngo.objects.filter(id__in=request.POST.getlist('ngos'))
@@ -98,6 +190,6 @@ class AreaAdminView(LoginRequiredMixin,View):
                 createGovernmentsAreas.append(GovernmentArea(government=government, area=area))
             NgoArea.objects.bulk_create(createNgoAreas)
             GovernmentArea.objects.bulk_create(createGovernmentsAreas)
-            return HttpResponseRedirect('')
+            return (True, HttpResponseRedirect(reverse('dcp:AreaView', kwargs={'pk':area.id})))
         else:
-            return self.get(request, create_new_form=form)
+            return (False, form)
