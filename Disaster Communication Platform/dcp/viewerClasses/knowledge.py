@@ -1,4 +1,4 @@
-from dcp.customForms.goodsFroms import *
+from dcp.customForms.knowledgeFroms import *
 from dcp.viewerClasses.timeline import TimelineView
 from dcp.viewerClasses.authentication import getPageAuthenticated
 from dcp.views import View, LoginRequiredMixin
