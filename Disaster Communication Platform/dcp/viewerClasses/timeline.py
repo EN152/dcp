@@ -8,23 +8,28 @@ from django.forms import *
 from geopy.geocoders import Nominatim
 
 class TimelineView(View):
-    def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ):
+    def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ, knowledge_type):
         templatePath = 'dcp/content/createNewGood.html'
         goods_list = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
         goods_list = filter(lambda x: type(x) is eval(good_typ), goods_list)
-            
+        
+        knowledge_list = sorted(Knowledge.getAllKnowledge(), key=lambda g: g.created_date, reverse=True)
+        knowledge_list = filter(lambda x: type(x) is eval(good_typ), knowledge_list)
+
         template = loader.get_template(templatePath)
         context = {
             'create_new_glyphicon': create_new_glyphicon,
             'create_new_button' : create_new_button,
             'page_title': page_title,
             'create_new_form' : create_new_form,
-            'goods_list' : goods_list
+            'goods_list' : goods_list,
+            'knowledge_list' : knowledge_list
         }
         return HttpResponse(template.render(context,request))
     
     def getTemplate(self,request):
-        goodtype = request.POST.get('good_type')        
+        goodtype = request.POST.get('good_type')
+        knowledgetype = request.POST.get('knowledge_type')         
         if(goodtype == 'Search_Material'):
             goodTemplate = "/suchen/materielles/"
         if(goodtype == 'Offer_Material'):
@@ -32,10 +37,16 @@ class TimelineView(View):
         if(goodtype == 'Search_Immaterial'):
             goodTemplate = "/suchen/immaterielles/"
         if(goodtype == 'Offer_Immaterial'):
-            goodTemplate = "/bieten/immaterielles/"      
+            goodTemplate = "/bieten/immaterielles/"
+        if(knowledgetype == 'Post_News'):
+            knowledgeTemplate = "/wissen/neuigkeiten/"
+        if(knowledgetype == 'Post_Dangers'):
+            knowledgeTemplate ="/wissen/gefahren/"
+        if(knowledgetype == 'Post_Questions'):
+            knowledgeTemplate = "/wissen/fragen"
         else:
             goodTemplate = ''
-        return goodTemplate
+        return goodTemplate, knowledgeTemplate
 
     def get_good_or_404(self, request):
         good = Goods.getGood(request.POST.get('good_type'), request.POST.get('good_id'))
