@@ -33,4 +33,4 @@ class PostQuestionssForm(KnowledgeForm):
     radius = forms.ChoiceField(choices=dcp.dcpSettings.RADIUS_CHOICES_GOODS, required=False, label='Suchradius')
     class Meta:
         model = Post_Questions
-        fields = ["title", "description", "image"]
+        fields = ["title", "description", "image", "location_x", "location_y"]

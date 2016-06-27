@@ -32,7 +32,13 @@ class TimelineView(View):
         if(goodtype == 'Search_Immaterial'):
             goodTemplate = "/suchen/immaterielles/"
         if(goodtype == 'Offer_Immaterial'):
-            goodTemplate = "/bieten/immaterielles/"      
+            goodTemplate = "/bieten/immaterielles/"
+        if(goodtype == 'Post_News'):
+            goodTemplate = "/wissen/neuigkeiten/"
+        if(goodtype == 'Post_Dangers'):
+            goodTemplate ="/wissen/gefahren/"
+        if(goodtype == 'Post_Questions'):
+            goodTemplate = "/wissen/fragen"
         else:
             goodTemplate = ''
         return goodTemplate
