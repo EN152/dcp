@@ -39,3 +39,4 @@ class OfferImmaterialForm(GoodForm):
     class Meta:
         model = Offer_Immaterial
         fields = ["title", "catastrophe", "description", "image", "location_x", "location_y"]
+

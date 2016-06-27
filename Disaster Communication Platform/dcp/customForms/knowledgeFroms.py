@@ -16,18 +16,17 @@ class KnowledgeForm(forms.ModelForm):
         model = Knowledge
         fields = ["title", "catastrophe", "description", "image", "location_x", "location_y"]
 
-
 class PostNewsForm(KnowledgeForm):
     radius = forms.ChoiceField(choices=dcp.dcpSettings.RADIUS_CHOICES_GOODS, required=False, label='Suchradius')
     class Meta:
         model = Post_News
-        fields = ["title", "catastrophe", "description", "image", "radius", "location_x", "location_y"]
+        fields = ["title", "catastrophe", "description", "image", "location_x", "location_y"]
 
 class PostDangersForm(KnowledgeForm):
     radius = forms.ChoiceField(choices=dcp.dcpSettings.RADIUS_CHOICES_GOODS, required=False, label='Suchradius')
     class Meta:
         model = Post_Dangers
-        fields = ["title", "catastrophe", "description", "image", "radius", "location_x", "location_y"]
+        fields = ["title", "catastrophe", "description", "image", "location_x", "location_y"]
 
 class PostQuestionssForm(KnowledgeForm):
     radius = forms.ChoiceField(choices=dcp.dcpSettings.RADIUS_CHOICES_GOODS, required=False, label='Suchradius')
