@@ -1,0 +1,42 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %} Teile dein Wissen {% endblock %}
+
+{% block content %}
+
+<div class="col-lg-4">
+	<div class="panel panel-yellow">
+		<div class="panel-heading">
+			Neuigkeiten
+		</div>
+		<div class="panel-body">
+			<p>Teile Neuigkeiten zu aufkommenden Katastrophen, Anlaufstellen um Hilfe zu bekommen oder was dir als relevant erscheint.</p>
+			<h2><span class="glyphicon glyphicon-alert"></span> <a href="/wissen/neuigkeiten/">Neuigkeiten</a></h2>
+		</div>
+	</div>
+</div>
+
+<div class="col-lg-4">
+	<div class="panel panel-yellow">
+		<div class="panel-heading">
+			Gefahren
+		</div>
+		<div class="panel-body">
+			<p>Hier kannst Du Informationen über aktuelle Gefahrenstellen posten, wie z.B. kaputte Straßen oder umgefallene Straßenschilder, Bäume etc.</p>
+			<h2><span class="glyphicon glyphicon-alert"></span> <a href="/wissen/gefahren/">Gefahren</a></h2>
+		</div>
+	</div>
+</div>
+
+<div class="col-lg-4">
+	<div class="panel panel-yellow">
+		<div class="panel-heading">
+			Fragen
+		</div>
+		<div class="panel-body">
+			<p>Wenn Du fragen zu irgendetwas hast, erstelle deine Einträge unter dieser Kategorie.</p>
+			<h2><span class="glyphicon glyphicon-alert"></span> <a href="/wissen/fragen/">Fragen</a></h2>
+		</div>
+	</div>
+</div>
+{% endblock %}
