@@ -12,7 +12,7 @@ class KnowledgeForm(forms.ModelForm):
     location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     class Meta:
-        model = Goods
+        model = Knowledge
         fields = ["title", "catastrophe", "description", "image", "location_x", "location_y"]
 
 class PostNewsForm(KnowledgeForm):
