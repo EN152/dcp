@@ -9,10 +9,10 @@ from geopy.geocoders import Nominatim
 from dcp.models.knowledge import *
 
 class TimelineView(View):
-    def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ, knowledge_type):
+    def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_type, knowledge_type):
         templatePath = 'dcp/content/createNewGood.html'
         goods_list = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
-        goods_list = filter(lambda x: type(x) is eval(good_typ), goods_list)
+       # goods_list = filter(lambda x: type(x) is eval(good_type), goods_list)
         
         knowledge_list = sorted(Knowledge.getAllKnowledge(), key=lambda g: g.created_date, reverse=True)
         knowledge_list = filter(lambda x: type(x) is eval(knowledge_type), knowledge_list)
@@ -44,9 +44,10 @@ class TimelineView(View):
         if(knowledgetype == 'Post_Dangers'):
             knowledgeTemplate ="/wissen/gefahren/"
         if(knowledgetype == 'Post_Questions'):
-            knowledgeTemplate = "/wissen/fragen"
+            knowledgeTemplate = "/wissen/fragen/"
         else:
             goodTemplate = ''
+            knowledgeTemplate = ''
         return goodTemplate, knowledgeTemplate
 
     def get_good_or_404(self, request):
@@ -54,6 +55,12 @@ class TimelineView(View):
         if good is None:
            raise Http404
         return good
+
+    def get_knowledge_or_404(self, request):
+        knowledge = Knowledge.getKnowledge(request.POST.get('knowledge_type'), request.POST.get('knowledge_id'))
+        if knowledge is None:
+            raise Http404
+        return knowledge
 
     def createNewGood(self, request, form):
         if form.is_valid():
@@ -82,11 +89,20 @@ class TimelineView(View):
                         template = self.getTemplate(request)
                         return HttpResponseRedirect(template)
                     good = self.get_good_or_404(request)
-                    if good.comments is None:
-                        good.comments = Comment_Relation.objects.create()
-                        good.save()
-                    relation = good.comments
-                    Comment.objects.create(text=text,user=user,relation=relation)
+                    knowledge = self.get_knowledge_or_404(request)
+                    if good:
+                        if good.comments is None:
+                            good.comments = Comment_Relation.objects.create()
+                            good.save()
+                        good_relation = good.comments
+                        Comment.objects.create(text=text,user=user,relation=good_relation)
+                    else:
+                        if knowledge.comments is None:
+                            knowledge.comments = Comment_Relation.objects.create()
+                            knowledge.save()
+                        knowledge_relation = knowledge.comments
+                        Comment.objects.create(text=text,user=user,relation=knowledge_relation)
+                    
                     template = self.getTemplate(request)
                     return HttpResponseRedirect(template)
 

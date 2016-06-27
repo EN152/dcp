@@ -52,8 +52,8 @@ urlpatterns = [
 #    # Wissen
     url(r'^wissen/$', Wissen.as_view()),
     url(r'^wissen/neuigkeiten/$', PostNewsView.as_view(), name='PostNewsView'),
-#   url(r'^wissen/gefahren/$', views.wissen_gefahren),
-#    url(r'^wissen/fragen/$', views.wissen_fragen),
+   url(r'^wissen/gefahren/$', PostDangersView.as_view(), name='PostDangersView'),
+    url(r'^wissen/fragen/$', PostQuestionsView.as_view(), name='PostQuestionsView'),
 #    url(r'^wissen/abstimmungen/$', views.wissen_abstimmungen),
 #    url(r'^wissen/archiv/$', views.wissen_archiv),
 
