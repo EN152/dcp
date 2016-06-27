@@ -169,8 +169,7 @@
                                                     <input name="{{hidden.html_name}}" id="{{hidden.auto_id}}" type="hidden" value="{{hidden.value}}">
                                                 {% endif %}
                                             {% endfor %}
-                                            
-                                            {{entry.label}}
+                                            {{ entry.label }}
                                             {% if entry.value %}    
                                                 <button type="submit" class="btn btn-danger btn-xs" name="post_identifier" value="degrateGovernment"><i class="fa fa-times" aria-hidden="true"></i> Entziehen</button>
                                             {% else %}
@@ -213,7 +212,6 @@
                                                         <input name="{{hidden.html_name}}" id="{{hidden.auto_id}}" type="hidden" value="{{hidden.value}}">
                                                     {% endif %}
                                                 {% endfor %}
-                                            
                                             {{entry.label}}
                                             {% if entry.value %}   
                                                 <button type="submit" class="btn btn-danger btn-xs" name="post_identifier" value="degrateNgo"><i class="fa fa-times" aria-hidden="true"></i> Entziehen</button>

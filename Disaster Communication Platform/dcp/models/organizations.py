@@ -10,8 +10,7 @@ class Organization(models.Model):
     name = models.CharField(max_length=200, null=False)
     name_short = models.CharField(max_length=3, null=False)
     created_date = models.DateTimeField(default=timezone.now, null=False, editable=False)
-    # Fully managing Catastrophe
-    catastrophe = models.ManyToManyField(Catastrophe)
+    catastrophes = models.ManyToManyField(Catastrophe) # Fully managing Catastrophe
 
     class Meta:
         abstract = True
@@ -83,6 +82,7 @@ class Government(Organization):
         """
         from dcp.models.profile import GovernmentInvite
         return GovernmentInvite.objects.filter(organization=self).select_related('profile')
+
 
 class Ngo(Organization):
     areas = models.ManyToManyField(Area, through='NgoArea')

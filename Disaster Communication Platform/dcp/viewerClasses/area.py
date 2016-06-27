@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from geopy.geocoders import Nominatim
 from django.core.urlresolvers import reverse
 from dcp.customclasses.distance.distance import calculateDistanceClass
+from dcp.auth.changeOrganizationRights import changeGovernmentRight, changeNgoRight
 
 class AreaView(LoginRequiredMixin, View):
     def get(self, request, pk, subAreaForm=None):
@@ -52,7 +53,7 @@ class AreaView(LoginRequiredMixin, View):
         ngoAreaList = []
         for ngoArea in allNgoAreas:
             ngoAreaList.append(ngoArea)
-            form = NgoAreaForm(ngoAreaQuery=allNgoAreas, ngoArea=ngoArea)
+            form = NgoAreaForm(ngoArea=ngoArea)
             ngoAreaFormList.append(form)
 
         ngoAreaFormList = zip(ngoAreaList, ngoAreaFormList)
@@ -61,7 +62,7 @@ class AreaView(LoginRequiredMixin, View):
         governmentAreaList = []
         for governmentArea in allGovernmentAreas:
             governmentAreaList.append(governmentArea)
-            form = GovernmentAreaForm(governmentAreaQuery=allGovernmentAreas, governmentArea=governmentArea)
+            form = GovernmentAreaForm(governmentArea=governmentArea)
             governmentAreaFormList.append(form)
 
         governmentAreaFormListZipped = zip(governmentAreaList, governmentAreaFormList)
@@ -84,14 +85,14 @@ class AreaView(LoginRequiredMixin, View):
         post_identifier = request.POST.get('post_identifier')
         area = get_object_or_404(Area.objects.select_related('catastrophe').prefetch_related('government_set', 'ngo_set', 'ngoarea_set', 'governmentarea_set') , id=pk)
 
-        if post_identifier == 'degrateGovernment': # TODO Permissons
-            pass
-        if post_identifier == 'promoteGovernment': # TODO Permissons
-            pass
-        if post_identifier == 'degrateNgo': # TODO Permissons
-            pass
-        if post_identifier == 'promoteNgo': # TODO Permissons
-            pass
+        if post_identifier == 'degrateGovernment':
+            changeGovernmentRight(request, area, False)
+        if post_identifier == 'promoteGovernment':
+            changeGovernmentRight(request, area, True)
+        if post_identifier == 'degrateNgo':
+            changeNgoRight(request, area, False)
+        if post_identifier == 'promoteNgo':
+            changeNgoRight(request, area, True)
 
         if post_identifier == 'addSubArea': # TODO Permissons
             successCreate, obj = createArea(request, parrentArea=area)
