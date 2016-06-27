@@ -1,9 +1,10 @@
 from .imports import *
 from .catastrophe import *
 from .profile import *
-from .categorysGoods import *
+from .goods import *
 import dcp.dcpSettings
 
+"""
 class Bump_Relation(models.Model):
     pass
 
@@ -19,7 +20,7 @@ class Report(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False)
     relation = models.ForeignKey(Report_Relation, on_delete=models.CASCADE, null=False)
     date_created = models.DateTimeField(default=timezone.now)
-
+"""
 class Knowledge(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=True)
     catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
@@ -31,8 +32,8 @@ class Knowledge(models.Model):
     created_date = models.DateTimeField(default=timezone.now, blank=True)
     image = models.ImageField(upload_to=dcp.dcpSettings.GOODS_IMAGE_UPLOADPATH, null=True, blank=True)
     comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
-    bumps = models.ForeignKey(Bump_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
-    reports = models.ForeignKey(Report_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
+    #bumps = models.ForeignKey(Bump_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
+    #reports = models.ForeignKey(Report_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
     visibility = models.BooleanField(default=True, blank=True)
 
     def delete(self, using = None, keep_parents = False):
@@ -52,14 +53,16 @@ class Knowledge(models.Model):
     def __unicode__(self):
         return self.title
 
-    def getComments(self):
-        return Comment.objects.filter(relation = self.comments)
 
-    def getBumps(self):
-        return Bump.objects.filter(relation = self.bumps)
+  #  def getComments(self):
+ #       return Comment.objects.filter(relation = self.comments)
+#
+  #  def getBumps(self):
+ #       return Bump.objects.filter(relation = self.bumps)
+#
+ #   def getReports(self):
+#        return Report.objects.filter(relation = self.reports)
 
-    def getReports(self):
-        return Report.objects.filter(relation = self.reports)
 
     def getKnowledge(type, id):
         if type == 'News':
@@ -81,12 +84,12 @@ class Knowledge(models.Model):
 
     def getAllKnowledge():
         listOfKnowledge = []
-        for oneKnowledge in News.objects.all():
-            listOfGoods.append(oneGood)
-        for oneKnowledge in Danger.objects.all():
-            listOfGoods.append(oneGood)
-        for oneKnowledge in Question.objects.all():
-            listOfGoods.append(oneGood)
+        for oneKnowledge in Post_News.objects.all():
+            listOfKnowledge.append(oneKnowledge)
+        for oneKnowledge in Post_Dangers.objects.all():
+            listOfKnowledge.append(oneKnowledge)
+        for oneKnowledge in Post_Questions.objects.all():
+            listOfKnowledge.append(oneKnowledge)
         return listOfKnowledge
 
     def isSearchedForByString(self, searchString):

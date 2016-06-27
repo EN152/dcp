@@ -1,6 +1,5 @@
 from django import forms
-from dcp.models.goods import *
-from dcp.models.categorysGoods import *
+from dcp.models.knowledge import *
 from dcp.models.catastrophe import Catastrophe
 
 import dcp.dcpSettings

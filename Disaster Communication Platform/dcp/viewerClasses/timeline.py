@@ -6,6 +6,7 @@ from django.template.context_processors import request
 from django.template.backends.django import Template
 from django.forms import *
 from geopy.geocoders import Nominatim
+from dcp.models.knowledge import *
 
 class TimelineView(View):
     def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ, knowledge_type):
@@ -14,7 +15,7 @@ class TimelineView(View):
         goods_list = filter(lambda x: type(x) is eval(good_typ), goods_list)
         
         knowledge_list = sorted(Knowledge.getAllKnowledge(), key=lambda g: g.created_date, reverse=True)
-        knowledge_list = filter(lambda x: type(x) is eval(good_typ), knowledge_list)
+        knowledge_list = filter(lambda x: type(x) is eval(knowledge_type), knowledge_list)
 
         template = loader.get_template(templatePath)
         context = {
