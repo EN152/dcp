@@ -50,9 +50,9 @@ urlpatterns = [
     url(r'^area/(?P<pk>\d+)/$', AreaView.as_view(),name='AreaView'),
 
 #    # Wissen
-#    url(r'^wissen/$', views.wissen),
+    url(r'^wissen/$', Wissen.as_view()),
 #    url(r'^wissen/neuigkeiten/$', views.wissen_neuigkeiten),
-#    url(r'^wissen/gefahren/$', views.wissen_gefahren),
+#   url(r'^wissen/gefahren/$', views.wissen_gefahren),
 #    url(r'^wissen/fragen/$', views.wissen_fragen),
 #    url(r'^wissen/abstimmungen/$', views.wissen_abstimmungen),
 #    url(r'^wissen/archiv/$', views.wissen_archiv),
