@@ -9,16 +9,23 @@ class Index(TimelineView):
 		countOffer = len(dcp.models.Offer_Material.objects.all()) + len(dcp.models.Offer_Immaterial.objects.all())
 		countInformation = 0 # TODO
 		countPeople = len(MissedPeople.objects.all())
-		
+
 		# user = request.user und irgendwas wie .filter(user=user) fehlt noch...
 		goods_list = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
 		goods_list = filter(lambda x: x.user==request.user, goods_list)
 
-		panel_title = "Übersicht  deiner erstellten Gesuche und Angebote"
 
+		quickstart = False
+		count_sum = countSearch + countOffer + countInformation + countPeople
+		if count_sum < 1:
+			quickstart = True
+
+		panel_title = "Übersicht  deiner erstellten Gesuche und Angebote"
 		template = 'dcp/index.html'
+
 		params = {
 				'goods_list': goods_list,
+				'quickstart' : quickstart,
 				'countSearch': countSearch,
 				'countOffer': countOffer,
 				'countInformation': countInformation,

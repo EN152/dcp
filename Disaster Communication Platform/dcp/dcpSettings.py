@@ -1,4 +1,4 @@
-MIN_COMMENT_LENGTH = 10
+MIN_COMMENT_LENGTH = 2
 RADIUS_CHOICES_GOODS = [
     (0, '0 km'),
     (1, '1 km'),
