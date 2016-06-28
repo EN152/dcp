@@ -1,0 +1,15 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %} Überblick: {{ organization.name }} {% endblock title %}
+
+{% block content %}
+
+{% include "dcp/content/organization/header.html" %}
+
+{% include "dcp/content/organization/organizationAreas.html" %}
+
+{% include "dcp/content/organization/userOverview.html" %}
+
+{% include "dcp/content/organization/invites.html" %}
+
+{% endblock content %}

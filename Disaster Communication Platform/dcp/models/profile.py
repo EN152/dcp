@@ -124,7 +124,7 @@ class Member(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        abstract = False
+        abstract = True
 
 class NgoMember(Member):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=False)

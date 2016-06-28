@@ -30,7 +30,7 @@ class Goods(models.Model):
     location_y = models.FloatField(null=True)
     created_date = models.DateTimeField(default=timezone.now, blank=True)
     image = models.ImageField(upload_to=dcp.dcpSettings.GOODS_IMAGE_UPLOADPATH, null=True, blank=True)
-    comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
+    comments = models.ForeignKey("Comment_Relation", on_delete=models.DO_NOTHING, null=True, blank=True)
     bumps = models.ForeignKey(Bump_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
     reports = models.ForeignKey(Report_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
     visibility = models.BooleanField(default=True, blank=True)
@@ -84,17 +84,34 @@ class Goods(models.Model):
             return Offer_Immaterial
         return None
 
-    def getAllGoods():
+    def getAllGoods(**kwargs):
         listOfGoods = []
-        for oneGood in Search_Material.objects.all():
+        for oneGood in Search_Material.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
-        for oneGood in Offer_Immaterial.objects.all():
+        for oneGood in Offer_Immaterial.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
-        for oneGood in Offer_Material.objects.all():
+        for oneGood in Offer_Material.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
-        for oneGood in Search_Immaterial.objects.all():
+        for oneGood in Search_Immaterial.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
         return listOfGoods
+
+    def getAllOffers(**kwargs):
+        listOfGoods = []
+        for oneGood in Offer_Immaterial.objects.all(**kwargs):
+            listOfGoods.append(oneGood)
+        for oneGood in Offer_Material.objects.all(**kwargs):
+            listOfGoods.append(oneGood)
+        return listOfGoods
+
+    def getAllSearches(**kwargs):
+        listOfGoods = []
+        for oneGood in Search_Immaterial.objects.all(**kwargs):
+            listOfGoods.append(oneGood)
+        for oneGood in Search_Material.objects.all(**kwargs):
+            listOfGoods.append(oneGood)
+        return listOfGoods
+    
 
     def isSearchedForByString(self, searchString):
         if searchString.upper() in self.description.upper() or searchString.upper() in self.title.upper():
