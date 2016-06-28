@@ -1,0 +1,17 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %} Abstimmungen {% endblock %}
+
+{% block content %}
+
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li>{{ question.question_text }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Zur Zeit gibt es nichts worüber abgestimmt werden müsste!</p>
+{% endif %}
+
+{% endblock %}
