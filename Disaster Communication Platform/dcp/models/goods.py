@@ -107,25 +107,13 @@ class Goods(models.Model):
             listOfGoods.append(oneGood)
         for oneGood in Search_Immaterial.objects.all():
             listOfGoods.append(oneGood)
+        for oneGood in Post_News.objects.all():
+            listOfGoods.append(oneGood)
+        for oneGood in Post_Dangers.objects.all():
+            listOfGoods.append(oneGood)
+        for oneGood in Post_Questions.objects.all():
+            listOfGoods.append(oneGood)
         return listOfGoods
-
-    #def getKnowledge(type, id):
-        
-     #   return None
-
-    #def stringToKnowledgeClass(type):
-        
-        #return None
-
-    def getAllKnowledge():
-        listOfKnowledge = []
-        for oneKnowledge in Post_News.objects.all():
-            listOfKnowledge.append(oneKnowledge)
-        for oneKnowledge in Post_Dangers.objects.all():
-            listOfKnowledge.append(oneKnowledge)
-        for oneKnowledge in Post_Questions.objects.all():
-            listOfKnowledge.append(oneKnowledge)
-        return listOfKnowledge
 
     def isSearchedForByString(self, searchString):
         if searchString.upper() in self.description.upper() or searchString.upper() in self.title.upper():
@@ -183,21 +171,21 @@ class Offer_Immaterial(Immaterial_Goods):
 
 class Post_News(Goods):
     timeline_badge_color = models.CharField(max_length=100, null=False, default='yellow')
-    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-bullhorn')
+    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-info-sign')
 
     def getGoodType(self):
         return 'Post_News'
 
 class Post_Dangers(Goods):
     timeline_badge_color = models.CharField(max_length=100, null=False, default='yellow')
-    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-alert')
+    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-info-sign')
 
     def getGoodType(self):
         return 'Post_Danger'
 
 class Post_Questions(Goods):
     timeline_badge_color = models.CharField(max_length=100, null=False, default='yellow')
-    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-question-sign')
+    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-info-sign')
 
     def getGoodType(self):
         return 'Post_Question'
