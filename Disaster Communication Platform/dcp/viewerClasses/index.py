@@ -7,7 +7,7 @@ class Index(TimelineView):
 	def get(self, request):
 		countSearch = len(dcp.models.Search_Material.objects.all()) + len(dcp.models.Search_Immaterial.objects.all())
 		countOffer = len(dcp.models.Offer_Material.objects.all()) + len(dcp.models.Offer_Immaterial.objects.all())
-		countInformation = 0 # TODO
+		countInformation = len(dcp.models.Post_News.objects.all()) + len(dcp.models.Post_Dangers.objects.all()) + len(dcp.models.Post_Questions.objects.all()) 
 		countPeople = len(MissedPeople.objects.all())
 		
 		# user = request.user und irgendwas wie .filter(user=user) fehlt noch...
