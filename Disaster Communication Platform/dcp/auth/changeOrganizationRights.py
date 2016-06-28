@@ -1,12 +1,12 @@
 from dcp.customForms.organizationForms import GovernmentAreaForm, NgoAreaForm
 from dcp.models.profile import Profile
 from django.http.request import HttpRequest
-from dcp.models.organizations import Area, GovernmentArea
-from dcp.auth.areaAuth import canCreateSubArea, canManageNgo, isAreaAdmin, canDeleteElements, isCatastropheAdminByArea
+from dcp.models.organizations import Area, GovernmentArea, NgoArea
+from dcp.auth.areaAuth import canCreateSubArea, canManageNgo, isAreaAdmin, isCatastropheAdminByArea
 from dcp.dcpSettings import ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS
 
-@staticmethod
-def changeGovernmentRight(request : HttpRequest, area :  Area, changeTo : type.BooleanType) -> type.BooleanType:
+
+def changeGovernmentRight(request : HttpRequest, area :  Area, changeTo : bool) -> bool:
     """
     Processes the new rights for an government of the request & area into the 'changeTo' type
     This method only changes one permisson at time
@@ -17,27 +17,30 @@ def changeGovernmentRight(request : HttpRequest, area :  Area, changeTo : type.B
     :param changeTo: A boolean which determines whether a to upgrade or downgrade the rights
     :return: Boolean depending on success
     """
-    profile = request.user.profile # Profile.objects.get(user=user).prefetch_related('ngomember_set__ngo__areas', 'governmentmember_set__government__areas') # TODO query optimization
+    user = request.user
+    isSuperuser = user.is_superuser
+    profile = user.profile # Profile.objects.get(user=user).prefetch_related('ngomember_set__ngo__areas', 'governmentmember_set__government__areas') # TODO query optimization
     form = GovernmentAreaForm(request.POST)
     success = False
     if not form.is_valid():
         return False
     governmentArea = form.cleaned_data.get('governmentArea')
+    area = governmentArea.area
 
     if request.POST.get('isFullAdmin') and not success:
-        if isAreaAdmin(profile, governmentArea) or isCatastropheAdminByArea(profile, governmentArea) or ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS:
+        if isAreaAdmin(profile, area) or isCatastropheAdminByArea(profile, area) or (isSuperuser and ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS):
             governmentArea.isFullAdmin = changeTo
             success = True
     if request.POST.get('canDeleteElements') and not success:
-        if isAreaAdmin(profile, governmentArea) or isCatastropheAdminByArea(profile, governmentArea) or ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS:
+        if isAreaAdmin(profile, area) or isCatastropheAdminByArea(profile, area) or (isSuperuser and ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS):
             governmentArea.canDeleteElements = changeTo
             success = True
     if request.POST.get('canCreateSubArea') and not success:
-        if isAreaAdmin(profile, governmentArea) or isCatastropheAdminByArea(profile, governmentArea) or ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS:
+        if isAreaAdmin(profile, area) or isCatastropheAdminByArea(profile, area) or (isSuperuser and ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS):
             governmentArea.canCreateSubArea = changeTo
             success = True
     if request.POST.get('canManageNgo') and not success:
-        if isAreaAdmin(profile, governmentArea) or isCatastropheAdminByArea(profile, governmentArea) or ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS:
+        if isAreaAdmin(profile, area) or isCatastropheAdminByArea(profile, area) or (isSuperuser and ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS):
             governmentArea.canManageNgo = changeTo
             success = True
 
@@ -45,8 +48,8 @@ def changeGovernmentRight(request : HttpRequest, area :  Area, changeTo : type.B
         governmentArea.save()
     return success
 
-@staticmethod
-def changeNgoRight(request : HttpRequest, area :  Area, changeTo : type.BooleanType) -> type.BooleanType:
+
+def changeNgoRight(request : HttpRequest, area :  Area, changeTo : bool) -> bool:
     """
     Processes the new rights for an ngo of the request & area into the 'changeTo' type
     This method only changes one permisson at time
@@ -63,18 +66,19 @@ def changeNgoRight(request : HttpRequest, area :  Area, changeTo : type.BooleanT
     if not form.is_valid():
         return False
     ngoArea = form.cleaned_data.get('ngoArea')
+    area = ngoArea.area
 
     if request.POST.get('isFullAdmin') and not success:
-        if isAreaAdmin(profile, ngoArea) or isCatastropheAdminByArea(profile, ngoArea) or ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS:
+        if isAreaAdmin(profile, area) or isCatastropheAdminByArea(profile, area) or ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS:
             ngoArea.isFullAdmin = changeTo
             success = True
     if request.POST.get('canDeleteElements') and not success:
-        if isAreaAdmin(profile, governmentArea) or isCatastropheAdminByArea(profile, ngoArea) or __canChangeNgoDeleteElements(profile, ngoArea) or ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS:
+        if isAreaAdmin(profile, area) or isCatastropheAdminByArea(profile, area) or __canChangeNgoDeleteElements(profile, ngoArea) or ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS:
             ngoArea.canDeleteElements = changeTo
             success = True
 
-@staticmethod
-def __canChangeNgoDeleteElements(profile : Profile, ngoArea : NgoArea) -> type.BooleanType:
+
+def __canChangeNgoDeleteElements(profile : Profile, ngoArea : NgoArea) -> bool:
     """
     Determinens wheter a user is allowed to change the canChangeNgoDeleteElements by 'manageNgo'
     :author: Jasper

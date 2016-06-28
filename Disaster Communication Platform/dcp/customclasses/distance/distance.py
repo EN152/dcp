@@ -20,3 +20,6 @@ class calculateDistanceClass(object):
 		#distance = R * c
         #
 		#return distance
+def getAreasForElement(location_x : float, location_y : float) -> bool:
+    """ DOCS PENDING """
+    pass
