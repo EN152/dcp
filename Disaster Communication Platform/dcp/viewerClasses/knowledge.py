@@ -2,9 +2,12 @@ from dcp.customForms.goodsFroms import *
 from dcp.viewerClasses.timeline import TimelineView
 from dcp.viewerClasses.authentication import getPageAuthenticated
 from dcp.views import View, LoginRequiredMixin
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.utils import timezone
+
 from dcp.models.polls import Choice, Question
-from django.views import generic
-from django.http import HttpResponse
 
 class Wissen(LoginRequiredMixin,View):
     template = 'dcp/content/wissen/wissen.html'
@@ -54,9 +57,12 @@ class PostQuestionsView(TimelineView):
             return self.get(request, form)
         return super().post(request)
 
-class PollsView(generic.ListView):
-    template= 'dcp/content/wissen/polls.html'
-    def get(self,request):
-        latest_question_list = Question.objects.order_by('-pub_date')
-        output = ', '.join([q.question_text for q in latest_question_list])
-        return HttpResponse(output)
+    
+class PollsView(LoginRequiredMixin,View):
+    
+    def get(self, request):
+        latest_question_list = Question.objects.all()
+        form = PollForm
+        template = 'dcp/content/wissen/polls.html'
+        context = {'latest_question_list': latest_question_list, 'form' : form}
+        return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
