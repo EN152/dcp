@@ -7,7 +7,7 @@ class SearchMaterialView(TimelineView):
     def get(self, request, form=None):
         if form is None:
             form = SearchMaterialForm
-        return super().getCreateNew(request, 'glyphicon-search', 'btn-primary' , 'Suchen: Materielles' , form, 'Search_Material', None)
+        return super().getCreateNew(request, 'glyphicon-search', 'btn-primary' , 'Suchen: Materielles' , form, 'Search_Material')
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
@@ -22,7 +22,7 @@ class SearchImmaterialView(TimelineView):
     def get(self, request, form=None):
         if form is None:
             form = SearchImmaterialForm
-        return super().getCreateNew(request, 'glyphicon-search', 'btn-primary', 'Suchen: Immaterielles', form, 'Search_Immaterial', None)
+        return super().getCreateNew(request, 'glyphicon-search', 'btn-primary', 'Suchen: Immaterielles', form, 'Search_Immaterial')
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
@@ -37,7 +37,7 @@ class OfferMaterialView(TimelineView):
     def get(self, request, form=None):
         if form is None:
             form = OfferMaterialForm
-        return super().getCreateNew(request, 'glyphicon-transfer', 'btn-danger', 'Bieten: Materielles', form, 'Offer_Material', None)
+        return super().getCreateNew(request, 'glyphicon-transfer', 'btn-danger', 'Bieten: Materielles', form, 'Offer_Material')
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
@@ -53,7 +53,7 @@ class OfferImmaterialView(TimelineView):
     def get(self, request, form=None):
         if form is None:
             form = OfferImmaterialForm
-        return super().getCreateNew(request, 'glyphicon-transfer', 'btn-danger', 'Bieten: Immaterielles', form, 'Offer_Immaterial', None)
+        return super().getCreateNew(request, 'glyphicon-transfer', 'btn-danger', 'Bieten: Immaterielles', form, 'Offer_Immaterial')
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
