@@ -2,6 +2,7 @@ from .imports import *
 from .catastrophe import *
 from .profile import *
 from .categorysGoods import *
+
 import dcp.dcpSettings
 
 class Bump_Relation(models.Model):
@@ -71,6 +72,12 @@ class Goods(models.Model):
             return Offer_Material.objects.get(id=id)
         if type == 'Offer_Immaterial':
             return Offer_Immaterial.objects.get(id=id)
+        if type == 'Post_News':
+            return Post_News.objects.get(id=id)
+        if type == 'Post_Danger':
+            return Post_Danger.objects.get(id=id)
+        if type == 'Post_Question':
+            return Post_Question.objects.get(id=id)
         return None
 
     def stringToGoodClass(type):
@@ -82,6 +89,12 @@ class Goods(models.Model):
             return Offer_Material
         if type == 'Offer_Immaterial':
             return Offer_Immaterial
+        if type == 'Post_News':
+            return Post_News
+        if type == 'Post_Danger':
+            return Post_Danger
+        if type == 'Post_Question':
+            return Post_Question
         return None
 
     def getAllGoods():
@@ -95,6 +108,24 @@ class Goods(models.Model):
         for oneGood in Search_Immaterial.objects.all():
             listOfGoods.append(oneGood)
         return listOfGoods
+
+    #def getKnowledge(type, id):
+        
+     #   return None
+
+    #def stringToKnowledgeClass(type):
+        
+        #return None
+
+    def getAllKnowledge():
+        listOfKnowledge = []
+        for oneKnowledge in Post_News.objects.all():
+            listOfKnowledge.append(oneKnowledge)
+        for oneKnowledge in Post_Dangers.objects.all():
+            listOfKnowledge.append(oneKnowledge)
+        for oneKnowledge in Post_Questions.objects.all():
+            listOfKnowledge.append(oneKnowledge)
+        return listOfKnowledge
 
     def isSearchedForByString(self, searchString):
         if searchString.upper() in self.description.upper() or searchString.upper() in self.title.upper():
@@ -149,3 +180,24 @@ class Offer_Immaterial(Immaterial_Goods):
 
     def getGoodType(self):
         return 'Offer_Immaterial'
+
+class Post_News(Goods):
+    timeline_badge_color = models.CharField(max_length=100, null=False, default='yellow')
+    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-bullhorn')
+
+    def getGoodType(self):
+        return 'Post_News'
+
+class Post_Dangers(Goods):
+    timeline_badge_color = models.CharField(max_length=100, null=False, default='yellow')
+    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-alert')
+
+    def getGoodType(self):
+        return 'Post_Danger'
+
+class Post_Questions(Goods):
+    timeline_badge_color = models.CharField(max_length=100, null=False, default='yellow')
+    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-question-sign')
+
+    def getGoodType(self):
+        return 'Post_Question'

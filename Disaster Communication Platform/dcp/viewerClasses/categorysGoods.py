@@ -2,7 +2,7 @@ from django.views.generic import View
 from django.views.static import loader
 from dcp.customForms.categorysGoodsForms import CategorysGoodsForms
 from django.http.response import HttpResponseForbidden, HttpResponseBadRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from dcp.models.categorysGoods import CategorysGoods
 
 
