@@ -47,7 +47,7 @@
                 {% endif %}
 		    	<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
             </form>
-	    </div>	
+	    </div>
     </div>
 </div>
 {% endif %}
@@ -55,7 +55,7 @@
 
 <!-- Aufzählung von allen NGOs-->
 {% if ngo_list %}
-    <div class="table-responsive">          
+    <div class="table-responsive">
       <table class="table">
         <thead>
           <tr>
@@ -67,11 +67,16 @@
         </thead>
         <tbody>
             {% for ngo in ngo_list %}
+
                 <tr>
                   <td>{{forloop.counter}}</td>
-                  <td><a href="{% url 'dcp:NgoView' ngo.id %}">{{ngo.name}}</a></td>
+                    {% if ngo.id %}
+
+                    {% else %}
+                        <td><a href="{% url 'dcp:NgoManagerView'  %}">{{ngo.name}}</a></td>
+                    {% endif %}
                   <td>{{ngo.name_short}}</td>
-                  <td>{{ngo.getMembers|length}}</td>
+
                 </tr>
             {% endfor %}
         </tbody>

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.utils.http import urlencode
+from profile import Profile
 '''
 Vincent: Resourcen Strings, für wiederverwendte Texte, Links usw.
 '''
@@ -11,7 +12,8 @@ Vincent: Funktionen, die immer wieder benutzt werden
 '''
 sessionStringCatastrophe = "CatastropheId"
 
-
+def filterByNgo(ngo):
+    return Profile.objects.filter(ngo=ngo)
 
 def get_object_or_none(model, **kwargs):
     """

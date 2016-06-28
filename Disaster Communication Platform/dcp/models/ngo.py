@@ -1,6 +1,9 @@
 from .imports import *
 from .catastrophe import *
 from .profile import *
+from dcp.customclasses.Helpers import *
+
+
 
 class Ngo(models.Model):
 	name = models.CharField(max_length=200, null=False)

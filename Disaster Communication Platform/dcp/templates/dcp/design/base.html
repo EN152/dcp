@@ -181,7 +181,9 @@
 									</li>
 	                                {% if user.profile.ngo != None %}
 	                                    <li>
-	                                        <a href="{% url 'dcp:NgoView' user.profile.ngo.id%}"><i class="fa fa-users" aria-hidden="true"></i> {{user.profile.ngo.name_short}}</a>
+                                            {% if user.profile.ngo.id %}
+	                                        <a href="{% url 'dcp:NgoView' pk=user.profile.ngo.id %}"><i class="fa fa-users" aria-hidden="true"></i> {{user.profile.ngo.name_short}}</a>
+                                                {% endif %}
 	                                    </li>
 	                                
 	                                {% elif user.profile.government != None %}

@@ -6,7 +6,7 @@ from .ngo import *
 class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschrieben wird:https://docs.djangoproject.com/en/1.8/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User)
     currentCatastrophe = models.ForeignKey(Catastrophe,related_name='currentCatastrophe',null=True,blank=True) # TODO: Kaskade?
-    ngo = models.ForeignKey(Ngo, on_delete=models.DO_NOTHING, null=True)
+    ngo = models.ForeignKey('Ngo', on_delete=models.DO_NOTHING, null=False)
     government = models.ForeignKey(Government, on_delete=models.DO_NOTHING, null=True)
     is_organization_admin = models.BooleanField(default=False, null=False)
     date_joined_organization = models.DateTimeField(default=timezone.now)
@@ -62,7 +62,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
         if governmentId is None: # Mache nichts
             return False
         try:
-            governmentId = int(GovernmentId)
+            governmentId = int(governmentId)
         except ValueError: #  ngoId kein Int
             return False
         government = get_object_or_none(Government,id=governmentId)

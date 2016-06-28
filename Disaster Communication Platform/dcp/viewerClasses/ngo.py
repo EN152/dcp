@@ -1,7 +1,7 @@
 from dcp.importUrls import *
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseForbidden
-
+from profile import  *
 class NgoView(View):
     """description of class"""
     def get(self, request, pk, usernameSearchString=None):
@@ -13,7 +13,7 @@ class NgoView(View):
         if usernameSearchString == '':
             usernameSearchString == None
 
-        if not(user.is_authenticated() and user.is_active and (user.profile.ngo == ngo or user.is_superuser)):
+        if not(user.is_authenticated() and user.is_active and user.is_superuser):
             return HttpResponseForbidden("Insufficent rights")
 
         usernameSearchListUser = []
@@ -45,7 +45,8 @@ class NgoView(View):
         context = {
             'ngo': ngo,
             'usernameSearchString': usernameSearchString,
-            'usernameSearchList': usernameSearchList
+            'usernameSearchList': usernameSearchList,
+            'ngo_members': ngo.getMembers()
         }
         return HttpResponse(template.render(context, request))
 

@@ -1,6 +1,8 @@
 from dcp.forms import CatastropheChoice
 from dcp.customclasses import  Helpers
 from dcp.models import Catastrophe,Profile
+from dcp.models.profile import Profile
+
 
 def catForm(request):
     """
