@@ -60,6 +60,8 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
                 p = Profile(user=user,currentCatastrophe=None)
                 p.save()
             return p
+    class Meta:
+        app_label = 'dcp'
 
 def create_profile(sender, **kwargs):
     """

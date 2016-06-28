@@ -7,6 +7,7 @@ from django.forms.models import ModelForm
 from django.forms.models import *
 from django.db.models.fields import CharField
 from django.core.validators import MaxLengthValidator, MinLengthValidator
+from dcp.models.categorysGoods import  *
 
 import dcp.dcpSettings
 
@@ -84,3 +85,10 @@ class EventPlanningForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = ['title', 'description', 'begin_date', 'numberOfUsers', 'numberOfCars', 'numberOfSpecials']
+
+class CategoryFilterForm(forms.Form):
+    choices = [(obj.pk,obj.name) for obj in CategorysGoods.objects.all()]
+    categories = forms.MultipleChoiceField(choices=choices,widget=forms.CheckboxSelectMultiple)
+    class Meta:
+        fields = ('pk','name')
+    #    model = CategorysGoods

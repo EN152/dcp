@@ -7,20 +7,23 @@ from django.template.backends.django import Template
 from django.forms import *
 from geopy.geocoders import Nominatim
 
+
 class TimelineView(View):
     def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ):
         templatePath = 'dcp/content/createNewGood.html'
         goods_list = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
         goods_list = filter(lambda x: type(x) is eval(good_typ), goods_list)
-            
+        categoryForm = CategoryFilterForm()
         template = loader.get_template(templatePath)
         context = {
             'create_new_glyphicon': create_new_glyphicon,
             'create_new_button' : create_new_button,
             'page_title': page_title,
             'create_new_form' : create_new_form,
-            'goods_list' : goods_list
+            'goods_list' : goods_list,
+            'categoryfilterform': categoryForm
         }
+
         return HttpResponse(template.render(context,request))
     
     def getTemplate(self,request):
