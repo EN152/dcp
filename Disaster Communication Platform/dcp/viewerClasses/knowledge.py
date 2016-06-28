@@ -13,7 +13,7 @@ class PostNewsView(TimelineView):
     def get(self, request, form=None):
         if form is None:
             form = PostNewsForm
-        return super().getCreateNew(request, 'glyphicon-info-sign', 'btn-yellow' , 'Wissen: Neuigkeiten' , form, 'Post_News')
+        return super().getCreateNew(request, 'glyphicon-info-sign', 'btn-warning' , 'Wissen: Neuigkeiten' , form, 'Post_News')
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
@@ -27,7 +27,7 @@ class PostDangersView(TimelineView):
     def get(self, request, form=None):
         if form is None:
             form = PostDangersForm
-        return super().getCreateNew(request, 'glyphicon-info-sign', 'btn-yellow' , 'Wissen: Gefahren' , form, 'Post_Dangers')
+        return super().getCreateNew(request, 'glyphicon-info-sign', 'btn-warning' , 'Wissen: Gefahren' , form, 'Post_Dangers')
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
@@ -41,7 +41,7 @@ class PostQuestionsView(TimelineView):
     def get(self, request, form=None):
         if form is None:
             form = PostQuestionsForm
-        return super().getCreateNew(request, 'glyphicon-info-sign', 'btn-yellow' , 'Wissen: Fragen' , form, 'Post_Questions')
+        return super().getCreateNew(request, 'glyphicon-info-sign', 'btn-warning' , 'Wissen: Fragen' , form, 'Post_Questions')
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
