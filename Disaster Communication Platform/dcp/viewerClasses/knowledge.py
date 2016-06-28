@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+from dcp.customForms.pollsForms import *
 
 from dcp.models.polls import Choice, Question
 
@@ -62,7 +63,8 @@ class PollsView(LoginRequiredMixin,View):
     
     def get(self, request):
         latest_question_list = Question.objects.all()
-        form = PollForm
+        form = QuestionForm()
         template = 'dcp/content/wissen/polls.html'
         context = {'latest_question_list': latest_question_list, 'form' : form}
+
         return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
