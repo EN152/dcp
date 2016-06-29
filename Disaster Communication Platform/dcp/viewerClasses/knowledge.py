@@ -7,7 +7,8 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from dcp.customForms.pollsForms import *
-
+from dcp.models.catastrophe import *
+from dcp.models.profile import *
 from dcp.models.polls import Choice, Question
 
 class Wissen(LoginRequiredMixin,View):
@@ -61,10 +62,41 @@ class PostQuestionsView(TimelineView):
     
 class PollsView(LoginRequiredMixin,View):
     
+    
     def get(self, request):
         latest_question_list = Question.objects.all()
         form = QuestionForm()
-        template = 'dcp/content/wissen/polls.html'
         context = {'latest_question_list': latest_question_list, 'form' : form}
-
+        template = 'dcp/content/wissen/polls.html'
         return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
+
+    def post(self, request):
+        template = 'dcp/content/wissen/polls.html'
+        if request.method == "POST":
+            form = QuestionForm(request.POST)
+            if form.is_valid():
+                question = Question(questipn_text=request.POST.get('question_text'), 
+                    description=request.POST.get('description'), 
+                    pub_date=timezone.now(),
+                    user=request.user,
+                    catastrophe=Catastrophe.objects.get(id))
+                question.save()
+        return HttpResponseRedirect("/wissen/abstimmungen/")
+    def vote(request, question_id):
+        question = get_object_or_404(Question, pk=question_id)
+        template = 'dcp/content/wissen/polls.html'
+        try:
+            selected_choice = question.choice_set.get(pk=request.POST['choice'])
+        except (KeyError, Choice.DoesNotExist):
+            # Redisplay the question voting form.
+            return render(request, template, {
+                'question': question,
+                'error_message': "You didn't select a choice.",
+                })
+        else:
+            selected_choice.votes += 1
+            selected_choice.save()
+            # Always return an HttpResponseRedirect after successfully dealing
+            # with POST data. This prevents data from being posted twice if a
+            #user hits the Back button.
+        return HttpResponseRedirect(reverse(template, args=(question.id,)))

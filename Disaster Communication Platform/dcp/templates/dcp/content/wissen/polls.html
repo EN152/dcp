@@ -25,6 +25,7 @@
 			<form method="POST" enctype="multipart/form-data">
 				<h2><span class="glyphicon glyphicon-stats"></span> Worüber soll abgestimmt werden? </h2>
 
+				{% load bootstrap3 %}
                 {% csrf_token %}	
 				{% bootstrap_form form %}
 
@@ -36,11 +37,30 @@
 {% endif %}
 <!-- Ende des Bereiches für die Neuerstellung -->
 {% if latest_question_list %}
-    <ul>
-    {% for question in latest_question_list %}
-        <li>{{ question.question_text }}</li>
+	{% for question in latest_question_list %}
+	<div class="col-xs-4">
+	<div class="panel panel-yellow" style="vertical-align:bottom;">
+		<div class="panel-heading">
+        	<b>{{ question.question_text }}</b>
+        </div>
+        <p>
+        	<ul>
+				{% for choice in question.choice_set.all %}
+    			<li>{{ choice.choice_text }}</li>
+				{% endfor %}
+			</ul>
+			<form method="vote">
+				{% csrf_token %}
+				{% for choice in question.choice_set.all %}
+   	 			<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+    				<label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+				{% endfor %}
+				<input type="submit" value="Vote" />
+			</form>
+		</p>
     {% endfor %}
     </ul>
+
 {% else %}
     <p>Zur Zeit gibt es nichts worüber abgestimmt werden müsste!</p>
 {% endif %}
