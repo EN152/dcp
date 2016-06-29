@@ -7,10 +7,17 @@
 <link rel="stylesheet" href="{% static 'css/bootstrap-multiselect.css"' %}" type="text/css"/>
 
 <script>
+    var mymap;
+    // var valueLocationXId;
+    //var valueLocationYId;
     $(document).ready(function() {
     $("#idFilterButton").click(function(){
         updateFilters();
     });
+        $("#idRadiusFilterInputSubmit").click(function(){
+            alert(mymap.valueLocationXId);
+            alert(mymap.valueLocationYId);
+        });
 });
 
     function updateFilters(){
@@ -35,11 +42,8 @@
 <div class="timeline">
     <div class="panel panel-default">
     	<div class="panel-heading"><i class="fa fa-th-list"></i><b> Überblick | {{ page_title }}</b></div>
-        <div class="panel-heading">
+        <div class="panel-heading" id="FilterPanel">
             <!-- Build your select: -->
-
-            {% csrf_token %}
-
             {% if categoryfilterform %}
                 <select id="categoryfilterform" multiple="multiple">
                 {% for value, text in categoryfilterform.choices %}
@@ -47,10 +51,38 @@
                 {% endfor %}
                 </select>
 
-                <button id="idFilterButton">Filter</button>
+                <button class="btn btn-success" id="idFilterButton">Filter</button>
             {% endif %}
+
+            <button class="btn btn-success" id="idFilterRadiusButton">Filter Radius</button>
         </div>
-    
+
+        <div id="RadiusFilterPanel">
+                {% load bootstrap3 %}
+
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+             <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.js"></script>
+
+                <label><input type="button" class="btn btn-success" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
+             <div style="height: 360px;" id="mapid"></div>
+
+            <form action="">
+  Radius
+  <input id="idRadiusFilterInput" type="number" name="quantity" min="1">
+  <input id="idRadiusFilterInputSubmit" value="Filtern nach Radius" type="submit">
+</form>
+{% load static %}
+<script src="{% static 'js/map/location-picker.js' %}"></script>
+            <script>
+
+                mymap = newMapScriptPicker("mapid",52,32);
+
+
+            </script>
+
+        </div>
     	<div class="panel-body">
     		<ul class="timeline">   
     			{% if goods_list %}
@@ -61,7 +93,7 @@
     			<li {% if forloop.counter|mod:2 == 0 %}class="timeline-inverted"{% endif %}>
     			    <div class="timeline-badge {{good.timeline_badge_color}} {{ good.getCategoryNameAsString }}"> <span class="glyphicon {{good.timeline_glyphicon}}"></span></div>
     
-    			    <div class="timeline-panel {{ good.getCategoryNameAsString }}">
+    			    <div class="timeline-panel {{ good.getCategoryNameAsString }} " id="{{ good.pk }}">
     
                         {% if good.image.url != None and user.profile.show_picture %}
     				        <img src="{{ good.image.url }}" width="150" style="float:right;" class="img-thumbnail">
