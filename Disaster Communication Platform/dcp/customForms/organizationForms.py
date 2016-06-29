@@ -1,6 +1,7 @@
 from django import forms
 from dcp.models.organizations import *
 from dcp.models.profile import Member
+from dcp.models.catastrophe import Catastrophe
 
 class GovernmentForm(forms.ModelForm):
     name = forms.CharField(required=True, label='Name', min_length=5, widget=forms.TextInput(attrs={'placeholder' : 'Deutschland'}))

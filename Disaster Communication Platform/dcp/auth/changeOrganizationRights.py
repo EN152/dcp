@@ -1,5 +1,5 @@
 from dcp.customForms.organizationForms import GovernmentAreaForm, NgoAreaForm
-from dcp.models.profile import Profile
+from dcp.models.profile import Profile, GovernmentMember
 from django.http.request import HttpRequest
 from dcp.models.organizations import Area, GovernmentArea, NgoArea
 from dcp.auth.areaAuth import canCreateSubArea, canManageNgo, isAreaAdmin, isCatastropheAdminByArea
@@ -76,7 +76,10 @@ def changeNgoRight(request : HttpRequest, area :  Area, changeTo : bool) -> bool
         if isAreaAdmin(profile, area) or isCatastropheAdminByArea(profile, area) or __canChangeNgoDeleteElements(profile, ngoArea) or ALLOW_SUPERUSER_TO_CHANGE_AREA_RIGHTS:
             ngoArea.canDeleteElements = changeTo
             success = True
-
+    
+    if success:
+        ngoArea.save()
+    return success
 
 def __canChangeNgoDeleteElements(profile : Profile, ngoArea : NgoArea) -> bool:
     """
@@ -87,5 +90,6 @@ def __canChangeNgoDeleteElements(profile : Profile, ngoArea : NgoArea) -> bool:
     :return: Boolean depending on success
     """
     area = ngoArea.area
-    for placeholder in Profile.objects.governmentmember_set.filter(isareaadmin=True).governments.governmentarea_set.filter(canmanagengo = True, area=area):
+    for placeholder in GovernmentMember.objects.filter(isAreaAdmin=True, profile=profile, government__governmentarea__canManageNgo=True, government__governmentarea__area=area):
         return True
+    return False

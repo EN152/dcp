@@ -72,6 +72,6 @@ class CatastropheOverview(views.SuperuserRequiredMixin,View):
         :param request:
         :return:
         """
-        catastropheList = Catastrophe.objects.all().prefetch_related('ngo_set', 'government_set')
+        catastropheList = Catastrophe.objects.all().prefetch_related('ngos', 'governments')
         return render(request,self.template,context={'catastrophes':catastropheList})
             

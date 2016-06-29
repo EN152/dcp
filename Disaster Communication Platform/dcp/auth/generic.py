@@ -1,5 +1,8 @@
 from dcp.models.profile import Profile
 from dcp.models.catastrophe import Catastrophe
+from dcp.auth.catastropheAuth import isCatastropheAdmin
+from dcp.customclasses.distance.distance import getAreasForElement
+from dcp.auth.areaAuth import canDeleteElementsByArea
 
 def isAllowedToDelete(catastrophe : Catastrophe, profile : Profile, location_x : float = None, location_y : float = None) -> bool:
     """
@@ -14,5 +17,12 @@ def isAllowedToDelete(catastrophe : Catastrophe, profile : Profile, location_x :
     """
     if profile.user.is_superuser:
         return True
-    # TODO further permissons checking
+    if isCatastropheAdmin(profile, catastrophe):
+        return True
+    if location_x and location_y:
+        areas = getAreasForElement(location_x, location_y)
+        for area in areas:
+            if canDeleteElementsByArea(profile, area):
+                return True
+    
     return False
