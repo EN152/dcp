@@ -38,31 +38,35 @@
 <!-- Ende des Bereiches für die Neuerstellung -->
 {% if latest_question_list %}
 	{% for question in latest_question_list %}
-	<div class="col-xs-4">
-	<div class="panel panel-yellow" style="vertical-align:bottom;">
-		<div class="panel-heading">
-        	<b>{{ question.question_text }}</b>
-        </div>
-        <p>
-        	<ul>
-				{% for choice in question.choice_set.all %}
-    			<li>{{ choice.choice_text }}</li>
-				{% endfor %}
-			</ul>
-			<form method="vote">
-				{% csrf_token %}
-				{% for choice in question.choice_set.all %}
-   	 			<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-    				<label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
-				{% endfor %}
-				<input type="submit" value="Vote" />
-			</form>
-		</p>
+	<div class="col-xl-4">
+		<div class="panel panel-yellow" style="vertical-align:bottom;">
+			<div class="panel-heading">
+        		<b>{{ question.question_text }}</b>
+        	</div>
+        	<p>
+        		<ul>
+        			<b>{{ question.description }}</b>
+        		</ul>
+        		<ul>
+					{% for choice in question.choice_set.all %}
+    				<li>{{ choice.choice_text }}</li>
+					{% endfor %}
+				</ul>
+				<form method="vote">
+					{% csrf_token %}
+					{% for choice in question.choice_set.all %}
+   	 				<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+    					<label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+					{% endfor %}
+					<input type="submit" value="Vote" />
+				</form>
+			</p>
+		</div>
+	</div>
     {% endfor %}
-    </ul>
 
 {% else %}
     <p>Zur Zeit gibt es nichts worüber abgestimmt werden müsste!</p>
 {% endif %}
 
-{% endblock content%}
+{% endblock content %}
