@@ -1,3 +1,4 @@
+from django.db import OperationalError
 from django.forms import ModelForm
 from dcp.models import *
 from django import forms
@@ -89,8 +90,17 @@ class EventPlanningForm(forms.ModelForm):
 
 
 class CategoryFilterForm(forms.Form):
-    choices = [(obj.pk, obj.name) for obj in CategorysGoods.objects.all()]
-    categories = forms.MultipleChoiceField(choices=choices, widget=forms.CheckboxSelectMultiple)
-    #class Meta:
-    #    model = CategorysGoods
-    #    fields = ('pk','name')
+    """
+    Vincent: Import der forms.py hat "side-effects2
+    http://stackoverflow.com/questions/34548768/django-no-such-table-exception, deswegen try pass
+    """
+    try:
+        choices = [(obj.pk, obj.name) for obj in Catastrophe.objects.all()]
+        #[(obj.pk, obj.name) for obj in CategorysGoods.objects.all()]
+        categories = forms.MultipleChoiceField(choices=choices, widget=forms.CheckboxSelectMultiple)
+        class Meta:
+            model = CategorysGoods
+            fields = ('pk','title')
+    except OperationalError:
+            pass  # happens when db doesn't exist yet, views.py should be
+            # importable without this side effect
