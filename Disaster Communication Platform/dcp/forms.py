@@ -95,8 +95,7 @@ class CategoryFilterForm(forms.Form):
     http://stackoverflow.com/questions/34548768/django-no-such-table-exception, deswegen try pass
     """
     try:
-        choices = [(obj.pk, obj.name) for obj in Catastrophe.objects.all()]
-        #[(obj.pk, obj.name) for obj in CategorysGoods.objects.all()]
+        choices =[(obj.pk, obj.name) for obj in CategorysGoods.objects.all()]
         categories = forms.MultipleChoiceField(choices=choices, widget=forms.CheckboxSelectMultiple)
         class Meta:
             model = CategorysGoods
