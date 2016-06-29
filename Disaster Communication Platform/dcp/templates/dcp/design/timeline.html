@@ -91,7 +91,7 @@
     	<div class="panel-body">
     		<ul class="timeline">   
     			{% if goods_list %}
-    			{% for good in goods_list %}
+    			{% for good, allowedToDelete in goods_list %}
     
                 <!-- Beginn eines Elements -->
                 {% load mathfilters %}
@@ -165,7 +165,7 @@
                                             </form>
                                         {% endif %}
     
-                                        {% if user.is_superuser or good.user == user %}
+                                        {% if allowedToDelete or good.user == user %}
                                             <form action="" role="form" id="delete_form" method="post" style="display: inline;">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="good_id" value="{{good.id}}" />

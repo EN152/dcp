@@ -4,15 +4,28 @@ from django.http import Http404
 import dcp.dcpSettings
 from django.template.context_processors import request
 from django.template.backends.django import Template
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import *
 from geopy.geocoders import Nominatim
+from dcp.auth.generic import isAllowedToDelete
 
 
-class TimelineView(View):
-    def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ):
+class TimelineView(LoginRequiredMixin, View):
+    def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ, elementList=None):
         templatePath = 'dcp/content/createNewGood.html'
-        goods_list = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
-        goods_list = filter(lambda x: type(x) is eval(good_typ), goods_list)
+        if elementList is None:
+            elementList = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
+            elementList = filter(lambda x: type(x) is eval(good_typ), elementList)
+
+        allowDeleteList = []
+        for element in elementList:
+            if isAllowedToDelete(element.catastrophe, request.user.profile, element.location_x, element.location_y):
+                allowDeleteList.append(True)
+            else:
+                allowDeleteList.append(False)
+
+        goods_list = zip(elementList, allowDeleteList)
+
         categoryForm = CategoryFilterForm()
         template = loader.get_template(templatePath)
         context = {
@@ -54,9 +67,12 @@ class TimelineView(View):
                 newGood.location_x = None
                 newGood.location_y = None
             else:
-                geolocator = Nominatim()
-                location = geolocator.reverse(str(newGood.location_x) + " , " + str(newGood.location_y))
-                newGood.locationString = location.address
+                try :
+                    geolocator = Nominatim()
+                    location = geolocator.reverse(str(newGood.location_x) + " , " + str(newGood.location_y))
+                    newGood.locationString = location.address
+                except :
+                    newGood.locationString = ""
             newGood.save()
             return HttpResponseRedirect('')
         raise Http404
@@ -96,7 +112,7 @@ class TimelineView(View):
 
             if postIdentifier == 'delete':
                 good = self.get_good_or_404(request)
-                if user.is_superuser or user == good.user:
+                if user.is_superuser or user == good.user or isAllowedToDelete(good.catastrophe, user.profile, good.location_x, good.location_y):
                     good.delete()
                     template = self.getTemplate(request)
                     return HttpResponseRedirect(template)
@@ -134,4 +150,4 @@ class TimelineView(View):
                 template = self.getTemplate(request)
                 return HttpResponseRedirect(template)
 
-        return HttpResponse(status=403)
+        return Http404
