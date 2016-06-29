@@ -89,6 +89,8 @@ class EventPlanningForm(forms.ModelForm):
 
 
 class CategoryFilterForm(forms.Form):
-    categories = forms.ModelMultipleChoiceField(queryset=CategorysGoods.objects.all(), required=False,widget=forms.CheckboxSelectMultiple())
-    class Meta:
-        fields = ('categories')
+    choices = [(obj.pk, obj.name) for obj in CategorysGoods.objects.all()]
+    categories = forms.MultipleChoiceField(choices=choices, widget=forms.CheckboxSelectMultiple)
+    #class Meta:
+    #    model = CategorysGoods
+    #    fields = ('pk','name')
