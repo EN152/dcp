@@ -13,14 +13,14 @@ class QuestionForm(forms.ModelForm):
     #image = forms.ImageField(required=False, label='Foto (optional)')
     #location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
    	#location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
-    choice = forms.ModelMultipleChoiceField(queryset=Question.objects.all())
+    #choice = forms.ModelMultipleChoiceField(queryset=Question.objects.all())
     class Meta:
         model = Question
-        fields = ["question_text","description", "choice"]
+        fields = ["question_text","description"]#, "choice"]
 
-class ChoiceForm(forms.ModelForm):
+'''class ChoiceForm(forms.ModelForm):
     choice_text = forms.CharField(widget=forms.Select(choices=CHOICES_TEXT))
     
     class Meta:
     	model = Choice
-    	fields = ["choice_text"]
+    	fields = ["choice_text"]'''
