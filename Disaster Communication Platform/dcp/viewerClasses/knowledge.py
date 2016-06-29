@@ -79,7 +79,8 @@ class PollsView(LoginRequiredMixin,View):
                     description=request.POST.get('description'), 
                     #pub_date=request.POST.get('pub_date'),
                     #image = request.POST.get('image'),
-                    user=request.user,)
+                    user=request.user,
+                    choice_text=request.POST.get('choice_text'))
                     #catastrophe=Catastrophe.objects.get(id))
                 question.save()
         return HttpResponseRedirect("/wissen/abstimmungen/")

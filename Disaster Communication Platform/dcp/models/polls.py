@@ -9,7 +9,7 @@ import dcp.dcpSettings
 class Choice(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=True)
 	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
-	choice_text = models.CharField(max_length=200)#, choices=CHOICES_TEXT)
+	#choice_text = models.CharField(max_length=200)#, choices=CHOICES_TEXT)
 	votes = models.IntegerField(default=0)
 
 	def __str__(self):
@@ -25,7 +25,7 @@ class Question(models.Model):
    	#location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     #location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())	
 	#choice = models.ManyToManyField(Choice)
-
+	choice_text = models.CharField(max_length=200, default=2)#, choices=CHOICES_TEXT)
 	def __str__(self):
 		return self.question_text
 
