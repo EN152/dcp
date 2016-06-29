@@ -72,16 +72,18 @@ class PollsView(LoginRequiredMixin,View):
 
     def post(self, request):
         template = 'dcp/content/wissen/polls.html'
-        if request.method == "POST":
-            form = QuestionForm(request.POST)
+        if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
+            form = QuestionForm(request.POST, request.FILES)
             if form.is_valid():
-                question = Question(questipn_text=request.POST.get('question_text'), 
+                question = Question(question_text=request.POST.get('question_text'), 
                     description=request.POST.get('description'), 
-                    pub_date=timezone.now(),
-                    user=request.user,
-                    catastrophe=Catastrophe.objects.get(id))
+                    #pub_date=request.POST.get('pub_date'),
+                    #image = request.POST.get('image'),
+                    user=request.user,)
+                    #catastrophe=Catastrophe.objects.get(id))
                 question.save()
         return HttpResponseRedirect("/wissen/abstimmungen/")
+
     def vote(request, question_id):
         question = get_object_or_404(Question, pk=question_id)
         template = 'dcp/content/wissen/polls.html'
@@ -90,13 +92,13 @@ class PollsView(LoginRequiredMixin,View):
         except (KeyError, Choice.DoesNotExist):
             # Redisplay the question voting form.
             return render(request, template, {
-                'question': question,
-                'error_message': "You didn't select a choice.",
-                })
+                    'question': question,
+                    'error_message': "You didn't select a choice.",
+                    })
         else:
             selected_choice.votes += 1
             selected_choice.save()
             # Always return an HttpResponseRedirect after successfully dealing
             # with POST data. This prevents data from being posted twice if a
             #user hits the Back button.
-        return HttpResponseRedirect(reverse(template, args=(question.id,)))
+            return HttpResponseRedirect(reverse(template, args=(question.id,)))

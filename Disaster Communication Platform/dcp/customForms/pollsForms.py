@@ -7,12 +7,20 @@ from dcp.models.polls import *
 import dcp.dcpSettings
 
 class QuestionForm(forms.ModelForm):
-    title = forms.CharField(required=True,label='Frage',widget=forms.TextInput(attrs={'placeholder': 'Soll Menschenfleischverzehr für die Dauer der Katastrophe erlaubt werden?'}))
-    catastrophe = forms.ModelChoiceField(required=True, queryset=Catastrophe.objects.all(), label='Katastrophe', empty_label=None)
+    question_text = forms.CharField(required=True,label='Frage',widget=forms.TextInput(attrs={'placeholder': 'Soll Menschenfleischverzehr für die Dauer der Katastrophe erlaubt werden?'}))
+    #catastrophe = forms.ModelChoiceField(required=True, queryset=Catastrophe.objects.all(), label='Katastrophe', empty_label=None)
     description = forms.CharField(required=False, label='Beschreibung (optional)', widget=forms.Textarea(attrs={'placeholder': 'Nähere Begebenheiten?', 'rows': '5'}))
-    image = forms.ImageField(required=False, label='Foto (optional)')
-    location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
-    location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
+    #image = forms.ImageField(required=False, label='Foto (optional)')
+    #location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
+   	#location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
+    choice = forms.ModelMultipleChoiceField(queryset=Question.objects.all())
     class Meta:
         model = Question
-        fields = ["title", "catastrophe", "description", "image", "location_x", "location_y"]
+        fields = ["question_text","description", "choice"]
+
+class ChoiceForm(forms.ModelForm):
+    choice_text = forms.CharField(widget=forms.Select(choices=CHOICES_TEXT))
+    
+    class Meta:
+    	model = Choice
+    	fields = ["choice_text"]
