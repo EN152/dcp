@@ -6,7 +6,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from dcp.customForms.organizationForms import MembershipForm
 
 class OrganizationView(LoginRequiredMixin, View):
-
     def getIniviteList(self, usernameSearchString, organization):
         usernameSearchListUser = []
         usernameSearchListInvited = []
@@ -50,10 +49,12 @@ class OrganizationView(LoginRequiredMixin, View):
             return HttpResponseForbidden("Insufficent rights")
 
         if post_identifier =='endMembership':
-            member = get_object_or_404(User.objects.select_related('profile'), id = request.POST.get('member_id'))
-            member.profile.resetOrganization()
-            if member == user:
-                return HttpResponseRedirect('/')
+            form = MembershipForm(request.POST, membershipQuery = membershipModel.objects.all())
+            if form.is_valid():
+                member = get_object_or_404(membershipModel, id=request.POST.get('membership'))
+                member.delete()
+            else: 
+                membership.delete()
             return True
    
         # Only Admin POST from this point

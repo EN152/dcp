@@ -6,11 +6,12 @@ from dcp.models.organizations import Government
 from dcp.customForms.organizationForms import GovernmentForm, MembershipForm
 from django.http.response import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, Http404
 from dcp.models.profile import GovernmentInvite, GovernmentMember
+from django.core.urlresolvers import reverse
 
 class GovernmentView(OrganizationView):
     def get(self, request, pk, usernameSearchString=None):
         # TODO Permission
-        templatePath= 'dcp/content/organization/government.html'
+        templatePath= 'dcp/content/organization/organization.html'
         template = loader.get_template(templatePath)
         user = request.user
         government = get_object_or_404(Government, id=pk) 
@@ -29,9 +30,12 @@ class GovernmentView(OrganizationView):
         for membership in memberlist:
             membershipForm = MembershipForm(membership=membership, membershipQuery=memberlist)
             membershipFormList.append(membershipForm)
-
+        
+        areas = government.areas.all()
+        
         context = {
             'organization': government,
+            'areas' : areas,
             'membershipFormList' : membershipFormList,
             'usernameSearchString': usernameSearchString,
             'usernameSearchList': usernameSearchList,

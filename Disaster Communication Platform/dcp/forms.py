@@ -11,7 +11,7 @@ from dcp.models.categorysGoods import  *
 
 import dcp.dcpSettings
 
-from django.contrib.admin.widgets import AdminDateWidget 
+from django.contrib.admin.widgets import AdminDateWidget
 
 class Offer_Form(ModelForm):
 	class Meta:
@@ -38,8 +38,9 @@ class Comment_Form(ModelForm):
         fields = ['text']
 
 class CatastropheForm(forms.ModelForm):
-    title = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Katastrophentext eingeben'}))
+    title = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Bitte Katastrophenname eingeben...'}))
     radius = forms.FloatField(min_value=0, max_value=10000, required=True)
+    maxOutsideRadius = forms.FloatField(min_value=0, max_value=10000, initial=0, required=False, label='Maximaler Radius für außerhalb des jetzigen für Sub-Gebiete')
     location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     class Meta:
@@ -53,7 +54,7 @@ class CatastropheModelChoiceField(forms.ModelChoiceField):
     Siehe hier:https://docs.djangoproject.com/en/1.9/ref/forms/fields/#django.forms.ModelChoiceField
     """
     def label_from_instance(self,obj: Catastrophe):
-        return obj.title + " in " + obj.locationString
+        return obj.title # + " in " + obj.locationString (zu lang...)
 
 class CatastropheChoice(forms.Form):
     catastrophe = CatastropheModelChoiceField(queryset=Catastrophe.objects.all().order_by('title'),empty_label='Katastrophe auswählen...',widget=forms.Select(attrs={'class':'form-control','onChange':'this.form.submit()'}),label='')
@@ -85,6 +86,7 @@ class EventPlanningForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = ['title', 'description', 'begin_date', 'numberOfUsers', 'numberOfCars', 'numberOfSpecials']
+
 
 class CategoryFilterForm(forms.Form):
     choices = [(obj.pk,obj.name) for obj in CategorysGoods.objects.all()]

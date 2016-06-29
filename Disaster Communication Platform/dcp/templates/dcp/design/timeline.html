@@ -92,7 +92,13 @@
 								    <div id="mapid_{{good.id}}{{good.location_x}}{{good.location_y}}" style="width:100%; height:150px;"></div>
 
 								    <script>
-                                        initialMap("mapid_{{good.id}}{{good.location_x}}{{good.location_y}}", "{{good.location_x}}","{{good.location_y}}","{{good.title}}")
+                                        initialMap("mapid_{{good.id}}{{good.location_x}}{{good.location_y}}", "{{good.location_x}}","{{good.location_y}}","{{good.title}}",
+                                        {% if good.radius %}
+                                            "{{good.radius}}"
+                                        {% else %}
+                                            "0"
+                                        {% endif %}
+                                        )
 								    </script>
                                 {% endif %}
     

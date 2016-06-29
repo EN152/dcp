@@ -18,14 +18,14 @@
 	<link href="{% static 'sb-admin/bower_components/morrisjs/morris.css' %}" rel="stylesheet">
 	<link href="{% static 'sb-admin/bower_components/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
 	<link href="{% static 'dataTables/jquery.dataTables.min.css' %}" rel="stylesheet">
-	
-	
+
+
 	<!-- Please leave them here because, if you move them to the end of the page the map site won't work -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script> <!-- Wird auf fast jeder Subseite verwendet -->
     <!-- Leaflet imports-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"/>
-	
+
 		<!-- SCRIPTS werden am Ende geladen: siehe unten! -->
 </head>
 
@@ -59,7 +59,7 @@
 				</div>
 
 
-				{{ catastrophe }} <!-- <- Was ist das ? --> 
+				{{ catastrophe }} <!-- <- Was ist das ? -->
 
 
 				<!-- /.dropdown -->
@@ -150,7 +150,7 @@
 									<li>
 										<a href="/wissen/archiv/"><span class="glyphicon glyphicon-duplicate"></span> Archiv</a>
 									</li>
-								</ul> 
+								</ul>
 							</div>
 						</li>
 
@@ -189,8 +189,8 @@
 								</li>
 							</ul>
 						</div>
-						</li>		
-						
+						</li>
+
 
 						<li>
 							<div style="padding-top: 7px; padding-bottom: 7px;">
@@ -199,7 +199,7 @@
 							</div>
 							<div id="profil" class="collapse in">
 								<ul class="nav nav-second-level">
-									<li> 
+									<li>
 										<a href="/profil/daten/"><span class="glyphicon glyphicon-th-list"></span> Persönliche Daten</a>
 									</li>
 									<li>
@@ -210,7 +210,7 @@
 	                                        <a href="{% url 'dcp:NgoView' ngo.id%}"><i class="fa fa-users" aria-hidden="true"></i> {{ngo.name_short}}</a>
 	                                    </li>
                                     {% endfor %}
-	                                
+
 	                                {% for government in user.profile.government.all %}
 	                                    <li>
 	                                        <a href="{% url 'dcp:GovernmentView' government.id %}"><i class="fa fa-globe" aria-hidden="true"></i> {{government.name_short}}</a>
@@ -236,6 +236,9 @@
 									</li>
 									<li>
 										<a href="{% url 'dcp:NgoManagerView' %}"><i class="fa fa-users" aria-hidden="true"></i> NGO</a>
+									</li>
+                                    <li>
+										<a href="{% url 'dcp:AreaAdministratorView' %}"><i class="fa fa-life-ring " aria-hidden="true"></i> Gebiete</a>
 									</li>
 									<li>
 										<a href="{% url 'dcp:GovernmentManagerView' %}"><i class="fa fa-globe" aria-hidden="true"></i> Staat</a>
@@ -264,11 +267,11 @@
 						{% block content %}{% endblock content%}
 					</div>
 
-					<div class="row" id="footer">     
+					<div class="row" id="footer">
 					<hr>
-						<p class="text-center">&copy;  2016  &mdash;  Disaster Communication Platform  &mdash;  <a href="https://github.com/EN152/dcp/">Documentation</a></p>     
+						<p class="text-center">&copy;  2016  &mdash;  Disaster Communication Platform  &mdash;  <a href="https://github.com/EN152/dcp/">Dokumentation</a></p>
 					<hr>
-					</div> 
+					</div>
 			</div>
 				<!--script>
 					$(document).ready(function(){
