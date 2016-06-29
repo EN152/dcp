@@ -65,24 +65,30 @@ class PollsView(LoginRequiredMixin,View):
     
     def get(self, request):
         latest_question_list = Question.objects.all()
-        form = QuestionForm()
-        context = {'latest_question_list': latest_question_list, 'form' : form}
+        choicelist = Choice.objects.all()
+        questionform = QuestionForm()
+        choiceform = ChoiceForm()
+        context = {'latest_question_list': latest_question_list, 'choicelist': choicelist, 'questionform' : questionform, 'choiceform' : choiceform}
         template = 'dcp/content/wissen/polls.html'
         return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
 
     def post(self, request):
         template = 'dcp/content/wissen/polls.html'
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
-            form = QuestionForm(request.POST, request.FILES)
-            if form.is_valid():
+            questionform = QuestionForm(request.POST, request.FILES)
+            choiceform = ChoiceForm(request.POST, request.FILES)
+            if questionform.is_valid() and choiceform.is_valid():
                 question = Question(question_text=request.POST.get('question_text'), 
                     description=request.POST.get('description'), 
                     #pub_date=request.POST.get('pub_date'),
                     #image = request.POST.get('image'),
-                    user=request.user,
-                    choice_text=request.POST.get('choice_text'))
+                    user=request.user)
                     #catastrophe=Catastrophe.objects.get(id))
                 question.save()
+                choice = Choice(user=request.user,
+                    question=question,
+                    choice_text=request.POST.get('choice_text'))
+                choice.save()
         return HttpResponseRedirect("/wissen/abstimmungen/")
 
     def vote(request, question_id):

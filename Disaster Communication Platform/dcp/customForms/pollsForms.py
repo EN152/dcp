@@ -14,14 +14,14 @@ class QuestionForm(forms.ModelForm):
     #location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
    	#location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
     #choice = forms.ModelMultipleChoiceField(queryset=Question.objects.all())
-    choice_text = forms.CharField(required=True,label='Antwort',widget=forms.TextInput(attrs={'placeholder': 'Ja!'}))
+
     class Meta:
         model = Question
-        fields = ["question_text","description", "choice_text"]
+        fields = ["question_text","description"]
 
-'''class ChoiceForm(forms.ModelForm):
-    choice_text = forms.CharField(widget=forms.Select(choices=CHOICES_TEXT))
+class ChoiceForm(forms.ModelForm):
+    choice_text = forms.CharField(required=True, label='Auswahl', widget=forms.TextInput(attrs={'placeholder': 'Antwortoption'}))
     
     class Meta:
     	model = Choice
-    	fields = ["choice_text"]'''
+    	fields = ["choice_text"]

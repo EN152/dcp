@@ -27,7 +27,8 @@
 
 				{% load bootstrap3 %}
                 {% csrf_token %}	
-				{% bootstrap_form form %}
+				{% bootstrap_form questionform %}
+				{% bootstrap_form choiceform %}
 
                 <button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
           </form>
@@ -47,16 +48,14 @@
         		<ul>
         			<b>{{ question.description }}</b>
         		</ul>
-        		<ul>
-					{% for choice in question.choice_set.all %}
-    				<li>{{ choice.choice_text }}</li>
-					{% endfor %}
-				</ul>
 				<form method="vote">
 					{% csrf_token %}
-					{% for choice in question.choice_text %}
+					{% for choice in choicelist %}
+					{% if choice.question == question %}
    	 				<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-    					<label for="choice{{ forloop.counter }}">{{ question.choice_text }}</label><br />
+    					<label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+
+    				{% endif %}
 					{% endfor %}
 					<input type="submit" value="Vote" />
 				</form>
