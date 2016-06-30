@@ -2,9 +2,8 @@ from django.views.generic import View
 from django.views.static import loader
 from dcp.customForms.categorysGoodsForms import CategorysGoodsForms
 from django.http.response import HttpResponseForbidden, HttpResponseBadRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from dcp.models.categorysGoods import CategorysGoods
-
 
 class CategorysGoodsMangerView(View):
     """description of class"""
@@ -23,7 +22,7 @@ class CategorysGoodsMangerView(View):
             'category_list' : category_list
         }
         return HttpResponse(template.render(context, request))
-        
+
     def post(self, request):
         user = request.user
         if not(user.is_authenticated() and user.is_active and user.is_superuser):

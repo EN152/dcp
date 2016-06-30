@@ -1,6 +1,7 @@
 # imports
 from dcp.importUrls import *
 from django.core.urlresolvers import reverse_lazy, reverse
+from django.shortcuts import get_object_or_404, redirect
 from geopy.geocoders import Nominatim
 from django.views.generic import View
 from dcp.customForms.catastropheForms import CatastropheChoiceFrom, CatastropheForm
@@ -14,7 +15,7 @@ class DeleteCatastropheView(views.SuperuserRequiredMixin,DeleteView):
 
 class CreateCatastrophe(views.SuperuserRequiredMixin,View):
     template = 'dcp/content/adminstrator/createOrEditCatastrophe.html'
-    
+
     def get(self,request):
         # Hat jemand die Id eine Katastrophe übergeben?
         inputId = request.GET.get('catid')
@@ -75,7 +76,7 @@ class CatastropheOverview(views.SuperuserRequiredMixin,View):
         """
         catastropheList = Catastrophe.objects.all().prefetch_related('ngos', 'governments')
         return render(request,self.template,context={'catastrophes':catastropheList})
-    
+
     # TODO, delete button?
     def post(self, request):
         pass

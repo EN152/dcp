@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import View
 from django.views.generic import UpdateView
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DeleteView
