@@ -7,76 +7,13 @@ from django.template.backends.django import Template
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import *
 from geopy.geocoders import Nominatim
-from dcp.auth.generic import isAllowedToDelete
+from dcp.auth.generic import getListWithDelete
 
 
 class TimelineView(LoginRequiredMixin, View):
-    def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ, elementList=None):
-        templatePath = 'dcp/content/createNewGood.html'
-        if elementList is None:
-            elementList = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
-            elementList = filter(lambda x: type(x) is eval(good_typ), elementList)
-
-        allowDeleteList = []
-        for element in elementList:
-            if isAllowedToDelete(element.catastrophe, request.user.profile, element.location_x, element.location_y):
-                allowDeleteList.append(True)
-            else:
-                allowDeleteList.append(False)
-
-        goods_list = zip(elementList, allowDeleteList)
-
-        categoryForm = CategoryFilterForm()
-        template = loader.get_template(templatePath)
-        context = {
-            'create_new_glyphicon': create_new_glyphicon,
-            'create_new_button' : create_new_button,
-            'page_title': page_title,
-            'create_new_form' : create_new_form,
-            'goods_list' : goods_list,
-            'categoryfilterform': categoryForm
-        }
-
-        return HttpResponse(template.render(context,request))
-    
-    def getTemplate(self,request):
-        goodtype = request.POST.get('good_type')        
-        if(goodtype == 'Search_Material'):
-            goodTemplate = "/suchen/materielles/"
-        if(goodtype == 'Offer_Material'):
-            goodTemplate = "/bieten/materielles/"
-        if(goodtype == 'Search_Immaterial'):
-            goodTemplate = "/suchen/immaterielles/"
-        if(goodtype == 'Offer_Immaterial'):
-            goodTemplate = "/bieten/immaterielles/"      
-        else:
-            goodTemplate = ''
-        return goodTemplate
-
-    def get_good_or_404(self, request):
-        good = Goods.getGood(request.POST.get('good_type'), request.POST.get('good_id'))
-        if good is None:
-           raise Http404
-        return good
-
-    def createNewGood(self, request, form):
-        if form.is_valid():
-            newGood = form.save(commit=False)
-            newGood.user = request.user
-            if newGood.location_x == 0 and newGood.location_y == 0:
-                newGood.location_x = None
-                newGood.location_y = None
-            else:
-                try :
-                    geolocator = Nominatim()
-                    location = geolocator.reverse(str(newGood.location_x) + " , " + str(newGood.location_y))
-                    newGood.locationString = location.address
-                except :
-                    newGood.locationString = ""
-            newGood.save()
-            return HttpResponseRedirect('')
-        raise Http404
-
+    """ DOCS PENDING
+    :author: Jasper 
+    """
     def post(self, request):
         user = request.user
         if user.is_authenticated() and user.is_active:
@@ -149,5 +86,63 @@ class TimelineView(LoginRequiredMixin, View):
                 Report.objects.create(user=user,relation=relation)
                 template = self.getTemplate(request)
                 return HttpResponseRedirect(template)
-
         return Http404
+
+    def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ, elementList=None):
+        templatePath = 'dcp/content/createNewGood.html'
+        if elementList is None:
+            elementList = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
+            elementList = filter(lambda x: type(x) is eval(good_typ), elementList)
+
+        goods_list = getListWithDelete(elementList, request.user.profile)
+
+        categoryForm = CategoryFilterForm()
+        template = loader.get_template(templatePath)
+        context = {
+            'create_new_glyphicon': create_new_glyphicon,
+            'create_new_button' : create_new_button,
+            'page_title': page_title,
+            'create_new_form' : create_new_form,
+            'goods_list' : goods_list,
+            'categoryfilterform': categoryForm
+        }
+
+        return HttpResponse(template.render(context,request))
+
+    def createNewGood(self, request, form):
+        if form.is_valid():
+            newGood = form.save(commit=False)
+            newGood.user = request.user
+            if newGood.location_x == 0 and newGood.location_y == 0:
+                newGood.location_x = None
+                newGood.location_y = None
+            else:
+                try :
+                    geolocator = Nominatim()
+                    location = geolocator.reverse(str(newGood.location_x) + " , " + str(newGood.location_y))
+                    newGood.locationString = location.address
+                except :
+                    newGood.locationString = ""
+            newGood.save()
+            return HttpResponseRedirect('')
+        raise Http404
+
+    def get_good_or_404(self, request):
+        good = Goods.getGood(request.POST.get('good_type'), request.POST.get('good_id'))
+        if good is None:
+           raise Http404
+        return good
+    
+    def getTemplate(self,request):
+        goodtype = request.POST.get('good_type')        
+        if(goodtype == 'Search_Material'):
+            goodTemplate = "/suchen/materielles/"
+        if(goodtype == 'Offer_Material'):
+            goodTemplate = "/bieten/materielles/"
+        if(goodtype == 'Search_Immaterial'):
+            goodTemplate = "/suchen/immaterielles/"
+        if(goodtype == 'Offer_Immaterial'):
+            goodTemplate = "/bieten/immaterielles/"      
+        else:
+            goodTemplate = ''
+        return goodTemplate

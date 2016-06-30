@@ -5,12 +5,14 @@ from django.contrib.staticfiles.urls import static
 from django.conf import  settings
 
 urlpatterns = [
+    # Core
     url(r'^$', Index.as_view(),name='Index'),
+    url(r'^catastrophechange/$', CatastropheChangeView.as_view(),name='CatastropheChangeView'),
 
     # Spezialseiten
-    url(r'^anmelden/$', Login.as_view()),
-    url(r'^abmelden/$', Logout.as_view()),
-    url(r'^registrieren/$', Register.as_view()),
+    url(r'^anmelden/$', LoginView.as_view()),
+    url(r'^abmelden/$', LogoutView.as_view()),
+    url(r'^registrieren/$', RegisterView.as_view()),
 
     # Karten
     url(r'^orte/karten/$', Karten.as_view()),

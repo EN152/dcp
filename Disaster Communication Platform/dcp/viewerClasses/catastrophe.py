@@ -3,6 +3,7 @@ from dcp.importUrls import *
 from django.core.urlresolvers import reverse_lazy, reverse
 from geopy.geocoders import Nominatim
 from django.views.generic import View
+from dcp.customForms.catastropheForms import CatastropheChoiceFrom
 
 
 class DeleteCatastropheView(views.SuperuserRequiredMixin,DeleteView):
@@ -74,4 +75,31 @@ class CatastropheOverview(views.SuperuserRequiredMixin,View):
         """
         catastropheList = Catastrophe.objects.all().prefetch_related('ngos', 'governments')
         return render(request,self.template,context={'catastrophes':catastropheList})
-            
+    
+    # TODO, delete button?
+    def post(self, request):
+        pass
+
+class CatastropheChangeView(LoginRequiredMixin, View):
+    """
+    :author: Jasper
+    Changes the current catastrophe of the user
+    """
+    def post(self, request):
+        form = CatastropheChoiceFrom(request.POST)
+        if form.is_valid():
+            profile = get_object_or_404(Profile, id=request.user.profile.id)
+            profile.currentCatastrophe = cat = form.cleaned_data.get('catastrophe')
+            profile.save()
+        return HttpResponse(status=205)
+
+# NOT IN USE; WILL BE IMPLEMENTED
+class CatastropheEditView(LoginRequiredMixin, View):
+    """
+    :author: Jasper
+    Gibt eine Übersicht um eine Katastrophe zu editieren
+    """
+    def get(self, request, pk):
+        # TODO permissons
+        templatePath = 'dcp/content/catastrophe/catastropheEdit.html'
+        # template = loader.get_template(templatePath)

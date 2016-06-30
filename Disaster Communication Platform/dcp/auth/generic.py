@@ -23,6 +23,21 @@ def isAllowedToDelete(catastrophe : Catastrophe, profile : Profile, location_x :
         areas = getAreasForElement(location_x, location_y)
         for area in areas:
             if canDeleteElementsByArea(profile, area):
-                return True
-    
+                return True  
     return False
+
+def getListWithDelete(elementList : [], profile : Profile) -> zip([],[bool]):
+    """
+    Method to create a tupel list with a second boolean value wheter the profile is allowed to delete the object
+    :author: Jasper
+    :param elementList: A list of goods; This implies a location_x value, location_y value
+    :param profile: The profile for the right evaluation
+    :return: A list with tupel
+    """
+    allowDeleteList = []
+    for element in elementList:
+        if isAllowedToDelete(element.catastrophe, profile, element.location_x, element.location_y):
+            allowDeleteList.append(True)
+        else:
+            allowDeleteList.append(False)
+    return zip(elementList, allowDeleteList)
