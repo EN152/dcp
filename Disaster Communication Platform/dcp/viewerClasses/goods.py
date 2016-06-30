@@ -2,12 +2,18 @@ from dcp.customForms.goodsFroms import *
 from dcp.viewerClasses.timeline import TimelineView
 from dcp.viewerClasses.authentication import getPageAuthenticated
 from dcp.views import View, LoginRequiredMixin
+from dcp.auth.generic import isAllowedToDelete
 
 class SearchMaterialView(TimelineView):
-    def get(self, request, form=None):
+    def get(self, request, form=None, elementList=None):
+        profile = request.user.profile
         if form is None:
             form = SearchMaterialForm
-        return super().getCreateNew(request, 'glyphicon-search', 'btn-primary' , 'Suchen: Materielles' , form, 'Search_Material')
+        
+        if elementList is None:
+            elementList = Search_Material.objects.all().order_by('created_date').reverse()
+
+        return super().getCreateNew(request, 'glyphicon-search', 'btn-primary' , 'Suchen: Materielles' , form, 'Search_Material', elementList)
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():

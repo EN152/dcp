@@ -2,7 +2,6 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from dcp import dcpSettings
 from dcp.customclasses.distance.distance import calculateDistanceClass
-from dcp.models.catastrophe import Catastrophe
 from django.utils import timezone
 import datetime
 
@@ -10,7 +9,6 @@ class Organization(models.Model):
     name = models.CharField(max_length=200, null=False)
     name_short = models.CharField(max_length=3, null=False)
     created_date = models.DateTimeField(default=timezone.now, null=False, editable=False)
-    catastrophes = models.ManyToManyField(Catastrophe) # Fully managing Catastrophe
 
     class Meta:
         abstract = True
@@ -22,7 +20,7 @@ class Organization(models.Model):
         return self.name
 
 class Area(models.Model):
-    catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False, blank=False)
+    catastrophe = models.ForeignKey("Catastrophe", on_delete=models.CASCADE, null=False, blank=False)
     created_date = models.DateTimeField(default=timezone.now, null=False, editable=False)
     parrent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
     maxOutsideRadius = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])

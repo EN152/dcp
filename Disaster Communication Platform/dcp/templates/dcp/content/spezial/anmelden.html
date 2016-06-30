@@ -68,9 +68,6 @@
 										<input type="checkbox" tabindex="3" class="" name="remember" id="remember">
 										<label for="remember"> angemeldet bleiben</label>
 									</div>
-                                    <div class="form-group">
-                                            {{ catChoiceForm }}
-		                            </div>
 
 									<div class="form-group">
 										<div class="row">
@@ -80,31 +77,28 @@
 										</div>
 									</div>
 								</form>
-
+                                {% if notValid %}
 								<div id="notValidAlert">
-									{% if notValid == false %}
-									{% else %}
 									<div class='alert alert-danger alert-dismissible' role='alert'>
 										<button type='button' class='close' data-dismiss='alert'>
 											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
 										</button>
 										Überprüfe bitte, ob du deinen Usernamen und Passwort richtig geschrieben hast!
 									</div>
-									{% endif %}
+									
 								</div>
+                                {% endif %}
 
-
-								<div id="notAvailableAlert">
-									{% if notAvailable == false %}
-									{% else %}
+                                {% if notAvailable %}
+								<div id="notAvailableAlert">	
 									<div class='alert alert-danger alert-dismissible' role='alert'>
 										<button type='button' class='close' data-dismiss='alert'>
 											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
 										</button>
 										Der Username ist leider schon vergeben. Probier's nochmal!
-									</div>
-									{% endif %}
+									</div>									
 								</div>
+                                {% endif %}
 
 
 								<form id="register-form" action="/registrieren/" method="POST" role="form" style="display: none;">

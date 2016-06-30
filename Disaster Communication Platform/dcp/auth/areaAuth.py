@@ -1,4 +1,4 @@
-from dcp.models.organizations import Government, Ngo, Area
+from dcp.models.organizations import Government, Ngo, Area, NgoArea, GovernmentArea
 from dcp.models.profile import Profile
 
 
@@ -91,12 +91,12 @@ def canDeleteElementsByArea(profile : Profile, area : Area) -> bool:
     :param area: The area for the authorization validation
     :return: Boolean whether a user can delete an Element in the Area
     """
-    for ngoArea in Profile.objects.filter(profile=profile).ngos.filter(areas=area).ngoarea_set:
+    for ngoArea in NgoArea.objects.filter(ngo__profile=profile, area=area).all():
         if ngoArea.isFullAdmin:
             return True
         if ngoArea.canDeleteElements:
             return True
-    for governmentArea in Profile.objects.filter(profile=profile).governments.filter(areas=area).governmenarea_set:
+    for governmentArea in GovernmentArea.objects.filter(government__profile=profile, area=area).all():
         if governmentArea.isFullAdmin:
             return True
         if governmentArea.canDeleteElements:

@@ -20,6 +20,19 @@ class calculateDistanceClass(object):
 		#distance = R * c
         #
 		#return distance
+
 def getAreasForElement(location_x : float, location_y : float) -> bool:
-    """ DOCS PENDING """
-    pass
+    """
+    Gets all areas based on the given cordinates
+    :author: Jasper
+    :param location_x: The location_x (lat) as float
+    :param location_y: The object location_y (lng) as float
+    :return: List of all areas found
+    """
+    from dcp.models.organizations import Area
+    list = []
+    for area in Area.objects.all():
+        distance = calculateDistanceClass.calculate_distance(location_x, location_y, area.location_x, area.location_y)
+        if distance <= area.radius:
+            list.append(area)
+    return list

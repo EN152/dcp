@@ -46,7 +46,8 @@
 			<!-- /.navbar-header -->
 			<ul class="nav navbar-top-links navbar-right">
 				<div class="navbar-form navbar-right">
-					<form role="form" method="POST" style ="float: right; padding: 5px;">{% csrf_token %}
+					<form action="{% url 'dcp:CatastropheChangeView' %}" role="form" method="POST" style ="float: right; padding: 5px;">
+                        {% csrf_token %}
 						{{ catChoiceForm }}
 					</form>
 
@@ -57,10 +58,6 @@
 						</button>
 					</form>
 				</div>
-
-
-				{{ catastrophe }} <!-- <- Was ist das ? -->
-
 
 				<!-- /.dropdown -->
 				<li class="dropdown">

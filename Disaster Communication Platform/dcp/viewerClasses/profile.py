@@ -47,7 +47,7 @@ class MyProfile(LoginRequiredMixin, View):
         raise Http404
         
 
-class EditProfile(View):
+class EditProfile(LoginRequiredMixin, View):
     template = 'dcp/content/spezial/profilBearbeiten.html'
     def get(self, request):
         user = User.objects.get(username=request.user.username)
@@ -64,14 +64,15 @@ class EditProfile(View):
                 if email != None: # Der Nutzer will die Email ändern
                     user.email = email
                     user.save()
+                
                 if password != None and password != scndpwd:
                     messages.add_message(request, messages.INFO,'Passwörter nicht identisch')
                     return render(request, self.template, {'form': form})
                 else:
                     user.set_password(password)
                     user.save()
-                    return HttpResponseRedirect("/profil/")
-        return HttpResponseRedirect("/profil/")
+                    return HttpResponseRedirect(reverse('dcp:ProfileView'))
+        return HttpResponseRedirect(reverse('dcp:ProfileView'))
 
 
 
