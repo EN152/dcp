@@ -3,7 +3,7 @@ from dcp.importUrls import *
 from django.core.urlresolvers import reverse_lazy, reverse
 from geopy.geocoders import Nominatim
 from django.views.generic import View
-from dcp.customForms.catastropheForms import CatastropheChoiceFrom
+from dcp.customForms.catastropheForms import CatastropheChoiceFrom, CatastropheForm
 
 
 class DeleteCatastropheView(views.SuperuserRequiredMixin,DeleteView):
