@@ -33,7 +33,7 @@ urlpatterns = [
     url(r'^chat/$', Chat.as_view(), name='Chat'),
     url(r'^nachrichten/$',ChatOverview.as_view(),name='ChatOverview'),
     #url(r'^profil/netzwerke/$',ChatOverview.as_view(),name='ChatOverview'),
-    
+
     # AdminPanel
     url(r'^administator/useroverview/$',UserAdminOverview.as_view(),name='UserAdminOverview'),
     url(r'^adminstrator/edituser/(?P<pk>\d+)/$', AdminEditUserProfileView.as_view(),name='AdminEditUserProfileView'),
@@ -52,7 +52,7 @@ urlpatterns = [
     url(r'^area/(?P<pk>\d+)/$', AreaView.as_view(),name='AreaView'),
 
 #    # Wissen
-#    url(r'^wissen/$', views.wissen),
+     url(r'^wissen/$', Wissen.as_view(), name='Wissen'),
 #    url(r'^wissen/neuigkeiten/$', views.wissen_neuigkeiten),
 #    url(r'^wissen/gefahren/$', views.wissen_gefahren),
 #    url(r'^wissen/fragen/$', views.wissen_fragen),
