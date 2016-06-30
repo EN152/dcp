@@ -5,13 +5,13 @@
 {% block content %}
 <!-- Script: Aufklappen des Bereiches für eine neue Erstellung-->
 <script>
-    $(document).ready(function(){
-        $("#newSearch").click(function(){
-            $("#suchFormular").toggle();
-            $("#suchFormularHeading").hide();
-            newMapCreateRender();
-        });
-    });
+	$(document).ready(function(){
+		$("#newSearch").click(function(){
+			$("#suchFormular").toggle();
+			$("#suchFormularHeading").hide();
+			newMapCreateRender();
+		});
+	});
 </script>
 
 <!-- Anfang des Bereich für die Neuerstellung -->
@@ -26,46 +26,63 @@
 				<h2><span class="glyphicon glyphicon-stats"></span> Worüber soll abgestimmt werden? </h2>
 
 				{% load bootstrap3 %}
-                {% csrf_token %}	
+				{% csrf_token %}	
 				{% bootstrap_form questionform %}
 				{% bootstrap_form choiceform %}
 
-                <button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
-          </form>
-        </div>	
-    </div>
+				<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
+			</form>
+		</div>	
+	</div>
 </div>
 {% endif %}
 <!-- Ende des Bereiches für die Neuerstellung -->
 {% if latest_question_list %}
-	{% for question in latest_question_list %}
-	<div class="col-xl-4">
-		<div class="panel panel-yellow" style="vertical-align:bottom;">
-			<div class="panel-heading">
-        		<b>{{ question.question_text }}</b>
-        	</div>
-        	<p>
-        		<ul>
-        			<b>{{ question.description }}</b>
-        		</ul>
-				<form method="vote">
-					{% csrf_token %}
-					{% for choice in choicelist %}
-					{% if choice.question == question %}
-   	 				<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-    					<label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
-
-    				{% endif %}
-					{% endfor %}
-					<input type="submit" value="Vote" />
-				</form>
-			</p>
+{% for question in latest_question_list %}
+<div class="col-xl-4">
+	<div class="panel panel-yellow" style="vertical-align:bottom;">
+		<div class="panel-heading">
+			<b>{{ question.question_text }}</b>
 		</div>
+		<p>
+			<ul>
+				<b>{{ question.description }}</b>
+			</ul>
+			<form method="vote">
+				{% csrf_token %}
+				{% for choice in choicelist %}
+				{% if choice.question == question %}
+				<input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+				<label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+
+				{% endif %}
+				{% endfor %}
+				<center>
+					<button type="submit" class="btn btn-success" name="post_identifier" value="Vote" style="margin-top: 10px; margin-bottom: 10px;">
+						<span class="glyphicon glyphicon-ok"></span>
+						Abstimmen
+					</button>
+					{% if user.is_active %}
+					{% if user.is_superuser or question.user == user %}
+					<form action="" role="form" id="delete_form" method="post" style="display: inline;">
+						{% csrf_token %}
+						<input type="hidden" name="question_id" value="{{question.id}}" />
+						<button type="submit" class="btn btn-danger" name="post_identifier" value="delete" style="margin-top: 10px; margin-bottom: 10px;">
+							<span class="glyphicon glyphicon-trash"></span> 
+							Löschen
+						</button>
+					</form>
+					{% endif %}
+					{% endif %}
+				</center>
+			</form>
+		</p>
 	</div>
-    {% endfor %}
+</div>
+{% endfor %}
 
 {% else %}
-    <p>Zur Zeit gibt es nichts worüber abgestimmt werden müsste!</p>
+<p>Zur Zeit gibt es nichts worüber abgestimmt werden müsste!</p>
 {% endif %}
 
 {% endblock content %}

@@ -12,9 +12,9 @@ class Question(models.Model):
 	description = models.TextField(max_length=500, null=True, blank=True)
 	#catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
 	#pub_date = models.DateTimeField('date published')
-    #image = forms.ImageField(required=False, label='Foto (optional)')
-   	#location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
-    #location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())	
+	#image = forms.ImageField(required=False, label='Foto (optional)')
+	#location_x = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())
+	#location_y = forms.FloatField(required=True, initial=0, widget=forms.HiddenInput())	
 
 	def __str__(self):
 		return self.question_text
