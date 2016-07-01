@@ -38,6 +38,20 @@
     </div>
     {% endif %}
     <!-- /.panel-body -->
+
+    <script>
+        var ws = new WebSocket("ws://127.0.0.1:8000/chat/{{ otherUser.id }}/?session_key={{ request.session.session_key }}");
+        ws.onmessage = function(e){
+            alert("hallo");
+            //alert(e.data);
+        };
+    function sendmessage(){
+
+        //debugger;
+        ws.send("text")
+        //return 1;
+    }
+    </script>
     <div class="panel-footer">
             <form class="form-horizontal" role="form" id="message" action="#" method="post" >
                                 <div class="form-group">
@@ -45,7 +59,7 @@
                                 {{ form.Text }}
                                     </div>
                                 <span class="input-group-btn">
-                                    <button class="btn btn-warning btn-sm" id="btn-chat" type="sumbit" >
+                                    <button class="btn btn-warning btn-sm" id="btn-chat" onclick="sendmessage()" >
                                         Senden
                                     </button>
                                 </span>
