@@ -14,6 +14,8 @@ class Chat(View):
         Chat-Überseite zu redirecten, falls der Chat bisher nicht existiert
 
         """
+        if request.method != 'GET' and request.method != 'POST':
+            return
         self.otherId = request.GET.get('userid')
         # Checke ob userid wirklich Integer ist
         try:

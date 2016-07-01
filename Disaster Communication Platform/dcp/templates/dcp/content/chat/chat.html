@@ -12,7 +12,7 @@
     <!-- /.panel-heading -->
     {% if message_list %}
     <div class="panel-body">
-        <ul class="chat">
+        <ul id="messaageListingUL" class="chat">
             {% for message in message_list %}
             {% if message.From_id == otherUser.id %}
 
@@ -42,28 +42,42 @@
     <script>
         var ws = new WebSocket("ws://127.0.0.1:8000/chat/{{ otherUser.id }}/?session_key={{ request.session.session_key }}");
         ws.onmessage = function(e){
-            alert("hallo");
+            var obj = JSON.parse(e.data);
+            showNewMessage(obj.message,obj.From,obj.To,"vincent","admin","13:30");
+            //alert(obj.message);
+            //alert(obj.From);
+            //alert(obj.To);
             //alert(e.data);
         };
-    function sendmessage(){
-
+    function sendmessage() {
+        text = $("#id_Text").val()
         //debugger;
-        ws.send("text")
+        ws.send(text);
         //return 1;
+    }
+    function showNewMessage(message,fromid,toid,fromname,toname,date){
+            if (fromid!={{ request.user.id }}){
+                text = "<li class=\"right clearfix\">";
+            }
+            else{
+                text = "<li class=\"left clearfix\">";
+            }
+            text += '<div class="chat-body clearfix"> <div class="header"> <strong class="primary-font">' + fromname +'</strong> <small class="pull-right text-muted"> <i class="fa fa-clock-o fa-fw"></i> 13:30 </small> </div> <p>'+message+'</p> </div> </li>';
+            $("#messaageListingUL").append(text);
     }
     </script>
     <div class="panel-footer">
-            <form class="form-horizontal" role="form" id="message" action="#" method="post" >
+            <!--<form class="form-horizontal" role="form" id="message" >-->
                                 <div class="form-group">
-                                {% csrf_token %}
-                                {{ form.Text }}
-                                    </div>
+                                    {% csrf_token %}
+                                    {{ form.Text }}
+                                </div>
                                 <span class="input-group-btn">
                                     <button class="btn btn-warning btn-sm" id="btn-chat" onclick="sendmessage()" >
                                         Senden
                                     </button>
                                 </span>
-            </form>
+           <!-- </form> -->
     </div>
     <!-- /.panel-footer -->
 </div>
