@@ -9,7 +9,6 @@
 		$("#newSearch").click(function(){
 			$("#suchFormular").toggle();
 			$("#suchFormularHeading").hide();
-			newMapCreateRender();
 		});
 	});
 </script>
@@ -28,7 +27,12 @@
 				{% load bootstrap3 %}
 				{% csrf_token %}	
 				{% bootstrap_form questionform %}
+
+				{% for choiceform in choiceformlist %}
 				{% bootstrap_form choiceform %}
+				{% endfor %}
+				<button type="button" class="btn btn-primary" name="add_identifier" value="add_choice"><span class="glyphicon glyphicon-plus" style="display: inline;" /> Hinzufügen </button>
+
 
 				<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
 			</form>
@@ -36,17 +40,18 @@
 	</div>
 </div>
 {% endif %}
+
 <!-- Ende des Bereiches für die Neuerstellung -->
 {% if latest_question_list %}
-{% for question in latest_question_list %}
 <div class="col-xl-4">
+	{% for question in latest_question_list %}
 	<div class="panel panel-yellow" style="vertical-align:bottom;">
 		<div class="panel-heading">
-			<b>{{ question.question_text }}</b>
+			<b>{{ question.title }}</b>
 		</div>
 		<p>
 			<ul>
-				<b>{{ question.description }}</b>
+				<b>{{ question.text }}</b>
 			</ul>
 			<form method="vote">
 				{% csrf_token %}
@@ -82,7 +87,7 @@
 {% endfor %}
 
 {% else %}
-<p>Zur Zeit gibt es nichts worüber abgestimmt werden müsste!</p>
+<p>Hinweis: Zur Zeit gibt es nichts, worüber abgestimmt werden müsste!</p>
 {% endif %}
 
 {% endblock content %}

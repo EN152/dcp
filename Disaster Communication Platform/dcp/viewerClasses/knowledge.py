@@ -67,28 +67,35 @@ class PollsView(LoginRequiredMixin,View):
 		latest_question_list = Question.objects.all()
 		choicelist = Choice.objects.all()
 		questionform = QuestionForm()
-		choiceform = ChoiceForm()
-		context = {'latest_question_list': latest_question_list, 'choicelist': choicelist, 'questionform' : questionform, 'choiceform' : choiceform}
+		choiceformlist = []
+		choiceformlist.append(ChoiceForm())
+		context = {'latest_question_list': latest_question_list, 'choicelist': choicelist, 'questionform' : questionform, 'choiceformlist' : choiceformlist}
 		template = 'dcp/content/wissen/polls.html'
 		return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
 
 	def post(self, request):
 		template = 'dcp/content/wissen/polls.html'
+		choiceformlist = []
+		choiceformlist.append(ChoiceForm(request.POST, request.FILES))
 		if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
 			questionform = QuestionForm(request.POST, request.FILES)
-			choiceform = ChoiceForm(request.POST, request.FILES)
-			if questionform.is_valid() and choiceform.is_valid():
-				question = Question(question_text=request.POST.get('question_text'), 
-					description=request.POST.get('description'), 
-					#pub_date=request.POST.get('pub_date'),
-					#image = request.POST.get('image'),
-					user=request.user)
-					#catastrophe=Catastrophe.objects.get(id))
-				question.save()
-				choice = Choice(user=request.user,
-					question=question,
-					choice_text=request.POST.get('choice_text'))
-				choice.save()
+			if questionform.is_valid():
+				for choiceform in choiceformlist:
+					if not choicefrom.is_valid():
+						return HttpResponseRedirect("/wissen/abstimmungen/")
+					question = Question(title=request.POST.get('title'), 
+						text=request.POST.get('text'), 
+						pub_date=timezone.now(),
+						user=request.user,
+						catastrophe=Catastrophe.objects.get(id=request.POST.get('catastrophe')))
+					question.save()
+					for choice in choiceformlist:
+						choice = Choice(user=request.user,
+							question=question,
+							choice_text=request.POST.get('choice_text'))
+						choice.save()
+		elif request.POST.get('add_identifier') == 'add_choice' and request.user.is_active and request.user.is_authenticated():
+			choiceformlist.append(ChoiceForm())
 		return HttpResponseRedirect("/wissen/abstimmungen/")
 
 	def vote(request, question_id):
@@ -109,3 +116,4 @@ class PollsView(LoginRequiredMixin,View):
 			# with POST data. This prevents data from being posted twice if a
 			#user hits the Back button.
 			return HttpResponseRedirect(reverse(template, args=(question.id,)))
+			
