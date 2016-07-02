@@ -76,13 +76,13 @@
                                 <td>{{ c.date_created }}</td>
                                 <td>{{ c.radius }}</td>
                                 <td>
-                                    {% if not c.ngo_set.all and not c.government_set.all %}
+                                    {% if not c.ngos.all and not c.governments.all %}
                                         Superuser       
                                     {% else %}
-                                        {% for ngo in c.ngo_set.all %}
+                                        {% for ngo in c.ngos.all %}
                                             <a href="{% url 'dcp:NgoView' ngo.id %}">{{ngo.name}}</a>
                                         {% endfor %}
-                                        {% for government in c.government_set.all %}
+                                        {% for government in c.governments.all %}
                                             <a href="{% url 'dcp:GovernmentView' government.id %}">{{government.name}}</a>
                                         {% endfor %}
                                     {% endif %}

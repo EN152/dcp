@@ -95,13 +95,13 @@ class CatastropheEditView(LoginRequiredMixin, View):
             catastropheForm = CatastropheEditForm(initial={'radius' : catastrophe.radius, 'maxOutsideRadius': catastrophe.maxOutsideRadius})
 
         ngos = Ngo.objects.exclude(catastrophes=catastrophe)
-        ngoChoices = []
+        ngoChoices = [('', 'Keine neue NGO')]
         for ngo in ngos:
             ngoChoices.append((ngo.id, ngo.name))
         catastropheForm['ngo'].field.choices = ngoChoices
 
         governments = Government.objects.exclude(catastrophes=catastrophe)
-        governmentChoices = []
+        governmentChoices = [('', 'Keine neue Regierung')]
         for government in governments:
             governmentChoices.append((government.id, government.name))
         catastropheForm['government'].field.choices = governmentChoices
