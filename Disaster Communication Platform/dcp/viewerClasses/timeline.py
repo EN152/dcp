@@ -8,6 +8,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import *
 from geopy.geocoders import Nominatim
 from dcp.auth.generic import getListWithDelete
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import render
+from dcp.models.goods import Goods
 
 
 class TimelineView(LoginRequiredMixin, View):
@@ -146,3 +149,25 @@ class TimelineView(LoginRequiredMixin, View):
         else:
             goodTemplate = ''
         return goodTemplate
+    
+class TimelineManagerView(TimelineView):
+    
+    def get(self, request):
+        templatePath = 'dcp/content/adminstrator/timelineManager.html'
+        template = loader.get_template(templatePath)
+        reportList = []
+        goodList = Goods.getAllGoods()
+        for good in goodList:
+            reportCount = good.getReports().count()
+            if(reportCount >= dcpSettings.REPORT_COUNT):
+                reportList.append(good)
+        
+        goods_list = getListWithDelete(reportList, request.user.profile)
+        
+        return HttpResponse(template.render({"goods_list" : goods_list},request))
+    
+    def post(self, request):
+        super().post(request)
+        return self.get(request)
+    
+    
