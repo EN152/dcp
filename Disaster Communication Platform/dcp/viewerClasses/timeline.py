@@ -91,6 +91,7 @@ class TimelineView(LoginRequiredMixin, View):
     def getCreateNew(self, request, create_new_glyphicon, create_new_button, page_title, create_new_form, good_typ, elementList=None):
         templatePath = 'dcp/content/createNewGood.html'
         if elementList is None:
+            # Legacy
             elementList = sorted(Goods.getAllGoods(), key=lambda g: g.created_date, reverse=True)
             elementList = filter(lambda x: type(x) is eval(good_typ), elementList)
 

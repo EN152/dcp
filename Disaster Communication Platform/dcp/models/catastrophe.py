@@ -29,6 +29,24 @@ class Catastrophe(models.Model):
         """
         from dcp.auth.catastropheAuth import isCatastropheAdmin
         return isCatastropheAdmin(user.profile, self)
+    def getGoods(self):
+        from dcp.models.goods import Goods
+        return Goods.getAllGoods(catastrophe=self)
+
+    def getAllOffers(self):
+        from dcp.models.goods import Goods
+        return Goods.getAllOffers(catastrophe=self)
+
+    def getSearches(self):
+        from dcp.models.goods import Goods
+        return Goods.getAllSearches(catastrophe=self)
+
+    # Haben keine Katastrophe..
+    def getMissingPersons():
+        pass
+    # Haben keine Katastrophe..
+    def getEvents():
+        pass
 
     class Meta:
             permissions = (

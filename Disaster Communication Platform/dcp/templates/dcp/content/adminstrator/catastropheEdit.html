@@ -36,8 +36,8 @@
               <td style="vertical-align: center;">
                 <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Ort: <b>{{catastrophe.locationString}}</b><br>
                 <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span> Radius: <b>{{catastrophe.radius}}</b> km<br>
-                <i class="fa fa-globe" aria-hidden="true"></i> Staat: {% for government in catastrophe.government_set.all %}<span class="label label-primary">{{government.name}}</span> {% endfor %}<br>
-                <i class="fa fa-users" aria-hidden="true"></i> NGOs: {% for ngo in catastrophe.ngo_set.all%}<span class="label label-success">{{ngo.name}}</span> {% endfor %}<br>
+                <i class="fa fa-globe" aria-hidden="true"></i> Staat: {% for government in catastrophe.governments.all %}<span class="label label-primary">{{government.name}}</span> {% endfor %}<br>
+                <i class="fa fa-users" aria-hidden="true"></i> NGOs: {% for ngo in catastrophe.ngos.all%}<span class="label label-success">{{ngo.name}}</span> {% endfor %}<br>
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span> vermisste Personen: <b>{{catastrophe.getMissingPersons|length}}</b><br>
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Gesuche: <b>{{catastrophe.getSearches|length}}</b><br>
                 <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span> Angebote: <b>{{catastrophe.getOffers|length}}</b><br>
@@ -59,7 +59,7 @@
 <div class="panel-body" id="catastropheFormular">
 	    <div class="col-sm-6">
 		    <form method="POST">
-		        <h2><span class="glyphicon glyphicon-fire"></span> Neuen Katastrophe anlegen </h2>
+		        <h2><span class="glyphicon glyphicon-fire"></span> Katastrophe bearbeiten </h2>
 
                 {% bootstrap_form catastropheForm %}
 				{% csrf_token %}

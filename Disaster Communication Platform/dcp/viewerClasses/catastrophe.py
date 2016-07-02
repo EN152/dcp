@@ -10,6 +10,7 @@ from dcp.auth.catastropheAuth import isCatastropheAdmin
 from dcp.customForms.organizationForms import AddNgoForm, AddGovernmentForm
 from dcp.models.catastrophe import Catastrophe
 from dcp.models.organizations import Ngo, Government
+from dcp.models.profile import Profile
 
 class CatastropheOverviewView(SuperuserRequiredMixin, View):
     template = 'dcp/content/adminstrator/catastropheOverview.html'
@@ -48,6 +49,13 @@ class CatastropheOverviewView(SuperuserRequiredMixin, View):
                 form.add_error('radius', 'Wähle eine gültige Position')
                 return self.get(request, create_new_form=form)
             catastrophe.save()
+
+            ngos = form.cleaned_data['ngos']
+            governments = form.cleaned_data['governments']
+            for ngo in ngos:
+                catastrophe.ngos.add(ngo)
+            for government in governments:
+                catastrophe.governments.add(government)      
 
         if post_identifier == 'delete':
             catastrophe = get_object_or_404(Catastrophe, id = request.POST.get('catastrophe_id'))
