@@ -17,6 +17,18 @@ class CatastropheForm(ModelForm):
     governments = ModelMultipleChoiceField(queryset=Government.objects.all(), required=False, label='Governments mit uneingeschränktem Zugriff')
     location_x = FloatField(required=True, initial=0, widget=HiddenInput())
     location_y = FloatField(required=True, initial=0, widget=HiddenInput())
+
     class Meta:
         model = Catastrophe
         fields = ["title", "radius", "maxOutsideRadius", "ngos", "governments","location_x", "location_y"]
+
+class CatastropheEditForm(Form):
+    from dcp.models.organizations import Ngo, Government
+
+    radius = FloatField(min_value=0, max_value=10000, required=True)
+    maxOutsideRadius = FloatField(min_value=0, max_value=10000, initial=0, required=False, label='Maximaler Radius für außerhalb des jetzigen für Sub-Gebiete')
+    ngo = ModelChoiceField(queryset=Ngo.objects.all(), required=False, empty_label='Keine neue NGO', label='NGO')
+    government = ModelChoiceField(queryset=Government.objects.all(), required=False, empty_label='Keine neue Regierung')
+
+    class Meta:
+        fields = ["radius", "maxOutsideRadius", "ngo", "government"]

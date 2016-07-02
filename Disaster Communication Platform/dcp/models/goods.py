@@ -98,17 +98,17 @@ class Goods(models.Model):
 
     def getAllOffers(**kwargs):
         listOfGoods = []
-        for oneGood in Offer_Immaterial.objects.all(**kwargs):
+        for oneGood in Offer_Immaterial.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
-        for oneGood in Offer_Material.objects.all(**kwargs):
+        for oneGood in Offer_Material.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
         return listOfGoods
 
     def getAllSearches(**kwargs):
         listOfGoods = []
-        for oneGood in Search_Immaterial.objects.all(**kwargs):
+        for oneGood in Search_Immaterial.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
-        for oneGood in Search_Material.objects.all(**kwargs):
+        for oneGood in Search_Material.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
         return listOfGoods
     

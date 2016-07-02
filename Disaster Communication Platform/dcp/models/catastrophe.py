@@ -20,13 +20,33 @@ class Catastrophe(models.Model):
     def __str__(self):
         return self.title
 
-    def isAbleToEdit(self,user : User):
+    def isAbleToEdit(self, user : User):
         """
         Gibt zurück, ob ein Benutzer eine Katastrophe bearbeiten darf oder nicht
+        :author: Jasper
         :param user: Der Benutzer, der erfragt
         :return: True falls er darf, False falls nciht
         """
-        return user.has_perm('dcp.EditCatastrophe')
+        from dcp.auth.catastropheAuth import isCatastropheAdmin
+        return isCatastropheAdmin(user.profile, self)
+    def getGoods(self):
+        from dcp.models.goods import Goods
+        return Goods.getAllGoods(catastrophe=self)
+
+    def getAllOffers(self):
+        from dcp.models.goods import Goods
+        return Goods.getAllOffers(catastrophe=self)
+
+    def getSearches(self):
+        from dcp.models.goods import Goods
+        return Goods.getAllSearches(catastrophe=self)
+
+    # Haben keine Katastrophe..
+    def getMissingPersons():
+        pass
+    # Haben keine Katastrophe..
+    def getEvents():
+        pass
 
     class Meta:
             permissions = (

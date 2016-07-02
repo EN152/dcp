@@ -26,7 +26,7 @@
 
                 {% load bootstrap3 %}
                 {% bootstrap_form create_new_form %}
-				  {% csrf_token %}
+				{% csrf_token %}
 
 		    	<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
             </form>

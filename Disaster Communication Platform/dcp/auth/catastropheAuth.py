@@ -11,6 +11,10 @@ def isCatastropheAdmin(profile : Profile, catastrophe : Catastrophe) -> bool:
     :return: Boolean whether a user is full Catastrophe Admin
     """
     # Verified by Jasper, other verification pending
+
+    if profile.user.is_superuser:
+        return True
+
     for placeholder in Catastrophe.objects.filter(id=catastrophe.id, ngos__profile=profile, ngos__ngomember__isOrganizationAdmin=True):
         return True
 
