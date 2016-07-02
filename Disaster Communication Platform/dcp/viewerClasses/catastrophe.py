@@ -98,9 +98,37 @@ class CatastropheChangeView(LoginRequiredMixin, View):
 class CatastropheEditView(LoginRequiredMixin, View):
     """
     :author: Jasper
-    Gibt eine Übersicht um eine Katastrophe zu editieren
+    On Overview of a catastrophe and a few editbuttons
     """
     def get(self, request, pk):
-        # TODO permissons
         templatePath = 'dcp/content/catastrophe/catastropheEdit.html'
-        # template = loader.get_template(templatePath)
+        template = loader.get_template(templatePath)
+        catastrophe = get_object_or_404(Catastrophe, id=pk)
+        if user.is_superuser or isAreaAdmin(user.profile, area) or canManageNgo(user.profile, area):
+            addNgoForm = AddNgoForm()
+            ngos = Ngo.objects.exclude(areas=area)
+            ngoChoices = []
+            for ngo in ngos:
+                ngoChoices.append((ngo.id, ngo.name))
+            addNgoForm['ngo'].field.choices = ngoChoices
+        else :
+            addNgoForm = None
+        
+
+
+    def post(self, request, pk):
+        catastrophe = get_object_or_404(Catastrophe, id=inputId)
+        if catastrophe is None:
+            return HttpResponseRedirect(self.nextUrl)
+        else:
+            if not catastrophe.isAbleToEdit(request.user):
+                return HttpResponseForbidden(render(request, 'dcp/content/spezial/403.html'))
+            locationString = form.cleaned_data["locationString"]
+            location_x = form.cleaned_data["location_x"]
+            location_y = form.cleaned_data["location_y"]
+            location = geolocator.reverse(str(location_x) + " , " + str(location_y))
+            catastrophe.title = title
+            catastrophe.locationString = location.address
+            catastrophe.created_date = timezone.now()
+            catastrophe.save()
+            return HttpResponse(reverse('dcp:CatastropheOverview'))
