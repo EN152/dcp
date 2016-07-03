@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %} Benachrichtigungen {% endblock %}
+{% block content %}
+    <script>
+        var ws = new WebSocket("ws://{{ request.get_host }}/notifications/?session_key={{ request.session.session_key }}");
+        ws.onmessage = function(e){
+            alert(e.data);
+        };
+    </script>
+
+{% endblock %}

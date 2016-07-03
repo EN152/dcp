@@ -56,9 +56,10 @@
             showNewMessage(obj.message,obj.From,obj.To,obj.Fromname,obj.Toname,obj.sendTime);
         };
         $("#id_Text").keypress(function(e) { // Abschicken wenn enter gedrückt
-        if(e.keyCode == 13) {
-            sendmessage();
-        }
+                    if (e.keyCode == 13) {
+                        sendmessage();
+                    }
+        });
     function sendmessage() {
         text = $("#id_Text").val();
         //debugger;

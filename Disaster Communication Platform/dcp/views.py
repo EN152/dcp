@@ -17,3 +17,4 @@ from dcp.viewerClasses.ngo import *
 from dcp.viewerClasses.categorysGoods import *
 from dcp.viewerClasses.area import *
 from dcp.viewerClasses.events import *
+from dcp.viewerClasses.notifications import *

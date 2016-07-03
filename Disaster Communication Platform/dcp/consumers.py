@@ -5,7 +5,9 @@ from django.utils import timezone
 import locale
 
 from dcp.customclasses.Helpers import get_object_or_none, get_user_display_name
-from .models import Message, Conversation, User
+from .models import Message, Conversation,User,Notification
+from .models.notifications import *
+
 from channels.auth import channel_session_user_from_http,http_session_user,channel_session_user
 import json
 # Connected to chat-messages
@@ -30,7 +32,9 @@ def msg_consumer(message):
     Group("chat-%s" % conv_id).send({
         "text": json.dumps(dict)
     })
-    print("sended")
+    #Channel("notification-messages").send({"title":"Neue Nachricht","text":"Neue Nachricht","userid":otheruser.id})
+    add_new_notification(title="Neue Nachricht",text="Neue Nachricht von "+otheruser.username,toUser=otheruser)
+   # print("sended")
 
 
 @channel_session
@@ -63,4 +67,22 @@ def ws_disconnect(message,userid):
 #@#channel_session_user_from_http
 #def ws_disconnect(message,userid):
    # conv=
- #
+
+def notify_msg_consumer(message):
+    user_id = message['userid']
+    user = get_object_or_none(User,id=user_id) #type:User
+    pubdate = timezone.now()
+    Notification.objects.create(title=message['title'],text=message['text'],toUser=user,noticed=False,pubdate=pubdate)
+    dict = {'title':message['title'],'text':message['text'],'pubdate':pubdate.strftime("%d. %B %Y %H:%M")}
+    Group("notifier-%s" % user_id).send({
+        "text": json.dumps(dict)
+    })
+
+@channel_session_user_from_http
+def notifier_ws_connect(message):
+    message.channel_session['user'] = message.user.id
+    Group("notifier-%s" % message.channel_session['user']).add(message.reply_channel)
+
+@channel_session
+def notifier_ws_disconnect(message):
+    Group('notifier-%s' % channel_session['user']).discard(message.reply_channel)
