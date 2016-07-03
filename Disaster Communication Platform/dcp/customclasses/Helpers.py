@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import User
 from django.utils.http import urlencode
 '''
 Vincent: Resourcen Strings, für wiederverwendte Texte, Links usw.
@@ -29,3 +30,9 @@ def get_object_or_none(model, **kwargs):
         return None
 def url_with_querystring(path, **kwargs): #TODO: Refactor nach Helpers.
     return path + '?' + urlencode(kwargs)
+
+def get_user_display_name(user: User):
+    if user.first_name is not None and user.last_name is not None:
+        return user.first_name + " " +  user.last_name
+    else:
+        return  user.username

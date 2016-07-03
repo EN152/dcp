@@ -1,8 +1,18 @@
-{% extends "dcp/design/base.html" %}
+{% load staticfiles %}
 
-{% block title %} Chat mit {{otherUser}} {% endblock %}
+	<link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+	<link href="{% static 'sb-admin/bower_components/metisMenu/dist/metisMenu.min.css' %}" rel="stylesheet">
+	<link href="{% static 'sb-admin/dist/css/timeline.css' %}" rel="stylesheet">
+	<link href="{% static 'sb-admin/dist/css/sb-admin-2.css' %}" rel="stylesheet">
+	<link href="{% static 'sb-admin/bower_components/morrisjs/morris.css' %}" rel="stylesheet">
+	<link href="{% static 'sb-admin/bower_components/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'dataTables/jquery.dataTables.min.css' %}" rel="stylesheet">
+    	<!-- Please leave them here because, if you move them to the end of the page the map site won't work -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script> <!-- Wird auf fast jeder Subseite verwendet -->
+    <!-- Leaflet imports-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"/>
 
-{% block content %}
 <!-- /.panel -->
 <div class="chat-panel panel panel-default">
     <div class="panel-heading">
@@ -40,19 +50,20 @@
     <!-- /.panel-body -->
 
     <script>
-        var ws = new WebSocket("ws://127.0.0.1:8000/chat/{{ otherUser.id }}/?session_key={{ request.session.session_key }}");
+        var ws = new WebSocket("ws://{{ request.get_host }}/chat/{{ otherUser.id }}/?session_key={{ request.session.session_key }}");
         ws.onmessage = function(e){
             var obj = JSON.parse(e.data);
-            showNewMessage(obj.message,obj.From,obj.To,"vincent","admin","13:30");
-            //alert(obj.message);
-            //alert(obj.From);
-            //alert(obj.To);
-            //alert(e.data);
+            showNewMessage(obj.message,obj.From,obj.To,obj.Fromname,obj.Toname,obj.sendTime);
         };
+        $("#id_Text").keypress(function(e) { // Abschicken wenn enter gedrückt
+        if(e.keyCode == 13) {
+            sendmessage();
+        }
     function sendmessage() {
-        text = $("#id_Text").val()
+        text = $("#id_Text").val();
         //debugger;
         ws.send(text);
+        $("#id_Text").val(""); // Resette eingabe
         //return 1;
     }
     function showNewMessage(message,fromid,toid,fromname,toname,date){
@@ -62,7 +73,7 @@
             else{
                 text = "<li class=\"left clearfix\">";
             }
-            text += '<div class="chat-body clearfix"> <div class="header"> <strong class="primary-font">' + fromname +'</strong> <small class="pull-right text-muted"> <i class="fa fa-clock-o fa-fw"></i> 13:30 </small> </div> <p>'+message+'</p> </div> </li>';
+            text += '<div class="chat-body clearfix"> <div class="header"> <strong class="primary-font">' + fromname +'</strong> <small class="pull-right text-muted"> <i class="fa fa-clock-o fa-fw"></i>' +date+ '</small> </div> <p>'+message+'</p> </div> </li>';
             $("#messaageListingUL").append(text);
     }
     </script>
@@ -83,4 +94,3 @@
 </div>
 <!-- /.panel .chat-panel -->
 </div>
-{% endblock content %}

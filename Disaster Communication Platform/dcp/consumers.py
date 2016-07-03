@@ -1,8 +1,10 @@
 # In consumers.py
 from channels import  Group,Channel
 from channels.sessions import channel_session
+from django.utils import timezone
+import locale
 
-from dcp.customclasses.Helpers import get_object_or_none
+from dcp.customclasses.Helpers import get_object_or_none, get_user_display_name
 from .models import Message, Conversation, User
 from channels.auth import channel_session_user_from_http,http_session_user,channel_session_user
 import json
@@ -10,7 +12,7 @@ import json
 def msg_consumer(message):
     print("msg_consuumer called")
     conv_id = message['conversation']
-    ownuser = get_object_or_none(User,id=message['user'])
+    ownuser = get_object_or_none(User,id=message['user']) #type:User
     currentconv = get_object_or_none(Conversation,id=conv_id) #type:Conversation
     if currentconv is None:
         print("None")
@@ -19,8 +21,12 @@ def msg_consumer(message):
         otheruser = currentconv.Receiver
     else:
         otheruser = currentconv.Starter
-    Message.objects.create(From=ownuser,To=otheruser,Text=message.content['message'],Conversation=currentconv)
-    dict = {"message":message.content['message'],"From":ownuser.id,"To":otheruser.id}
+    sendTime = timezone.now()
+    locale.setlocale(locale.LC_ALL,''   )
+    Message.objects.create(From=ownuser,To=otheruser,Text=message.content['message'],Conversation=currentconv,SendTime=sendTime)
+    fromusername = get_user_display_name(ownuser)
+    tousername = get_user_display_name(otheruser)
+    dict = {"message":message.content['message'],"From":ownuser.id,"To":otheruser.id,"Fromname":fromusername,"Toname":tousername,"sendTime":sendTime.strftime("%d. %B %Y %H:%M")}
     Group("chat-%s" % conv_id).send({
         "text": json.dumps(dict)
     })
