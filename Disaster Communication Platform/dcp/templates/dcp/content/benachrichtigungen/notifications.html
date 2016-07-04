@@ -1,0 +1,36 @@
+{% extends "dcp/design/base.html" %}
+{% block title %} Benachrichtigungen {% endblock %}
+{% block content %}
+    <script>
+        var ws_custom = new WebSocket("ws://{{ request.get_host }}/notifications/?session_key={{ request.session.session_key }}");
+        ws_custom.onmessage = function(e){
+            addToNotificationsList(e);
+        };
+        //#var ws_all = new WebSocket("ws://{{ request.get_host }}/notify_all//?session_key={{ request.session.session_key }}");
+        /*ws_all.onmessage = function(e){
+            addToNotificationsList(e);
+        };*/
+        function addToNotificationsList(obj){
+            notification = JSON.parse(obj.data);
+            divListing = $('#DivNotificationListing');
+            divListing.prepend('<a href="'+obj.url+'" class="list-group.item" ><b>'+notification.title+'</b><br>'+notification.text+'<span class="pull-right text-muted small"><em>'+notification.pubdate+'</em></span></a>');
+        }
+    </script>
+    <div class="col-md-6">
+        <div class="panel-body">
+            <div id="DivNotificationListing" class="list-group">
+
+                {% for notification in notifications_list %}
+                    <a href="{{ notification.url }}" class="list-group-item" onclick="">
+                    <b>{{notification.title}}</b><br>
+
+                    {{ notification.text }}
+                    <span class="pull-right text-muted small"><em>{{ notification.pubdate }}</em></span>
+                    </a>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

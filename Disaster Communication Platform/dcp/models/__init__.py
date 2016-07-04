@@ -11,3 +11,4 @@ from .missedPeople import *
 from .organizations import *
 from .categorysGoods import *
 from .event import *
+from .notifications import *

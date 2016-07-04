@@ -73,6 +73,9 @@ urlpatterns = [
     #Profil
     url(r'^profil/$', MyProfile.as_view(), name='ProfileView'),
     url(r'^profil/bearbeiten/$', EditProfile.as_view()),
+
+    #Benachrichtigungen
+    url(r'^notifications/$', NotificationView.as_view(), name='Notifications'),
 ]
 
 # media url patters

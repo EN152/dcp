@@ -14,6 +14,8 @@ class Chat(View):
         Chat-Überseite zu redirecten, falls der Chat bisher nicht existiert
 
         """
+        if request.method != 'GET' and request.method != 'POST':
+            return
         self.otherId = request.GET.get('userid')
         # Checke ob userid wirklich Integer ist
         try:
@@ -39,7 +41,7 @@ class Chat(View):
         :param request:
         :return: Gerendertes Template
         """
-        messages = Message.objects.filter(Conversation=self.conversation)
+        messages = Message.objects.filter(Conversation=self.conversation).order_by('-SendTime')
         form = self.form_class()
         return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template,params={'message_list':messages,'otherUser':self.otherUser,'currentUser':self.currentUser,'form':form})
     
@@ -83,9 +85,3 @@ class ChatOverview(View):
         for x in tmpList:
             mList.append(x[0])
         return render(request,self.template,context={'last_message_list':mList,'currentUser':request.user})
-
-
-
-
-
-
