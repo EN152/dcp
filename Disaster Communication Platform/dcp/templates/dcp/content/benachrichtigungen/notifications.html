@@ -13,7 +13,7 @@
         function addToNotificationsList(obj){
             notification = JSON.parse(obj.data);
             divListing = $('#DivNotificationListing');
-            divListing.append('<a href="'+obj.url+'" class="list-group.item" ><b>'+notification.title+'</b><br>'+notification.text+'<span class="pull-right text-muted small"><em>'+notification.pubdate+'</em></span></a>');
+            divListing.prepend('<a href="'+obj.url+'" class="list-group.item" ><b>'+notification.title+'</b><br>'+notification.text+'<span class="pull-right text-muted small"><em>'+notification.pubdate+'</em></span></a>');
         }
     </script>
     <div class="col-md-6">

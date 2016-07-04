@@ -100,7 +100,7 @@ def notifier_ws_connect(message):
     Group("notify-all").add(message.reply_channel)
 @channel_session
 def notifier_ws_disconnect(message):
-    Group('notifier-%s' % channel_session['user']).discard(message.reply_channel)
+    Group('notifier-%s' % message.channel_session['user']).discard(message.reply_channel)
     Group("notify-all").discard(message.reply_channel)
 #def public_notifier_ws_connect(message):
 #def public_notifier_ws_disconnect(message):

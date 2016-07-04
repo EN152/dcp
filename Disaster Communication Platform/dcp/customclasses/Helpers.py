@@ -32,6 +32,7 @@ def url_with_querystring(path, **kwargs): #TODO: Refactor nach Helpers.
     return path + '?' + urlencode(kwargs)
 
 def get_user_display_name(user: User):
+    return user.username
     if user.first_name is not None and user.last_name is not None:
         return user.first_name + " " +  user.last_name
     else:

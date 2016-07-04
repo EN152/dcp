@@ -51,12 +51,15 @@
 
     <script>
         var ws = new WebSocket("ws://{{ request.get_host }}/chat/{{ otherUser.id }}/?session_key={{ request.session.session_key }}");
+        $('document').ready(function(){
         textField = $("#id_Text");
-        textField.keydown(function(e) { // Abschicken wenn enter gedrückt
-                    alert("called");
+                textField.keydown(function(e) { // Abschicken wenn enter gedrückt
+                    //alert("called");
                     if (e.keyCode == 13) {
                         sendmessage();
                     }
+                });
+
         });
         ws.onmessage = function(e){
             var obj = JSON.parse(e.data);
@@ -79,7 +82,7 @@
                 text = "<li class=\"left clearfix\">";
             }
             text += '<div class="chat-body clearfix"> <div class="header"> <strong class="primary-font">' + fromname +'</strong> <small class="pull-right text-muted"> <i class="fa fa-clock-o fa-fw"></i>' +date+ '</small> </div> <p>'+message+'</p> </div> </li>';
-            $("#messaageListingUL").append(text);
+            $("#messaageListingUL").prepend(text);
     }
     </script>
     <div class="panel-footer">

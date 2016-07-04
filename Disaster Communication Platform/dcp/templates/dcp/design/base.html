@@ -21,7 +21,7 @@
 
 
 	<!-- Please leave them here because, if you move them to the end of the page the map site won't work -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script> <!-- Wird auf fast jeder Subseite verwendet -->
+	<script src="{% static 'js/jquery.min.js' %}"></script><!--https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>  Wird auf fast jeder Subseite verwendet -->
     <!-- Leaflet imports-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"/>
@@ -73,6 +73,7 @@
 						<li class="divider"></li>
 						<li><a href="/abmelden/"><i class="fa fa-sign-out fa-fw"></i> Abmelden</a>
 						</li>
+
 					</ul>
 				</li>
 
@@ -205,6 +206,9 @@
 									<li>
 										<a href="/nachrichten/"><span class="glyphicon glyphicon-envelope"></span> Nachrichten</a>
 									</li>
+                                    <li>
+                                        <a href="{% url 'dcp:Notifications' %}"><span class="glyphicon glyphicon-bullhorn"></span>Benachrichtigungen</a>
+                                    </li>
 	                                {% for ngo in user.profile.ngo.all  %}
 	                                    <li>
 	                                        <a href="{% url 'dcp:NgoView' ngo.id%}"><i class="fa fa-users" aria-hidden="true"></i> {{ngo.name_short}}</a>

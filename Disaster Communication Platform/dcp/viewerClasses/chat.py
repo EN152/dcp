@@ -41,7 +41,7 @@ class Chat(View):
         :param request:
         :return: Gerendertes Template
         """
-        messages = Message.objects.filter(Conversation=self.conversation)
+        messages = Message.objects.filter(Conversation=self.conversation).order_by('-SendTime')
         form = self.form_class()
         return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template,params={'message_list':messages,'otherUser':self.otherUser,'currentUser':self.currentUser,'form':form})
     
