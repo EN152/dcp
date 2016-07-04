@@ -5,7 +5,6 @@
 
 
 <!-- Include the plugin's CSS and JS: -->
-<!-- Funktoniert nicht
 <link rel="stylesheet" href="{% static 'css/bootstrap-multiselect.css"' %}" type="text/css"/>
 
 <script>
@@ -37,7 +36,6 @@
    }
 
 </script>
--->
 
 
 
@@ -45,14 +43,15 @@
 <div class="timeline">
     <div class="panel panel-default">
     	<div class="panel-heading"><i class="fa fa-th-list"></i><b> Überblick | {{ page_title }}</b></div>
-        <!--
         <div class="panel-heading" id="FilterPanel">
-            <!-- Build your select:
             {% if categoryfilterform %}
+                    {% for c in categoryfilterform.categories %}
+                    <p>{{ c }}</p>
+                    {% endfor %}
                 <select id="categoryfilterform" multiple="multiple">
-                {% for value, text in categoryfilterform.choices %}
-                    <option value="{{ value}}">{{  text }}</option>
-                {% endfor %}
+
+                    <option value="NJ">New Jersey</option>
+                    <option value="NY">New York</option>
                 </select>
 
                 <button class="btn btn-success" id="idFilterButton">Filter</button>
@@ -85,7 +84,6 @@
 
 
             </script>
-            -->
 
         </div>
     	<div class="panel-body">
