@@ -102,13 +102,15 @@ class TimelineView(LoginRequiredMixin, View):
 
         categoryForm = CategoryFilterForm()
         template = loader.get_template(templatePath)
+        categoryChoices = CategorysGoods.objects.all()
         context = {
             'create_new_glyphicon': create_new_glyphicon,
             'create_new_button' : create_new_button,
             'page_title': page_title,
             'create_new_form' : create_new_form,
             'goods_list' : goods_list,
-            'categoryfilterform': categoryForm
+            #'categoryfilterform': categoryForm,
+            'categoryChoices' : categoryChoices
         }
 
         return HttpResponse(template.render(context,request))
