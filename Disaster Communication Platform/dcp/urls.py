@@ -43,7 +43,7 @@ urlpatterns = [
     url(r'^administrator/ngomanager/$',NgoManagerView.as_view(),name='NgoManagerView'),
     url(r'^administrator/governmentmanager/$',GovernmentManagerView.as_view(),name='GovernmentManagerView'),
     url(r'^administrator/categorygoodmanager/$',CategorysGoodsMangerView.as_view(),name='CategoryGoodManagerView'),
-   # url(r'^administrator/timelinemanager/$',TimelineManagerView.as_view(),name='TimelineManagerView'),
+    url(r'^administrator/timelinemanager/$',TimelineManagerView.as_view(),name='TimelineManagerView'),
     url(r'^administrator/areaadministrator/$',AreaAdminView.as_view(),name='AreaAdministratorView'),
 
     # Organisationen
