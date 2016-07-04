@@ -51,20 +51,24 @@
 
     <script>
         var ws = new WebSocket("ws://{{ request.get_host }}/chat/{{ otherUser.id }}/?session_key={{ request.session.session_key }}");
-        ws.onmessage = function(e){
-            var obj = JSON.parse(e.data);
-            showNewMessage(obj.message,obj.From,obj.To,obj.Fromname,obj.Toname,obj.sendTime);
-        };
-        $("#id_Text").keypress(function(e) { // Abschicken wenn enter gedrückt
+        textField = $("#id_Text");
+        textField.keydown(function(e) { // Abschicken wenn enter gedrückt
+                    alert("called");
                     if (e.keyCode == 13) {
                         sendmessage();
                     }
         });
+        ws.onmessage = function(e){
+            var obj = JSON.parse(e.data);
+            showNewMessage(obj.message,obj.From,obj.To,obj.Fromname,obj.Toname,obj.sendTime);
+        };
+
     function sendmessage() {
-        text = $("#id_Text").val();
+        textField = $("#id_Text");
+        text = textField.val();
         //debugger;
         ws.send(text);
-        $("#id_Text").val(""); // Resette eingabe
+        textField.val(""); // Resette eingabe
         //return 1;
     }
     function showNewMessage(message,fromid,toid,fromname,toname,date){

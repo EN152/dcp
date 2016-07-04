@@ -1,7 +1,8 @@
 from dcp.importUrls import *
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import  Q
 from django.core.urlresolvers import reverse
-# models.notifications import *
+from dcp.models import *
 
 class NotificationView(LoginRequiredMixin,View):
     templatePath = 'dcp/content/benachrichtigungen/notifications.html'
@@ -14,7 +15,8 @@ class NotificationView(LoginRequiredMixin,View):
         :return: --
         '''
         current_user = request.user;
-        # Hole Notification für den user, die noch nicht als bemerkt gemarkt wurden
-        notifications = Notification.objects.filter(toUser=current_user,noticed=False).order_by('pubdate')
         template = loader.get_template(self.templatePath)
+        # Hole Notification für den user, die noch nicht als bemerkt gemarkt wurden
+        notifications = Notification.objects.filter(Q(toUser=current_user,noticed=False) | Q(toUser=None))#.exclude(id_in = UserHasNoticed.objects.filter(user=current_user).values_list('id',flat=True))
         return HttpResponse(template.render({'notifications_list':notifications},request))
+

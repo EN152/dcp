@@ -58,6 +58,7 @@ class TimelineView(View):
                 location = geolocator.reverse(str(newGood.location_x) + " , " + str(newGood.location_y))
                 newGood.locationString = location.address
             newGood.save()
+            add_new_notification("Neues Gesuch","Neues Gesuch",None,reverse_lazy(TimelineView))
             return HttpResponseRedirect('')
         raise Http404
 

@@ -69,12 +69,27 @@ def ws_disconnect(message,userid):
    # conv=
 
 def notify_msg_consumer(message):
-    user_id = message['userid']
-    user = get_object_or_none(User,id=user_id) #type:User
+    if message.get('userid') is None:
+        group = "notifiy-all"
+        user = None
+        noticed = None
+    else:
+        user_id = message['userid']
+        group = "notifier-%s" % user_id
+        user = get_object_or_none(User,id=user_id) #type:User
+        if user is None:
+            return
+        else:
+            noticed = False
+    #user_id = message['userid']
+    #user = get_object_or_none(User,id=user_id) #type:User
     pubdate = timezone.now()
-    Notification.objects.create(title=message['title'],text=message['text'],toUser=user,noticed=False,pubdate=pubdate)
-    dict = {'title':message['title'],'text':message['text'],'pubdate':pubdate.strftime("%d. %B %Y %H:%M")}
-    Group("notifier-%s" % user_id).send({
+    Notification.objects.create(title=message['title'],text=message['text'],toUser=user,noticed=noticed,pubdate=pubdate,url=message.get('url'))
+    url = message['url']
+    if url is None:
+        url = ""
+    dict = {'title':message['title'],'text':message['text'],'pubdate':pubdate.strftime("%d. %B %Y %H:%M"),'url':url}
+    Group(group).send({
         "text": json.dumps(dict)
     })
 
@@ -82,7 +97,20 @@ def notify_msg_consumer(message):
 def notifier_ws_connect(message):
     message.channel_session['user'] = message.user.id
     Group("notifier-%s" % message.channel_session['user']).add(message.reply_channel)
-
+    Group("notify-all").add(message.reply_channel)
 @channel_session
 def notifier_ws_disconnect(message):
     Group('notifier-%s' % channel_session['user']).discard(message.reply_channel)
+    Group("notify-all").discard(message.reply_channel)
+#def public_notifier_ws_connect(message):
+#def public_notifier_ws_disconnect(message):
+'''
+def public_notifier_msg_consumer(message):
+    #user_id = message['userid']
+    #user = get_object_or_none(User,id=user_id) #type:User
+    pubdate = timezone.now()
+    Notification.objects.create(title=message['title'],text=message['text'],pubdate=pubdate)
+    dict = {'title':message['title'],'text':message['text'],'pubdate':pubdate.strftime("%d. %B %Y %H:%M")}
+    Group("notify-all").send({
+        "text": json.dumps(dict)
+    })'''
