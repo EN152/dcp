@@ -21,6 +21,7 @@ def add_new_notification(title,text,toUser=None,url=None):
     :param title: Der Titel der Benachrichtigung
     :param text: Der Text der Benachrichtigung
     :param toUser: None, falls die Benachrichtigung an alle gehen soll, sonst  eine bestimmte Benutzerinstanz
+    :param url: None, falls keine URL, sonst die URL, die beim Klicken der Benachrichtigung aufgerufen werden sollen
     :return: --
     """
     message = {'title':title,'text':text}
