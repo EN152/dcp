@@ -1,12 +1,17 @@
 # In consumers.py
 from channels import  Group,Channel
 from channels.sessions import channel_session
-from django.utils import timezone
+from django.core.urlresolvers import reverse,reverse_lazy
+
 import locale
 
-from dcp.customclasses.Helpers import get_object_or_none, get_user_display_name
+from django.utils.timezone import activate
+
+from dcp.customclasses.Helpers import get_object_or_none, get_user_display_name, url_with_querystring
 from .models import Message, Conversation,User,Notification
 from .models.notifications import *
+from django.utils import timezone,formats
+from django.utils.dateformat import *
 
 from channels.auth import channel_session_user_from_http,http_session_user,channel_session_user
 import json
@@ -16,6 +21,9 @@ def msg_consumer(message):
     conv_id = message['conversation']
     ownuser = get_object_or_none(User,id=message['user']) #type:User
     currentconv = get_object_or_none(Conversation,id=conv_id) #type:Conversation
+    if message.content['message'] == "":
+        print("Keine Nachricht")
+        return
     if currentconv is None:
         print("None")
         return
@@ -24,16 +32,16 @@ def msg_consumer(message):
     else:
         otheruser = currentconv.Starter
     sendTime = timezone.now()
-    locale.setlocale(locale.LC_ALL,''   )
+    locale.setlocale(locale.LC_ALL,'')
     Message.objects.create(From=ownuser,To=otheruser,Text=message.content['message'],Conversation=currentconv,SendTime=sendTime)
     fromusername = get_user_display_name(ownuser)
     tousername = get_user_display_name(otheruser)
-    dict = {"message":message.content['message'],"From":ownuser.id,"To":otheruser.id,"Fromname":fromusername,"Toname":tousername,"sendTime":sendTime.strftime("%d. %B %Y %H:%M")}
+    dict = {"message":message.content['message'],"From":ownuser.id,"To":otheruser.id,"Fromname":fromusername,"Toname":tousername,"sendTime":timezone.localtime(sendTime).strftime("%d. %B %Y %H:%M")}#formats.date_format(sendTime,'F Y H:i')}#
     Group("chat-%s" % conv_id).send({
         "text": json.dumps(dict)
     })
     #Channel("notification-messages").send({"title":"Neue Nachricht","text":"Neue Nachricht","userid":otheruser.id})
-    add_new_notification(title="Neue Nachricht",text="Neue Nachricht von "+otheruser.username,toUser=otheruser)
+    add_new_notification(title="Neue Nachricht",text="Neue Nachricht von "+otheruser.username,toUser=otheruser,url=url_with_querystring(reverse('dcp:ChatOverview'),userid=ownuser.id))
    # print("sended")
 
 

@@ -19,16 +19,22 @@
     <div class="col-md-6">
         <div class="panel-body">
             <div id="DivNotificationListing" class="list-group">
-
                 {% for notification in notifications_list %}
+                    {% if notification.url %}
                     <a href="{{ notification.url }}" class="list-group-item" onclick="">
+                    {% else %}
+                        <li class="list-group-item">
+                    {% endif %}
                     <b>{{notification.title}}</b><br>
 
                     {{ notification.text }}
                     <span class="pull-right text-muted small"><em>{{ notification.pubdate }}</em></span>
-                    </a>
-            {% endfor %}
-            </div>
+                    {% if notification.url %}
+                        </a>
+                    {% else %}
+                        </li>
+                    {% endif %}
+                {% endfor %}
         </div>
     </div>
 

@@ -41,7 +41,7 @@ class Chat(View):
         :param request:
         :return: Gerendertes Template
         """
-        messages = Message.objects.filter(Conversation=self.conversation).order_by('-SendTime')
+        messages = Message.objects.filter(Conversation=self.conversation).order_by('SendTime')
         form = self.form_class()
         return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template,params={'message_list':messages,'otherUser':self.otherUser,'currentUser':self.currentUser,'form':form})
     
@@ -73,6 +73,12 @@ class ChatOverview(View):
         currentUser = request.user
         allConversations = Conversation.objects.filter(Starter=currentUser) | Conversation.objects.filter(Receiver=currentUser)
         all_chats = Message.objects.filter(Conversation__in = allConversations)
+        initial_user = request.GET.get('userid')
+        if initial_user is not None: # Nochmal abfragen, ob die angegebene Userid auch wirklich existiert
+            # Das eingebundene Frame kontrolliert zusätzlcih, ob bereits ein konversation existiert
+            user = get_object_or_none(User,id=initial_user) #type:user
+            if user is None:
+                initial_user = None
         # Jetzt teile die Listen jeweils auf in Chat Gruppen
         for m in all_chats:
             chatPatner = m.To if m.From.id == currentUser.id else m.From
@@ -84,4 +90,4 @@ class ChatOverview(View):
         mList = list()
         for x in tmpList:
             mList.append(x[0])
-        return render(request,self.template,context={'last_message_list':mList,'currentUser':request.user})
+        return render(request,self.template,context={'last_message_list':mList,'initial_user':initial_user,'currentUser':request.user})

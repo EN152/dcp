@@ -12,7 +12,7 @@
     <!-- Leaflet imports-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"/>
-
+<link href="https://s3-us-west-2.amazonaws.com/pesticide/1.2.0/pesticide.css">
 <!-- /.panel -->
 <div class="chat-panel panel panel-default">
     <div class="panel-heading">
@@ -21,7 +21,9 @@
     </div>
     <!-- /.panel-heading -->
     {% if message_list %}
-    <div class="panel-body">
+    <div class="panel-body" id="thispanel">
+        <div id="scrollbar">
+        <div class="chat-panel" >
         <ul id="messaageListingUL" class="chat">
             {% for message in message_list %}
             {% if message.From_id == otherUser.id %}
@@ -45,6 +47,8 @@
             </li>
             {% endfor %}
         </ul>
+        </div>
+        </div>
     </div>
     {% endif %}
     <!-- /.panel-body -->
@@ -59,7 +63,8 @@
                         sendmessage();
                     }
                 });
-
+             var messagelistingobj = $('#thispanel');
+             messagelistingobj.scrollTop(messagelistingobj[0].scrollHeight);
         });
         ws.onmessage = function(e){
             var obj = JSON.parse(e.data);
@@ -82,7 +87,9 @@
                 text = "<li class=\"left clearfix\">";
             }
             text += '<div class="chat-body clearfix"> <div class="header"> <strong class="primary-font">' + fromname +'</strong> <small class="pull-right text-muted"> <i class="fa fa-clock-o fa-fw"></i>' +date+ '</small> </div> <p>'+message+'</p> </div> </li>';
-            $("#messaageListingUL").prepend(text);
+            $("#messaageListingUL").append(text);
+            var messagelistingobj = $("#thispanel");
+            messagelistingobj.scrollTop(messagelistingobj[0].scrollHeight);
     }
     </script>
     <div class="panel-footer">
