@@ -18,14 +18,16 @@ class RegisterView(View):
                 email = request.POST['email']
                 valid = bool(False)
 
-                for users in User.objects.all():
+                for users in User.objects.all(): # Nicht lieber objects.get()?
                     if username == users.username:
-                         return render(request, self.template, {'notAvailable': valid})
-
+                         return render(request, self.template, {'notAvailable': valid}) # So wird man aber direkt auf die anmelden Seite weitergeleitet
 
                 user = User.objects.create_user(username, email, password)
                 user.save()
-                return HttpResponseRedirect("/anmelden/")
+
+                new_user = authenticate(username=username,password=password)
+                login(self.request,new_user)
+                return HttpResponseRedirect(reverse_lazy('dcp:Index'))
 
 class LoginView(View):
     def get(self, request, context={}):
