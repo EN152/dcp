@@ -13,7 +13,7 @@ class SearchMaterialView(TimelineView):
             elementList = Search_Material.objects.all().order_by('created_date').reverse()
         elif elementList is None:
             elementList = Search_Material.objects.filter(catastrophe=profile.currentCatastrophe).order_by('created_date').reverse()
-
+        elementList = Goods.sortByBumpCount(elementList)
         return super().getCreateNew(request, 'glyphicon-search', 'btn-primary' , 'Suchen: Materielles' , form, 'Search_Material', elementList)
 
     def post(self, request):
@@ -35,7 +35,7 @@ class SearchImmaterialView(TimelineView):
             elementList = Search_Immaterial.objects.all().order_by('created_date').reverse()
         elif elementList is None:
             elementList = Search_Immaterial.objects.filter(catastrophe=profile.currentCatastrophe).order_by('created_date').reverse()
-
+        elementList = Goods.sortByBumpCount(elementList)
         return super().getCreateNew(request, 'glyphicon-search', 'btn-primary', 'Suchen: Immaterielles', form, 'Search_Immaterial', elementList=elementList)
 
     def post(self, request):
@@ -57,7 +57,7 @@ class OfferMaterialView(TimelineView):
             elementList = Offer_Material.objects.all().order_by('created_date').reverse()
         elif elementList is None:
             elementList = Offer_Material.objects.filter(catastrophe=profile.currentCatastrophe).order_by('created_date').reverse()
-
+        elementList = Goods.sortByBumpCount(elementList)
         return super().getCreateNew(request, 'glyphicon-transfer', 'btn-danger', 'Bieten: Materielles', form, 'Offer_Material', elementList=elementList)
 
     def post(self, request):
@@ -79,7 +79,7 @@ class OfferImmaterialView(TimelineView):
             elementList = Offer_Immaterial.objects.all().order_by('created_date').reverse()
         elif elementList is None:
             elementList = Offer_Immaterial.objects.filter(catastrophe=profile.currentCatastrophe).order_by('created_date').reverse()
-
+        elementList = Goods.sortByBumpCount(elementList)
         return super().getCreateNew(request, 'glyphicon-transfer', 'btn-danger', 'Bieten: Immaterielles', form, 'Offer_Immaterial', elementList=elementList)
 
     def post(self, request):

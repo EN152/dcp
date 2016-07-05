@@ -95,7 +95,12 @@ class Goods(models.Model):
         for oneGood in Search_Immaterial.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
         return listOfGoods
-
+    def sortByBumpCount(goods_list):
+        """
+        :param goods_list Liste an Gütern
+        :return: Liste an Gütern sortiert nach Bumps
+        """
+        return (sorted(goods_list, key=lambda g: Bump.objects.filter(relation=g.bumps).count(), reverse=True))
     def getAllOffers(**kwargs):
         listOfGoods = []
         for oneGood in Offer_Immaterial.objects.filter(**kwargs):
