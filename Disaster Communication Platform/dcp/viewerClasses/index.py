@@ -17,11 +17,11 @@ class Index(TimelineView):
         user = request.user
         profile = user.profile
         if profile.currentCatastrophe is not None:
-            goods_list = sorted(Goods.getAllGoods(user=user, catastrophe=profile.currentCatastrophe), key=lambda g: g.created_date, reverse=True)
+            goods_list = Goods.getAllGoods(user=user, catastrophe=profile.currentCatastrophe)#, key=lambda g: g.created_date, reverse=True)
         else :
-            goods_list = sorted(Goods.getAllGoods(user=user), key=lambda g: g.created_date, reverse=True)
+            goods_list = Goods.getAllGoods(user=user)
+        goods_list = sorted(goods_list,key= lambda g: Bump.objects.filter(relation=g.bumps).count(),reverse=True)
         goods_list = getListWithDelete(goods_list, profile)
-        
         quickstart = False
         count_sum = countSearch + countOffer + countInformation + countPeople
         if count_sum < 1:
