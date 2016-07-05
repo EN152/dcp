@@ -19,3 +19,4 @@ from dcp.viewerClasses.area import *
 from dcp.viewerClasses.events import *
 from dcp.viewerClasses.notifications import *
 from dcp.viewerClasses.knowledge import *
+from dcp.viewerClasses.misc import *
