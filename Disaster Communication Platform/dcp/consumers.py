@@ -40,7 +40,7 @@ def msg_consumer(message):
     Group("chat-%s" % conv_id).send({
         "text": json.dumps(dict)
     })
-    add_new_notification(title="Neue Nachricht",text="Neue Nachricht von "+otheruser.username,toUser=otheruser,url=url_with_querystring(reverse('dcp:ChatOverview'),userid=ownuser.id))
+    add_new_notification(title="Neue Nachricht",text="Neue Nachricht von "+ownuser.username,toUser=otheruser,url=url_with_querystring(reverse('dcp:ChatOverview'),userid=ownuser.id))
    # print("sended")
 
 
