@@ -34,9 +34,11 @@
 <!-- /.panel .chat-panel -->
     {% if initial_user %}
         <iframe id="chatframeid" class="col-md-6" height="500px" src=" {% url "dcp:Chat" %}?userid={{ initial_user }}">
-        </iframe>
+        </iframe-->
+        <!--{% include "chat.html" with userid="{{ initial_user }}" %} besser? -->
+
     {% else %}
-        <iframe id="chatframeid" class="col-md-6" height="500px" src="" style="display: none">
+        <iframe id="chatframeid" class="col-md-6" height="550px" frameBorder="0" src="" style="display: none">
         </iframe>
     {% endif %}
 {% endblock content %}

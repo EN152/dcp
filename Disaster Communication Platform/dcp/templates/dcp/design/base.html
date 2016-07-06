@@ -78,11 +78,11 @@
 
 			</ul>
 
-			
 
-				
 
-			
+
+
+
 
 
 			<div class="navbar-default sidebar" role="navigation">
@@ -206,7 +206,7 @@
 										<a href="/nachrichten/"><span class="glyphicon glyphicon-envelope"></span> Nachrichten</a>
 									</li>
                                     <li>
-                                        <a href="{% url 'dcp:Notifications' %}"><span class="glyphicon glyphicon-bullhorn"></span>Benachrichtigungen</a>
+                                        <a href="{% url 'dcp:Notifications' %}"><span class="glyphicon glyphicon-bullhorn"></span> Benachrichtigungen</a>
                                     </li>
 	                                {% for ngo in user.profile.ngo.all  %}
 	                                    <li>
@@ -273,7 +273,7 @@
 						{% block content %}{% endblock content%}
 					</div>
 
-					<div class="row" id="footer">
+			<div class="row" id="footer">
 					<hr>
 						<p class="text-center">&copy;  2016  &mdash;  Disaster Communication Platform  &mdash;  <a href="https://github.com/EN152/dcp/">Dokumentation</a></p>
 					<hr>
