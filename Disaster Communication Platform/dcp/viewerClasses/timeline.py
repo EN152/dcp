@@ -130,7 +130,8 @@ class TimelineView(LoginRequiredMixin, View):
                 except :
                     newGood.locationString = ""
             newGood.save()
-            return HttpResponseRedirect('')
+            template = request.build_absolute_uri()
+            return HttpResponseRedirect(template)
         raise Http404
 
     def get_good_or_404(self, request):
