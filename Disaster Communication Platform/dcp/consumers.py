@@ -40,7 +40,6 @@ def msg_consumer(message):
     Group("chat-%s" % conv_id).send({
         "text": json.dumps(dict)
     })
-    #Channel("notification-messages").send({"title":"Neue Nachricht","text":"Neue Nachricht","userid":otheruser.id})
     add_new_notification(title="Neue Nachricht",text="Neue Nachricht von "+otheruser.username,toUser=otheruser,url=url_with_querystring(reverse('dcp:ChatOverview'),userid=ownuser.id))
    # print("sended")
 
@@ -92,11 +91,11 @@ def notify_msg_consumer(message):
     #user_id = message['userid']
     #user = get_object_or_none(User,id=user_id) #type:User
     pubdate = timezone.now()
-    Notification.objects.create(title=message['title'],text=message['text'],toUser=user,noticed=noticed,pubdate=pubdate,url=message.get('url'))
+    new_notification = Notification.objects.create(title=message['title'],text=message['text'],toUser=user,pubdate=pubdate,url=message.get('url'))
     url = message['url']
     if url is None:
         url = ""
-    dict = {'title':message['title'],'text':message['text'],'pubdate':pubdate.strftime("%d. %B %Y %H:%M"),'url':url}
+    dict = {'title':message['title'],'text':message['text'],'pubdate':timezone.localtime(pubdate).strftime("%d. %B %Y %H:%M"),'url':url,'id':new_notification.id}
     Group(group).send({
         "text": json.dumps(dict)
     })
@@ -106,10 +105,37 @@ def notifier_ws_connect(message):
     message.channel_session['user'] = message.user.id
     Group("notifier-%s" % message.channel_session['user']).add(message.reply_channel)
     Group("notify-all").add(message.reply_channel)
-@channel_session
+@channel_session_user_from_http
 def notifier_ws_disconnect(message):
     Group('notifier-%s' % message.channel_session['user']).discard(message.reply_channel)
     Group("notify-all").discard(message.reply_channel)
+
+@channel_session
+def notifier_ws_message(message):
+    # Stick the message onto the processing queue
+    print(message['text'])
+    objdict = json.loads(message['text'])
+    print(objdict)
+    delid = objdict.get('delete')
+    if delid is None:
+        return
+
+    try:
+        delid = int(delid)
+    except:
+        return
+    userid = message.channel_session['user']
+    user = User.objects.get(id=userid)#type:User
+    notification = get_object_or_none(Notification,id=delid)#type:Notification
+    notification.noticedBy.add(user)
+
+
+
+#    Channel("chat-messages").send({
+#        "conversation": message.channel_session['conversation'],
+#        "message": message['text'],
+#        "user":message.channel_session['user']
+#    })
 #def public_notifier_ws_connect(message):
 #def public_notifier_ws_disconnect(message):
 '''

@@ -11,29 +11,44 @@
             addToNotificationsList(e);
         };*/
         function addToNotificationsList(obj){
-            notification = JSON.parse(obj.data);
-            divListing = $('#DivNotificationListing');
-            divListing.prepend('<a href="'+obj.url+'" class="list-group.item" ><b>'+notification.title+'</b><br>'+notification.text+'<span class="pull-right text-muted small"><em>'+notification.pubdate+'</em></span></a>');
+            var notification = JSON.parse(obj.data);
+            var divListing = $('#DivNotificationListing');
+            var newElemHtml = '<li class="list-group-item" id="' +notification.id+'">';
+            if(notification.url!=""){
+                newElemHtml += '<a href="'+notification.url+'" class="" onclick=""><b>'+notification.title+'</b><br></a>';
+            }
+            else{
+                newElemHtml += '<b>' +notification.title+'</b><br>';
+            }
+            newElemHtml += notification.text;
+            newElemHtml += '<span class="pull-right text-muted small"><em>';
+            newElemHtml += notification.pubdate;
+            newElemHtml +='</em></span>';
+            newElemHtml += '<button id="ok" class="btn btn-danger" onclick="deleteNotification(' +notification.id+ ')">Löschen</button>'
+                    + '</li>';
+            divListing.prepend(newElemHtml);
+        }
+        function deleteNotification(id){
+            ws_custom.send(JSON.stringify({delete:id}));
+            $("#"+id).remove();
         }
     </script>
     <div class="col-md-6">
         <div class="panel-body">
             <div id="DivNotificationListing" class="list-group">
                 {% for notification in notifications_list %}
+                    <li class="list-group-item" id="{{ notification.id }}">
                     {% if notification.url %}
-                    <a href="{{ notification.url }}" class="list-group-item" onclick="">
+                    <a href="{{ notification.url }}" class="" onclick=""><b>{{notification.title}}</b><br></a>
                     {% else %}
-                        <li class="list-group-item">
+                        <b>{{notification.title}}</b><br>
                     {% endif %}
-                    <b>{{notification.title}}</b><br>
+
 
                     {{ notification.text }}
                     <span class="pull-right text-muted small"><em>{{ notification.pubdate }}</em></span>
-                    {% if notification.url %}
-                        </a>
-                    {% else %}
-                        </li>
-                    {% endif %}
+                    <button id="ok" class="btn btn-danger" onclick="deleteNotification({{ notification.id }})">Löschen</button>
+                     </li>
                 {% endfor %}
         </div>
     </div>
