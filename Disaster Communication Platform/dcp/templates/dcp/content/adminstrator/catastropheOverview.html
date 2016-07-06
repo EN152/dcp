@@ -88,16 +88,22 @@
                                     {% endif %}
                                 </td>
                                 
-                                <td><center><a href="{% url 'dcp:EditCatastropheView' pk=c.id %}"><button type="button" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Bearbeiten</button></a></center></td>
+                                <td>
+                                    <center>
+                                        <a href="{% url 'dcp:EditCatastropheView' pk=c.id %}">
+                                            <button type="button" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Bearbeiten</button>
+                                        </a>
+                                    </center>
+                                </td>
                                 
                                 <td>
-                                    <form>
-                                        <center>
+                                    <center>
+                                        <form method="POST">
                                             {% csrf_token %}
                                             <input type="hidden" name="catastrophe_id" value="{{c.id}}"/>
                                             <button type="submit" class="btn btn-danger" name="post_identifier" value="delete"><i class="fa fa-trash" aria-hidden="true"></i> Löschen</button>
-                                        </center>
-                                    </form>
+                                        </form>
+                                    </center>
                                 </td>
                                 
                             </tr>
