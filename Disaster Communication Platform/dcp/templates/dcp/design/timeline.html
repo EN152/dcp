@@ -39,10 +39,8 @@
 
 
 
-
-<div class="timeline">
-    <div class="panel panel-default">
-    	<div class="panel-heading"><i class="fa fa-th-list"></i><b> Überblick | {{ page_title }}</b></div>
+<div class="panel panel-default">
+	<div class="panel-heading"><i class="fa fa-th-list"></i><b> Überblick | {{ page_title }}</b></div>
         <div class="panel-heading" id="FilterPanel">
             {% if categoryChoices %}
                 <select id="categoryfilterform" multiple="multiple">
@@ -51,12 +49,13 @@
                     {% endfor %}
                 </select>
 
-                <button class="btn btn-success" id="idFilterButton">Filter</button>
+                <button class="btn btn-success" id="idFilterButton"><span class="glyphicon glyphicon-ok-circle"></span> Filter</button>
             {% endif %}
 
-            <button class="btn btn-success" id="idFilterRadiusButton">Filter Radius</button>
+            <button class="btn btn-success" id="idFilterRadiusButton"><span class="glyphicon glyphicon-record"></span> Filter Radius</button>
         </div>
-
+        
+<div class="timeline">
         <!--
         <div id="RadiusFilterPanel">
                 {% load bootstrap3 %}
