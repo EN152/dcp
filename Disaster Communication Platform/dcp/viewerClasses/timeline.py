@@ -26,7 +26,7 @@ class TimelineView(LoginRequiredMixin, View):
                 if form.is_valid():
                     text = request.POST.get('text')
                     if text is None or len(text) <= dcp.dcpSettings.MIN_COMMENT_LENGTH:
-                        template = self.getTemplate(request)
+                        template = request.build_absolute_uri()
                         return HttpResponseRedirect(template)
                     good = self.get_good_or_404(request)
                     if good.comments is None:
@@ -34,7 +34,7 @@ class TimelineView(LoginRequiredMixin, View):
                         good.save()
                     relation = good.comments
                     Comment.objects.create(text=text,user=user,relation=relation)
-                    template = self.getTemplate(request)
+                    template = request.build_absolute_uri()
                     return HttpResponseRedirect(template)
 
             if postIdentifier == 'contact_form':
@@ -54,7 +54,7 @@ class TimelineView(LoginRequiredMixin, View):
                 good = self.get_good_or_404(request)
                 if user.is_superuser or user == good.user or isAllowedToDelete(good.catastrophe, user.profile, good.location_x, good.location_y):
                     good.delete()
-                    template = self.getTemplate(request)
+                    template = request.build_absolute_uri()
                     return HttpResponseRedirect(template)
 
             if postIdentifier == 'bump':
@@ -65,11 +65,11 @@ class TimelineView(LoginRequiredMixin, View):
                 else:
                     already_exists = Bump.objects.filter(relation = good.bumps, user = user)
                     if already_exists:
-                        template = self.getTemplate(request)
+                        template = request.build_absolute_uri()
                         return HttpResponseRedirect(template)
                 relation = good.bumps
                 Bump.objects.create(user=user,relation=relation)
-                template = self.getTemplate(request)
+                template = request.build_absolute_uri()
                 return HttpResponseRedirect(template)
 
             if postIdentifier == 'report':
@@ -83,11 +83,11 @@ class TimelineView(LoginRequiredMixin, View):
                 else:
                     already_exists = Report.objects.filter(relation = good.reports, user = user)
                     if already_exists:
-                        template = self.getTemplate(request)
+                        template = request.build_absolute_uri()
                         return HttpResponseRedirect(template)
                 relation = good.reports
                 Report.objects.create(user=user,relation=relation)
-                template = self.getTemplate(request)
+                template = request.build_absolute_uri()
                 return HttpResponseRedirect(template)
         return Http404
 
@@ -138,20 +138,6 @@ class TimelineView(LoginRequiredMixin, View):
         if good is None:
            raise Http404
         return good
-
-    def getTemplate(self,request):
-        goodtype = request.POST.get('good_type')
-        if(goodtype == 'Search_Material'):
-            goodTemplate = "/suchen/materielles/"
-        if(goodtype == 'Offer_Material'):
-            goodTemplate = "/bieten/materielles/"
-        if(goodtype == 'Search_Immaterial'):
-            goodTemplate = "/suchen/immaterielles/"
-        if(goodtype == 'Offer_Immaterial'):
-            goodTemplate = "/bieten/immaterielles/"
-        else:
-            goodTemplate = ''
-        return goodTemplate
 
 class TimelineManagerView(TimelineView):
 
