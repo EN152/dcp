@@ -9,12 +9,23 @@ class AktionenPlanung(View):
 
 	def post(self,request):
 		form = EventPlanningForm(request.POST)
-		event = Event.objects.create(title=request.POST.get('title'), 
-			description=request.POST.get('description'),
-			begin_date =request.POST.get('begin_date'),
-			numberOfUsers = request.POST.get('numberOfUsers'),
-			numberOfCars = request.POST.get('numberOfCars'),
-			numberOfSpecials = request.POST.get('numberOfSpecials'))
+		if form.is_valid():
+			title = form.cleaned_data['title']
+			description = form.cleaned_data['description']
+			begin_date = form.cleaned_data['begin_date']
+			numberofUsers = form.cleaned_data['numberOfUsers']
+			numberofCars = form.cleaned_data['numberOfCars']
+			numberofSpecial = form.cleaned_data['numberOfSpecials']
+		else:
+			template = 'dcp/content/aktionen/planung.html'
+			context = {'form': form}
+			return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
+		event = Event.objects.create(title=title,
+			description=description,
+			begin_date =begin_date,
+			numberOfUsers = numberofUsers,
+			numberOfCars = numberofCars,
+			numberOfSpecials = numberofSpecial)
 		event.members.add(request.user)
 		event.save()
 		return HttpResponseRedirect('/aktionen/laufende/#' + str(event.id))
