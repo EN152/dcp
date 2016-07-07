@@ -11,6 +11,8 @@
 
 	<title>DCP &mdash; Disaster Communication Platform</title>
 
+	<script src="{% static 'js/pace.js' %}"></script> <!--Should be first thing to load! -->
+	<link href="{% static 'css/pace.css' %}" rel="stylesheet">
 	<link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 	<link href="{% static 'sb-admin/bower_components/metisMenu/dist/metisMenu.min.css' %}" rel="stylesheet">
 	<link href="{% static 'sb-admin/dist/css/timeline.css' %}" rel="stylesheet">
@@ -28,7 +30,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"/>
 
-		<!-- SCRIPTS werden am Ende geladen: siehe unten! -->
+		<!-- weitere SKRIPTE werden am Ende geladen: siehe unten! -->
 </head>
 
 <body>
@@ -49,11 +51,7 @@
 			<!-- /.navbar-header -->
 			<ul class="nav navbar-top-links navbar-right">
 				<div class="navbar-form navbar-right">
-                    {% if notificationCount != None %}
-                        <a href="{% url 'dcp:Notifications' %}" class="glyphicon glyphicon-bullhorn" style="font-size: 1.3em;">
-                        {{ notificationCount }}
-                        </a>
-                    {% endif %}
+                   
 					<form action="{% url 'dcp:CatastropheChangeView' %}" role="form" method="POST" style ="float: right; padding: 5px;">
                         {% csrf_token %}
 						{{ catChoiceForm }}
@@ -66,6 +64,9 @@
 						</button>
 					</form>
 				</div>
+
+
+		
 
 				<!-- /.dropdown -->
 				<li class="dropdown">
@@ -82,14 +83,14 @@
 					</ul>
 				</li>
 
+			 {% if notificationCount != None %}
+			 <li class="dropdown">
+					<a   href="{% url 'dcp:Notifications' %}" >
+						<span class="glyphicon glyphicon-bullhorn"></span>  <b> {{ notificationCount }}  <b>
+					</a>
+					</li>
+             {% endif %}
 			</ul>
-
-
-
-
-
-
-
 
 			<div class="navbar-default sidebar" role="navigation">
 				<div class="sidebar-nav navbar-collapse">
