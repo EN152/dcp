@@ -25,7 +25,7 @@
 	<h2><span class="glyphicon glyphicon-search"></span> Welche Person suchst Du? </h2>
 		{% csrf_token %}	
 		{% bootstrap_form form %}
-        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span> Person hinzufügen</button>
+        <button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-search"></span> Person hinzufügen</button>
 </form>
 
 
@@ -35,7 +35,7 @@
 
 
 {% if missed_people %}
-{% for person in missed_people %}
+{% for person, isAllowedToDelete in missed_people %}
 <div class="col-xs-4">
 	<div class="panel panel-{% if person.gender == 'w' %}red{% else %}primary{% endif %}" style="vertical-align:bottom;">
 		<div class="panel-heading">
@@ -99,19 +99,17 @@
 			<center>
 				<form action="" role="form" id="bump_form" method="post" style="display: inline;">
 					{% csrf_token %}
-					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
-					<input type="hidden" name="good_id" value="{{good.id}}" />
+					<input type="hidden", name="missedpeople_id" value="{{person.id}}">
 					<button type="submit" class="btn btn-success" name="post_identifier" value="bump" style="margin-top: 10px; margin-bottom: 10px;">
 						<span class="glyphicon glyphicon-arrow-up" ></span>
-						Bump! <span class="badge">{{good.getBumps|length}}</span>
+						Bump! <span class="badge">{{person.bumps.all|length}}</span>
 					</button>
 				</form>
 
-				{% if good.user != user %}
+				{% if good.user != user %}<!-- TODO WAS PASSIERT? -->
 				<form action="" role="form" id="contact_form" method="post" style="display: inline;">
 					{% csrf_token %}
-					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
-					<input type="hidden" name="good_id" value="{{good.id}}" />
+					<input type="hidden", name="missedpeople_id" value="{{person.id}}">
 					<button type="submit" class="btn btn-primary" value="contact_form" name="post_identifier" style="margin-top: 10px; margin-bottom: 10px;">
 						<span class="glyphicon glyphicon-envelope"></span>
 						Kontaktieren
@@ -119,11 +117,10 @@
 				</form>
 				{% endif %}
 
-				{% if user.is_superuser or good.user == user %}
+				{% if isAllowedToDelete %}
 				<form action="" role="form" id="delete_form" method="post" style="display: inline;">
 					{% csrf_token %}
-					<input type="hidden" name="good_id" value="{{good.id}}" />
-					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+					<input type="hidden", name="missedpeople_id" value="{{person.id}}">
 					<button type="submit" class="btn btn-danger" name="post_identifier" value="delete" style="margin-top: 10px; margin-bottom: 10px;">
 						<span class="glyphicon glyphicon-trash"></span> 
 						Löschen
@@ -133,11 +130,10 @@
 				{% else %}
 				<form action="" role="form" id="report_form" method="post">
 					{% csrf_token %}
-					<input type="hidden" name="good_id" value="{{good.id}}" />
-					<input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+					<input type="hidden", name="missedpeople_id" value="{{person.id}}">
 					<button class="btn btn-danger" type="submit" name="post_identifier" value="report">
 						<span class="glyphicon glyphicon-ban-circle"></span> 
-						Melden <span class="badge">{{good.getReports|length}}</span>
+						Melden <span class="badge">{{person.reports.all|length}}</span>
 					</button>
 				</form>
 				{% endif %}

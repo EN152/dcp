@@ -97,14 +97,13 @@ class AreaView(LoginRequiredMixin, View):
 
         if post_identifier == 'addSubArea':
             if user.is_superuser or isAreaAdmin(user.profile, area) or canCreateSubArea(user.profile, area):
-                if canCreateSubArea(profile, area):
-                    successCreate, obj = createArea(request, parrentArea=area)
-                    if successCreate:
-                        return obj
-                    else:
-                        return self.get(request, pk, subAreaForm=obj)
+                successCreate, obj = createArea(request, parrentArea=area)
+                if successCreate:
+                    return obj
                 else:
-                    HttpResponseForbidden("insufficent rights")
+                    return self.get(request, pk, subAreaForm=obj)
+            else:
+                HttpResponseForbidden("insufficent rights")
 
         if post_identifier == 'addNgo':
             if user.is_superuser or isAreaAdmin(user.profile, area) or canManageNgo(user.profile, area):
