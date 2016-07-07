@@ -48,6 +48,11 @@
 			<!-- /.navbar-header -->
 			<ul class="nav navbar-top-links navbar-right">
 				<div class="navbar-form navbar-right">
+                    {% if notificationCount != None %}
+                        <a href="{% url 'dcp:Notifications' %}" class="glyphicon glyphicon-bullhorn" style="font-size: 1.3em;">
+                        {{ notificationCount }}
+                        </a>
+                    {% endif %}
 					<form action="{% url 'dcp:CatastropheChangeView' %}" role="form" method="POST" style ="float: right; padding: 5px;">
                         {% csrf_token %}
 						{{ catChoiceForm }}

@@ -1,4 +1,5 @@
 from channels import Channel
+from django.db.models import Q
 
 from .imports import *
 from dcp import dcpSettings
@@ -31,5 +32,7 @@ def add_new_notification(title,text,toUser=None,url=None):
     else:
         Channel("notification-messages").send({"title":title,"text":text,'url':url})
     #Notification.objects.create(title=title,text=text,toUser=toUser,noticed=False)
-
+def get_notifications(user: User):
+    return Notification.objects.filter(Q(toUser=user) | Q(toUser=None)).exclude(
+        id__in=user.noticedNotifications.values_list('id', flat=True)).order_by('-pubdate')
 

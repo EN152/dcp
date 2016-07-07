@@ -17,6 +17,6 @@ class NotificationView(LoginRequiredMixin,View):
         current_user = request.user #type:User
         template = loader.get_template(self.templatePath)
         # Hole Notification für den user, die noch nicht als bemerkt gemarkt wurden
-        notifications = Notification.objects.filter(Q(toUser=current_user)  | Q(toUser=None)).exclude(id__in = current_user.noticedNotifications.values_list('id',flat=True)).order_by('-pubdate')
+        notifications = get_notifications(current_user)
         return HttpResponse(template.render({'notifications_list':notifications},request))
 
