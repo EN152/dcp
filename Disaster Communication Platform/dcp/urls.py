@@ -61,7 +61,7 @@ urlpatterns = [
 
     # Aktionen
     url(r'^aktionen/planung/$', AktionenPlanung.as_view()),
-    url(r'^aktionen/laufende/$', AktionenLaufende.as_view()),
+    url(r'^aktionen/laufende/$', AktionenLaufende.as_view(),name='EventsView'),
 
 
 #    # Orte

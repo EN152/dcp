@@ -57,6 +57,7 @@ class EventPlanningForm(forms.ModelForm):
     title = forms.CharField(max_length=200, required=True, label='Aktionsname',widget=forms.TextInput(attrs={'placeholder': 'Marchstraße aufräumen'}))
     description = forms.CharField(max_length=5000, required=False, label='Nähere Informationen',widget=forms.Textarea(attrs={'placeholder' : 'Insgesamt werden 42 Personen mit 7 Fahrzeugen gebraucht. Speziell gesucht wird Kaffee in Thermoskannen. Vielen Dank für Eure Mithilfe!'}))
     begin_date = forms.DateTimeField(input_formats=['%d.%m.%Y %H:%M'],required=True, label='Beginn', widget=forms.TextInput(attrs={ 'placeholder' : '2016-03-04 12:00' }))
+    catastrophe = forms.ModelChoiceField(required=True, queryset=Catastrophe.objects.all(), label='Katastrophe', empty_label=None)
     #begin_date = DateField(widget = AdminDateWidget)
     numberOfUsers = forms.IntegerField(required=True, label="maximale Personenzahl", widget=forms.NumberInput())
     numberOfCars = forms.IntegerField(required=True, label="maximale Fahrzeuganzahl", widget=forms.NumberInput())
@@ -64,10 +65,15 @@ class EventPlanningForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['title', 'description', 'begin_date', 'numberOfUsers', 'numberOfCars', 'numberOfSpecials']
+        fields = ['title', 'description', 'begin_date', 'numberOfUsers', 'numberOfCars', 'numberOfSpecials','catastrophe']
 
 
 class CategoryFilterForm(forms.Form):
     categories = forms.ModelMultipleChoiceField(queryset=CategorysGoods.objects.all(), required=False,widget=forms.CheckboxSelectMultiple())
     class Meta:
         fields = ('categories')
+
+class DeleteEventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = []

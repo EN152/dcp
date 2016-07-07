@@ -5,7 +5,7 @@ from .organizations import *
 
 class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschrieben wird:https://docs.djangoproject.com/en/1.8/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User)
-    currentCatastrophe = models.ForeignKey(Catastrophe, null=True, on_delete=models.DO_NOTHING)
+    currentCatastrophe = models.ForeignKey(Catastrophe, null=True, on_delete=models.SET_NULL)
     ngo = models.ManyToManyField(Ngo, through='NgoMember')
     government = models.ManyToManyField(Government, through='GovernmentMember')
     show_map = models.BooleanField(default=True, null=False)
