@@ -14,6 +14,25 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 	<script type="text/javascript">
+
+        {% if notAvailable == False%}
+
+            $(document).ready(
+            function(){
+                appendString = "<div id=\"notAvailableAlert\"> " +
+                        "								<div class='alert alert-danger alert-dismissible' role='alert'>" +
+                        "										<button type='button' class='close' data-dismiss='alert'>" +
+                        "											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>" +
+                        "										</button>" +
+                        "										Der Username ist leider schon vergeben. Probier's nochmal!" +
+                        "									</div>" +
+                        "								</div>";
+                registerForm();
+                $("#register-form").append(appendString);
+            });
+
+
+        {% endif %}
 		window.alert = function(){};
 		var defaultCSS = document.getElementById('bootstrap-css');
 		function changeCSS(css){
@@ -90,13 +109,13 @@
                                 {% endif %}
 
                                 {% if notAvailable %}
-								<div id="notAvailableAlert">	
+								<div id="notAvailableAlert">
 									<div class='alert alert-danger alert-dismissible' role='alert'>
 										<button type='button' class='close' data-dismiss='alert'>
 											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
 										</button>
 										Der Username ist leider schon vergeben. Probier's nochmal!
-									</div>									
+									</div>
 								</div>
                                 {% endif %}
 
@@ -123,7 +142,18 @@
 											</div>
 										</div>
 									</div>
+
 								</form>
+                                {% if notAvailable %}
+								<div id="notAvailableAlert">
+									<div class='alert alert-danger alert-dismissible' role='alert'>
+										<button type='button' class='close' data-dismiss='alert'>
+											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
+										</button>
+										Der Username ist leider schon vergeben. Probier's nochmal!
+									</div>
+								</div>
+                                {% endif %}
 							</div>
 						</div>
 					</div>
@@ -143,7 +173,14 @@
 	</div>
 
 	<script type="text/javascript">
-		$(function() {
+        function registerForm(){ // Jump to register form
+                $("#register-form").delay(100).fadeIn(100);
+				$("#login-form").fadeOut(100);
+				$('#login-form-link').removeClass('active');
+				$("#register-form-link").addClass('active');
+
+        }
+		$(function(e) {
 			$('#login-form-link').click(function(e) {
 				$("#login-form").delay(100).fadeIn(100);
 				$("#register-form").fadeOut(100);
@@ -153,11 +190,10 @@
 			});
 
 			$('#register-form-link').click(function(e) {
-				$("#register-form").delay(100).fadeIn(100);
-				$("#login-form").fadeOut(100);
-				$('#login-form-link').removeClass('active');
-				$(this).addClass('active');
+                registerForm();
+
 				e.preventDefault();
+
 			});
 		});
 
