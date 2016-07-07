@@ -10,6 +10,7 @@ def catForm(request):
     :return: The catastrophe choice for a user
     """
     user = request.user
+    notificationcount = None
     if user.is_authenticated():
         catastrophe = user.profile.currentCatastrophe
         if catastrophe is not None:
