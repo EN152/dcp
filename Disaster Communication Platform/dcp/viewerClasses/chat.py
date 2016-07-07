@@ -54,8 +54,7 @@ class Chat(View):
             url = url_with_querystring(reverse('dcp:Chat'),userid=self.otherUser.id)
             return HttpResponseRedirect(url)
 
-    def url_with_querystring(path, **kwargs): #TODO: Refactor nach Helpers.
-        return path + '?' + urlencode(kwargs)
+
 
 
 class ChatOverview(View):
@@ -69,25 +68,20 @@ class ChatOverview(View):
         kontaktiert, aber dann doch keine Nachricht schreibt? Soll er diesen Chat dann sehen oder nicht?
         Falls ja -> noch zu implementieren
         """
-        messageDict = defaultdict(list)
         currentUser = request.user
         allConversations = Conversation.objects.filter(Starter=currentUser) | Conversation.objects.filter(Receiver=currentUser)
-        all_chats = Message.objects.filter(Conversation__in = allConversations)
         initial_user = request.GET.get('userid')
         if initial_user is not None: # Nochmal abfragen, ob die angegebene Userid auch wirklich existiert
             # Das eingebundene Frame kontrolliert zusätzlcih, ob bereits ein konversation existiert
             user = get_object_or_none(User,id=initial_user) #type:user
             if user is None:
                 initial_user = None
-        # Jetzt teile die Listen jeweils auf in Chat Gruppen
-        for m in all_chats:
-            chatPatner = m.To if m.From.id == currentUser.id else m.From
-            messageDict[chatPatner].append(m)
-        tmpList = list()
-        for key,value in messageDict.items():
-            value.sort(key=lambda message: message.SendTime,reverse=True)
-            tmpList.append(value)
         mList = list()
-        for x in tmpList:
-            mList.append(x[0])
+        for conv in allConversations: #type:Conversation
+            try:
+                lastMessage = Message.objects.filter(Conversation=conv).latest('SendTime')
+                mList.append(lastMessage)
+            except:
+                templatemessage = Message(From=conv.Starter,To=conv.Receiver,Text="Noch keine Nachricht",SendTime=conv.created_at,Conversation=conv)
+                mList.append(templatemessage)
         return render(request,self.template,context={'last_message_list':mList,'initial_user':initial_user,'currentUser':request.user})

@@ -1,4 +1,5 @@
 # imports
+from dcp.customclasses.Helpers import url_with_querystring
 from dcp.importUrls import *
 from django.http import Http404
 import dcp.dcpSettings
@@ -46,8 +47,8 @@ class TimelineView(LoginRequiredMixin, View):
                 if conv is None: # Wenn noch keine Conversation da ist
                     Conversation.objects.create(Starter=user,Receiver=goodOwner)
                 # Jetzt: Redirect
-                url = '/chat/?userid='
-                url += str(goodOwner.id)
+                url = url_with_querystring(reverse('dcp:ChatOverview'),userid=goodOwner.id)
+
                 return HttpResponseRedirect(url)
 
             if postIdentifier == 'delete':

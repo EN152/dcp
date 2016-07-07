@@ -1,4 +1,5 @@
 from channels import Channel
+from django.db.models import Q
 
 from .imports import *
 from dcp import dcpSettings
@@ -7,13 +8,13 @@ from django.utils import timezone
 class Notification(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField()
-    toUser = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    noticed = models.NullBooleanField(null=True)
+    toUser = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,related_name='customNotifications')
+    noticedBy = models.ManyToManyField(User,related_name='noticedNotifications')
     pubdate = models.DateTimeField(default=timezone.now)
     url = models.CharField(max_length=256,null=True)
-class UserHasNoticed(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=False)
-    notification = models.ForeignKey(Notification,on_delete=models.CASCADE,null=False)
+#class UserHasNoticed(models.Model):
+#    user = models.ForeignKey(User,on_delete=models.CASCADE,null=False)
+#    notification = models.ForeignKey(Notification,on_delete=models.CASCADE,null=False)
 def add_new_notification(title,text,toUser=None,url=None):
     """
     Füge eine neue Benachrichtungen an einen bestimmten User oder alle User hinzu
@@ -31,5 +32,7 @@ def add_new_notification(title,text,toUser=None,url=None):
     else:
         Channel("notification-messages").send({"title":title,"text":text,'url':url})
     #Notification.objects.create(title=title,text=text,toUser=toUser,noticed=False)
-
+def get_notifications(user: User):
+    return Notification.objects.filter(Q(toUser=user) | Q(toUser=None)).exclude(
+        id__in=user.noticedNotifications.values_list('id', flat=True)).order_by('-pubdate')
 

@@ -3,6 +3,8 @@ from dcp.customclasses import Helpers
 class Conversation(models.Model):
     Starter  = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='Starter')
     Receiver = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name='Receiver')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     class Meta:
         unique_together = ('Starter','Receiver')
     def getConversationOrNone(userOne: User,userTwo: User):
