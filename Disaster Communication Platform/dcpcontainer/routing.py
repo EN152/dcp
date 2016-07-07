@@ -9,13 +9,9 @@ chat_routing = [
 ]
 notifications_routing = [
     route("websocket.connect",notifier_ws_connect),
-    route("websocket.disconnect",notifier_ws_disconnect)
+    route("websocket.disconnect",notifier_ws_disconnect),
+    route("websocket.receive",notifier_ws_message)
 ]
-'''
-notify_all_routing =[
-    route("websocket.connect",public_notifier_ws_connect),
-    route("websocket.disconnect",public_notifier_ws_disconnect)
-]'''
 
 channel_routing = [
     include(chat_routing, path=r"^/chat/(?P<userid>\d+)/$"),

@@ -17,10 +17,10 @@
 <div class="chat-panel panel panel-default">
     <div class="panel-heading">
         <i class="fa fa-comments fa-fw"></i>
-        Chat
+        Chat mit {{ otherUser.username }}
     </div>
     <!-- /.panel-heading -->
-    {% if message_list %}
+
     <div class="panel-body" id="thispanel">
         <div id="scrollbar">
         <div class="chat-panel" >
@@ -50,7 +50,6 @@
         </div>
         </div>
     </div>
-    {% endif %}
     <!-- /.panel-body -->
 
     <script>
