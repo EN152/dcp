@@ -8,7 +8,7 @@ from django.template.backends.django import Template
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import *
 from geopy.geocoders import Nominatim
-from dcp.auth.generic import getListWithDelete
+from dcp.auth.generic import getListWithDelete, isAllowedToDelete
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from dcp.models.goods import Goods

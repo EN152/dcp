@@ -40,6 +40,7 @@ class Comment_Form(ModelForm):
 
 class MissedPeopleForm(forms.ModelForm):
     title = forms.CharField(required=True,label='Überschrift',widget=forms.TextInput(attrs={'placeholder': 'Lisa, 24 Jahre, Wedding'}))
+    catastrophe = forms.ModelChoiceField(required=True, queryset=Catastrophe.objects.all(), label='Katastrophe', empty_label=None)
     description = forms.CharField(required=True,label='Situationsbeschreibung',widget=forms.TextInput(attrs={'placeholder': 'Verloren im Getummel am Hauptbahnhof am 01. April 2016. Sie hatte eine schwarze Tasche dabei.'}))
     gender = forms.CharField(required=True,label='Geschlecht: m/w',widget=forms.TextInput(attrs={'placeholder': 'w'}))
     age = forms.IntegerField(required=True,label='Alter (in Jahren)',widget=forms.TextInput(attrs={'placeholder': '24'}))
@@ -51,7 +52,7 @@ class MissedPeopleForm(forms.ModelForm):
     picture = forms.ImageField(required=False, label='Aktuelles Foto (optional)')
     class Meta:
         model = MissedPeople
-        fields = ['title', 'description', 'gender', 'age', 'name',  'size', 'eyeColor', 'hairColor', 'characteristics', 'picture']
+        fields = ['title', 'catastrophe','description', 'gender', 'age', 'name',  'size', 'eyeColor', 'hairColor', 'characteristics', 'picture']
 
 class EventPlanningForm(forms.ModelForm):
     title = forms.CharField(max_length=200, required=True, label='Aktionsname',widget=forms.TextInput(attrs={'placeholder': 'Marchstraße aufräumen'}))

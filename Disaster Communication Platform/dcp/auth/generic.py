@@ -36,8 +36,22 @@ def getListWithDelete(elementList : [], profile : Profile) -> zip([],[bool]):
     """
     allowDeleteList = []
     for element in elementList:
-        if isAllowedToDelete(element.catastrophe, profile, element.location_x, element.location_y):
-            allowDeleteList.append(True)
+        hasLocation = False
+        try:
+            element.location_x
+            hasLocation = True
+        except:
+            pass
+        
+        if hasLocation:
+            if isAllowedToDelete(element.catastrophe, profile, element.location_x, element.location_y):
+                allowDeleteList.append(True)
+            else:
+                allowDeleteList.append(False)
         else:
-            allowDeleteList.append(False)
+            if isAllowedToDelete(element.catastrophe, profile):
+                allowDeleteList.append(True)
+            else:
+                allowDeleteList.append(False)
+
     return zip(elementList, allowDeleteList)
