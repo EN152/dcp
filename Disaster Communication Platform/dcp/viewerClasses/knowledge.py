@@ -72,7 +72,9 @@ class PollsView(LoginRequiredMixin,View):
 				all_choices = question.choice_text.split(";")
 				
 				for c in all_choices:
-					if not Choice.objects.filter(text = c, question = question).exists():
+					if c[0] == " ":
+						c = c[1:]
+					if (not (Choice.objects.filter(text = c, question = question).exists())):
 						choice = Choice(text=c,
 							votes=0,
 							question=question)
@@ -98,7 +100,9 @@ class PollsView(LoginRequiredMixin,View):
 					choice_text=request.POST.get('choice_text'))
 				question.save()
 		elif post_identifier == 'vote' and request.user.is_active and request.user.is_authenticated():
-			selected_choice = Choice.objects.filter(id = request.POST.get('choice'))[0]
-			selected_choice.votes += 1
+			selected_choice = Choice.objects.get(id = request.POST.get('choice'))
+			selected_choice.votes = selected_choice.votes + 1
+			voted_question = selected_choice.question
+			voted_question.voted_users.add(request.user)
 		return HttpResponseRedirect("/wissen/abstimmungen/")
 			

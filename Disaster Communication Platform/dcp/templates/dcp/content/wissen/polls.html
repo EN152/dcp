@@ -50,6 +50,26 @@
 			<ul>{{ question.text }}</ul>
 		</p>
 		</div>
+		{% if user in question.voted_users.all %}
+
+		{% if choice_list %}
+				<div class="container">
+				<p>
+				{% for choice in choice_list %}
+
+				{% if choice.question == question %}
+
+				<span class="badge">{{choice.votes}}</span> {{ choice.text }}
+				<br />
+
+				{% endif %}
+
+				{% endfor %}
+				</p>
+				</div>
+				{% endif %}
+
+		{% else %}
 
 			<form method="POST" enctype="multipart/form-data">
 				{% csrf_token %}
@@ -75,6 +95,8 @@
 				{% endif %}
 
 
+
+		{% endif %}
 				<center>
 					<button type="submit" class="btn btn-success" name="post_identifier" value="vote" style="margin-top: 10px; margin-bottom: 10px;">
 						<span class="glyphicon glyphicon-ok"></span>

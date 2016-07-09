@@ -9,6 +9,7 @@ class Question(models.Model):
 	title = models.CharField(max_length=200)
 	text = models.TextField(max_length=500, null=True, blank=True)
 	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=True)
+	voted_users = models.ManyToManyField(User, null=True)
 	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True)
 	choice_text = models.CharField(max_length=500, null=False, default="Ja; Nein")
 	pub_date = models.DateTimeField('date published', default=timezone.now())
