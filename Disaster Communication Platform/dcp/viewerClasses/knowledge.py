@@ -69,7 +69,10 @@ class PollsView(LoginRequiredMixin,View):
 
 		for question in latest_question_list:
 			if question.choice_text:
+				if question.choice_text[len(question.choice_text) - 1] == ";":
+					question.choice_text = question.choice_text[:len(question.choice_text) - 2]
 				all_choices = question.choice_text.split(";")
+
 				
 				for c in all_choices:
 					if c[0] == " ":
@@ -79,6 +82,7 @@ class PollsView(LoginRequiredMixin,View):
 							votes=0,
 							question=question)
 						choice.save()
+
 
 		choice_list = Choice.objects.all()
 
@@ -101,8 +105,9 @@ class PollsView(LoginRequiredMixin,View):
 				question.save()
 		elif post_identifier == 'vote' and request.user.is_active and request.user.is_authenticated():
 			selected_choice = Choice.objects.get(id = request.POST.get('choice'))
-			selected_choice.votes = selected_choice.votes + 1
+			selected_choice.votes += 1
 			voted_question = selected_choice.question
 			voted_question.voted_users.add(request.user)
-		return HttpResponseRedirect("/wissen/abstimmungen/")
+			selected_choice.save()
+		return HttpResponseRedirect("/wissen/")
 			
