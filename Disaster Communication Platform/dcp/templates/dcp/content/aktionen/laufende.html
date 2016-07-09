@@ -24,6 +24,14 @@
 		{% endif %}
 
 		{% for event in events %}
+            {% if event.14 %}
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ deleteeventform }}
+                    <input type="hidden" name="event_id" value="{{event.0.id }}"/>
+                    <button type="submit" class="btn btn-danger" name="post_identifier" value="delete"><i class="fa fa-trash" aria-hidden="true"></i> Löschen</button>
+                </form>
+            {% endif %}
 		<div class="panel panel-green" id="{{ event.0.id }}">
 			<div class="panel-heading"><h3> <b><i class="fa fa-calendar" aria-hidden="true"></i>  {{ event.0.title }}</b> <br>{{ event.0.begin_date|date:"D, d. F Y (H:i" }} Uhr) </h3>
 				<small style="font-size: 0.9em; font-color: #FFF;"><i class="fa fa-clock-o"></i> erstellt vor {{ event.0.created_date|timesince }}</small></div>

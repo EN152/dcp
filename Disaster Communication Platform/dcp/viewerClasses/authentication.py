@@ -8,7 +8,7 @@ def getPageAuthenticated(request, template, params={}):
     else:
         return HttpResponseRedirect("/anmelden/")
 
-class Register(View):
+class RegisterView(View):
     template = 'dcp/content/spezial/anmelden.html'
     def post(self, request):
         if not request.user.is_authenticated():
@@ -18,46 +18,44 @@ class Register(View):
                 email = request.POST['email']
                 valid = bool(False)
 
-                for users in User.objects.all():
+                for users in User.objects.all(): # Nicht lieber objects.get()?
                     if username == users.username:
-                         return render(request, self.template, {'notAvailable': valid})
-
+                         return render(request, self.template, {'notAvailable': valid}) # So wird man aber direkt auf die anmelden Seite weitergeleitet
 
                 user = User.objects.create_user(username, email, password)
                 user.save()
-                return HttpResponseRedirect("/anmelden/")
 
-class Login(View):
-    template = 'dcp/content/spezial/anmelden.html'
+                new_user = authenticate(username=username,password=password)
+                login(self.request,new_user)
+                return HttpResponseRedirect(reverse_lazy('dcp:Index'))
 
-    def get(self, request):
-        catChoiceForm = CatastropheChoice
-        return render(request, self.template, context={'catChoiceForm':catChoiceForm})
+class LoginView(View):
+    def get(self, request, context={}):
+        templatePath = 'dcp/content/spezial/anmelden.html'
+        template = loader.get_template(templatePath)
+        return HttpResponse(template.render(context=context, request=request))
         
     def post(self, request):
-       if request.method == "POST":
-           username = request.POST['username']
-           password = request.POST['password']
-           catId = request.POST['catastrophe']
+       template = 'dcp/content/spezial/anmelden.html'
+       username = request.POST.get('username')
+       password = request.POST.get('password')
 
-           valid = bool(False)
-           user = authenticate(username=username, password=password)
-           if user is not None:
-               if user.is_active:
-                   login(request, user)
-                   Profile.get_profile_or_create(user).setCatastropheById(catId)
-                   next = request.GET.get('next')
-                   if next==None:
-                       return HttpResponseRedirect("/")
-                   else:
-                       return HttpResponseRedirect(next)
+       user = authenticate(username=username, password=password)
+       if user is not None:
+           if user.is_active:
+               login(request, user)
+               Profile.get_profile_or_create(user)
+               next = request.GET.get('next')
+               if next==None:
+                   return HttpResponseRedirect("/")
                else:
-                   return HttpResponse("Inactive user.")
+                   return HttpResponseRedirect(next)
            else:
-               return render(request, self.template, {'notValid': valid})
-       return render(request, self.template, {})
+               return HttpResponse("Inactive user.")
+       else:
+        return self.get(request, context={'notValid': True})
 
-class Logout(View):
+class LogoutView(View):
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect("../anmelden/")
+        return HttpResponseRedirect("/anmelden/")

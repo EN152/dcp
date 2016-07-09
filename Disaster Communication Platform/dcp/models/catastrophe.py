@@ -1,13 +1,18 @@
 from .imports import *
 from dcp import dcpSettings
+from dcp.models.organizations import Government, Ngo
 
 class Catastrophe(models.Model):
     title = models.CharField(max_length=200)
-    locationString = models.CharField(max_length=100) # Soll das so? Nicht per Map Anzeigen?r
+    locationString = models.CharField(max_length=100) # Soll das so? Ja. Wird der reverse aus x und y drin gespeichert und muss nicht jedesml neu aufgelöst werden
     date_created = models.DateTimeField('date published', default=timezone.now)
     location_x = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])
     location_y = models.FloatField(null=False, validators=[MinValueValidator(-180), MaxValueValidator(180)])
     radius = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(dcpSettings.CATASTROPHE_MAX_RADIUS)])
+    maxOutsideRadius = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(dcpSettings.CATASTROPHE_MAX_RADIUS)])
+    # Fully catastrophes manager
+    ngos = models.ManyToManyField(Ngo, related_name='catastrophes')
+    governments = models.ManyToManyField(Government, related_name='catastrophes')
 
     def __unicode__(self):
         return self.title
@@ -15,13 +20,33 @@ class Catastrophe(models.Model):
     def __str__(self):
         return self.title
 
-    def isAbleToEdit(self,user : User):
+    def isAbleToEdit(self, user : User):
         """
         Gibt zurück, ob ein Benutzer eine Katastrophe bearbeiten darf oder nicht
+        :author: Jasper
         :param user: Der Benutzer, der erfragt
         :return: True falls er darf, False falls nciht
         """
-        return user.has_perm('dcp.EditCatastrophe')
+        from dcp.auth.catastropheAuth import isCatastropheAdmin
+        return isCatastropheAdmin(user.profile, self)
+    def getGoods(self):
+        from dcp.models.goods import Goods
+        return Goods.getAllGoods(catastrophe=self)
+
+    def getAllOffers(self):
+        from dcp.models.goods import Goods
+        return Goods.getAllOffers(catastrophe=self)
+
+    def getSearches(self):
+        from dcp.models.goods import Goods
+        return Goods.getAllSearches(catastrophe=self)
+
+    # Haben keine Katastrophe..
+    def getMissingPersons():
+        pass
+    # Haben keine Katastrophe..
+    def getEvents():
+        pass
 
     class Meta:
             permissions = (

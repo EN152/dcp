@@ -31,7 +31,7 @@ class Goods(models.Model):
     location_y = models.FloatField(null=True)
     created_date = models.DateTimeField(default=timezone.now, blank=True)
     image = models.ImageField(upload_to=dcp.dcpSettings.GOODS_IMAGE_UPLOADPATH, null=True, blank=True)
-    comments = models.ForeignKey(Comment_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
+    comments = models.ForeignKey("Comment_Relation", on_delete=models.DO_NOTHING, null=True, blank=True)
     bumps = models.ForeignKey(Bump_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
     reports = models.ForeignKey(Report_Relation, on_delete=models.DO_NOTHING, null=True, blank=True)
     visibility = models.BooleanField(default=True, blank=True)
@@ -97,15 +97,15 @@ class Goods(models.Model):
             return Post_Question
         return None
 
-    def getAllGoods():
+    def getAllGoods(**kwargs):
         listOfGoods = []
-        for oneGood in Search_Material.objects.all():
+        for oneGood in Search_Material.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
-        for oneGood in Offer_Immaterial.objects.all():
+        for oneGood in Offer_Immaterial.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
-        for oneGood in Offer_Material.objects.all():
+        for oneGood in Offer_Material.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
-        for oneGood in Search_Immaterial.objects.all():
+        for oneGood in Search_Immaterial.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
         for oneGood in Post_News.objects.all():
             listOfGoods.append(oneGood)
@@ -114,6 +114,28 @@ class Goods(models.Model):
         for oneGood in Post_Questions.objects.all():
             listOfGoods.append(oneGood)
         return listOfGoods
+    def sortByBumpCount(goods_list):
+        """
+        :param goods_list Liste an Gütern
+        :return: Liste an Gütern sortiert nach Bumps
+        """
+        return (sorted(goods_list, key=lambda g: Bump.objects.filter(relation=g.bumps).count(), reverse=True))
+    def getAllOffers(**kwargs):
+        listOfGoods = []
+        for oneGood in Offer_Immaterial.objects.filter(**kwargs):
+            listOfGoods.append(oneGood)
+        for oneGood in Offer_Material.objects.filter(**kwargs):
+            listOfGoods.append(oneGood)
+        return listOfGoods
+
+    def getAllSearches(**kwargs):
+        listOfGoods = []
+        for oneGood in Search_Immaterial.objects.filter(**kwargs):
+            listOfGoods.append(oneGood)
+        for oneGood in Search_Material.objects.filter(**kwargs):
+            listOfGoods.append(oneGood)
+        return listOfGoods
+    
 
     def isSearchedForByString(self, searchString):
         if searchString.upper() in self.description.upper() or searchString.upper() in self.title.upper():

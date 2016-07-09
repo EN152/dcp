@@ -5,7 +5,7 @@ from .organizations import *
 
 class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschrieben wird:https://docs.djangoproject.com/en/1.8/topics/auth/customizing/#extending-the-existing-user-model
     user = models.OneToOneField(User)
-    currentCatastrophe = models.ForeignKey(Catastrophe, related_name='currentCatastrophe', null=True,blank=True)
+    currentCatastrophe = models.ForeignKey(Catastrophe, null=True, on_delete=models.SET_NULL)
     ngo = models.ManyToManyField(Ngo, through='NgoMember')
     government = models.ManyToManyField(Government, through='GovernmentMember')
     show_map = models.BooleanField(default=True, null=False)
@@ -29,6 +29,7 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
             return False
         else:
             self.currentCatastrophe = newCatastrophe
+            self.save()
             return True
 
     def get_profile_or_none(user: User):
@@ -60,6 +61,8 @@ class Profile(models.Model): # Wir erweitern das User Modell, wie es hier beschr
                 p = Profile(user=user,currentCatastrophe=None)
                 p.save()
             return p
+    class Meta:
+        app_label = 'dcp'
 
 def create_profile(sender, **kwargs):
     """
@@ -124,7 +127,7 @@ class Member(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        abstract = False
+        abstract = True
 
 class NgoMember(Member):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=False)

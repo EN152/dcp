@@ -1,13 +1,12 @@
 from .imports import *
+from dcp.models.catastrophe import Catastrophe
 
 class MissedPeople(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
-    # catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
+    catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
     created_date = models.DateTimeField(default=timezone.now)
-
-    #bumps = models.ForeignKey(Bump_Relation, on_delete=models.DO_NOTHING, null=True)
-    #reports = models.ForeignKey(Report_Relation, on_delete=models.DO_NOTHING, null=True)
-
+    bumps = models.ManyToManyField(User, related_name='PeopleBumps')
+    reports = models.ManyToManyField(User, related_name='PeopleReports')
     title = models.CharField(max_length=100, null=False)
     description = models.CharField(max_length=5000, null=False)
     gender = models.CharField(max_length=1, null=False)

@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from dcp.viewerClasses.misc import *
 
 urlpatterns = [
 	url(r'', include('dcp.urls', namespace="dcp")),
     url(r'^admin/', admin.site.urls),
+    url(r'404$',view=handler404)
 ]

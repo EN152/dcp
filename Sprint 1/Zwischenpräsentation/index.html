@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+<head>
+	<meta charset="utf-8">
+
+	<title>Sprint 1</title>
+	<meta name="author" content="EN152">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css" id="theme">
+	<link rel="stylesheet" href="lib/css/zenburn.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement( 'link' );
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<section style="text-align: left;">
+				<h1>Sprint 1: Zwischenpräsentation</h1>
+				<h2><strong>Disaster Communication Platform &mdash; DCP</strong><br>
+				<strong>Emergency Notifications &mdash; EN152</strong><br>
+				Programmierpraktikum: Soziale Netzwerke</h2>
+
+
+					<div style="-webkit-column-count: 2; -moz-column-count: 2; column-count: 2;">				
+								Jasper Bernhardt<br>
+								Elias Grünewald<br>
+								Priska Kohnen<br>
+								Bruno Kortowski<br>
+								Nikita Krohmer<br>
+								Nikias Praast<br>
+								Franz Tscharf<br>
+								Vincent Ulitzsch<br>
+					</div>
+			
+				<br style="clear: both">
+		
+				<h4>EN152</h4>
+
+				<div style="-webkit-column-count: 2; -moz-column-count: 2; column-count: 2;">	
+				Sommersemester 2016<br>
+						Complex and Distributed IT Systems<br>
+						Technische Universität Berlin<br>
+					<img src="tu.png" height="80px" border=0 align="left">
+					</div>
+
+				</section>
+
+				<section style="text-align: left;">
+				<h1>Workflow</h1>
+				<ul>
+					<li>persönliche Treffen</li>
+					<li>Instant Messaging (täglich)</li>
+					<li>Dokumentation u.a. via Etherpad</li>
+					<br>
+					<li>vermehrtes Branching</li>
+					<li>Issues im Backlog</li>
+					<li>Continuous integration [gestartet]</li>
+				</ul>
+				</section>
+
+				<section style="text-align: left;">
+				<h1>Was haben wir bisher erreicht?</h1>
+				<ul>
+					<li>Design</li>
+					<br>
+					<li>Einloggen/Registrieren/Authentifizierung</li>
+					<br>
+					<li>Gesuche aufgeben</li>
+					<li>Angebote einstellen</li>
+					<br>
+					<li>persönliche Daten einsehen und ändern</li>
+					<li>Chats mit anderen Nutzern</li>
+				</ul>
+				<br>
+				<hr>
+				Status: <i>work in progress</i>
+				</section>
+
+				<section style="text-align: left;">
+					<h1>Was haben wir bis zum Ende<br> des Sprints noch vor?</h1>
+					<ul>
+						<li>Bugfixing</li>
+						<li>Design-Schliffe</li>
+						<li>Tests [hoffentlich]</li>
+					</ul>
+				</section>
+
+			</div> <!--slides-->
+		</div> <!--reveal-->
+		
+		<!-- Settings -->
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+				dependencies: [
+				{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+				{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+				{ src: 'plugin/zoom-js/zoom.js', async: true },
+				{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+	</html>

@@ -3,29 +3,116 @@
     <script src="{% static 'js/map/show-map.js' %}"></script>
 {% endif%}
 
+
+<!-- Include the plugin's CSS and JS: -->
+<link rel="stylesheet" href="{% static 'css/bootstrap-multiselect.css"' %}" type="text/css"/>
+
+<script>
+    var mymap;
+    // var valueLocationXId;
+    //var valueLocationYId;
+    $(document).ready(function() {
+    $("#idFilterButton").click(function(){
+        updateFilters();
+    });
+        $("#idRadiusFilterInputSubmit").click(function(){
+            alert(mymap.valueLocationXId);
+            alert(mymap.valueLocationYId);
+        });
+});
+
+    function updateFilters(){
+     var categories = document.getElementById('categoryfilterform'), category, i;
+
+     for(i = 0; i < categories.length; i++) {
+       category = categories[i];
+       if (category.selected) {
+           $('.'+category.value).show();
+       } else {
+           //alert(category.value);
+           $('.'+category.value).hide();
+       }
+     }
+   }
+
+</script>
+
+
+
+<div class="panel panel-default">
+	<div class="panel-heading"><i class="fa fa-th-list"></i><b> Überblick | {{ page_title }}</b></div>
+        <div class="panel-heading" id="FilterPanel">
+            {% if categoryChoices %}
+                <select id="categoryfilterform" multiple="multiple">
+                    {% for c in categoryChoices  %}
+                        <option value="{{ c.name }}">{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <button class="btn btn-success" id="idFilterButton"><span class="glyphicon glyphicon-ok-circle"></span> Filter</button>
+            {% endif %}
+
+            <button class="btn btn-success" id="idFilterRadiusButton"><span class="glyphicon glyphicon-record"></span> Filter Radius</button>
+        </div>
+        
 <div class="timeline">
-    <div class="panel panel-default">
-    	<div class="panel-heading"><i class="fa fa-th-list"></i><b> Überblick | {{ page_title }}</b></div>
-    
+        <!--
+        <div id="RadiusFilterPanel">
+                {% load bootstrap3 %}
+
+                <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+                             <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.css">
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.js"></script>
+                
+                                <label><input type="button" class="btn btn-success" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
+                             <div style="height: 360px;" id="mapid"></div>
+                
+                            <form action="">
+                  Radius
+                  <input id="idRadiusFilterInput" type="number" name="quantity" min="1">
+                  <input id="idRadiusFilterInputSubmit" value="Filtern nach Radius" type="submit">
+                </form>
+                {% load static %}
+                <script src="{% static 'js/map/location-picker.js' %}"></script>
+                            <script>
+                
+                                mymap = newMapScriptPicker("mapid",52,32);
+
+
+            </script>
+
+        </div>
+        -->
+
     	<div class="panel-body">
     		<ul class="timeline">   
     			{% if goods_list %}
-    			{% for good in goods_list %}
+    			{% for good, allowedToDelete in goods_list %}
     
                 <!-- Beginn eines Elements -->
                 {% load mathfilters %}
     			<li {% if forloop.counter|mod:2 == 0 %}class="timeline-inverted"{% endif %}>
-    			    <div class="timeline-badge {{good.timeline_badge_color}}"> <span class="glyphicon {{good.timeline_glyphicon}}"></span></div>
+    			    <div class="timeline-badge {{good.timeline_badge_color}} {{ good.getCategoryNameAsString }}"> <span class="glyphicon {{good.timeline_glyphicon}}"></span></div>
     
-    			    <div class="timeline-panel">
+    			    <div class="timeline-panel {{ good.getCategoryNameAsString }} " id="{{ good.pk }}">
     
                         {% if good.image.url != None and user.profile.show_picture %}
     				        <img src="{{ good.image.url }}" width="150" style="float:right;" class="img-thumbnail">
                         {% endif %}
-    
     				    <div class="timeline-heading">
     				    	<h4 class="timeline-title"><span class="label label-success">{% if good.user.profile.ngo != None %}{{good.user.profile.ngo.name_short}}{% elif good.user.profile.government != None %}{{good.user.profile.government.name_short}}{% endif %}</span> <b>{{ good.title }}</b></h4>
-    				    	<p><span class="glyphicon glyphicon-user"></span> <a href="#">{{ good.user }}</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor {{ good.created_date|timesince }}</small></p>
+
+    				    	<p>
+                                <form action="" role="form" id="contact_form" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="good_type" value="{{good.getGoodType}}" />
+                                    <input type="hidden" name="good_id" value="{{good.id}}" />
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    <button type="submit" value="contact_form" name="post_identifier" class="btn-link">{{ good.user }}</button>
+                                    <!--<a href="{% url 'dcp:ChatOverview' %}?userid={{ good.user.id }}">{{ good.user }}</a> <small class="text-muted" style="font-size: 0.9em;"><i class="fa fa-clock-o"></i> vor {{ good.created_date|timesince }}</small>-->
+                                </form>
+                            </p>
     				    </div>
     
     				    <div class="timeline-body">
@@ -48,7 +135,13 @@
 								    <div id="mapid_{{good.id}}{{good.location_x}}{{good.location_y}}" style="width:100%; height:150px;"></div>
 
 								    <script>
-                                        initialMap("mapid_{{good.id}}{{good.location_x}}{{good.location_y}}", "{{good.location_x}}","{{good.location_y}}","{{good.title}}")
+                                        initialMap("mapid_{{good.id}}{{good.location_x}}{{good.location_y}}", "{{good.location_x}}","{{good.location_y}}","{{good.title}}",
+                                        {% if good.radius %}
+                                            "{{good.radius}}"
+                                        {% else %}
+                                            "0"
+                                        {% endif %}
+                                        )
 								    </script>
                                 {% endif %}
     
@@ -78,7 +171,7 @@
                                             </form>
                                         {% endif %}
     
-                                        {% if user.is_superuser or good.user == user %}
+                                        {% if allowedToDelete or good.user == user %}
                                             <form action="" role="form" id="delete_form" method="post" style="display: inline;">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="good_id" value="{{good.id}}" />
@@ -181,3 +274,9 @@
     	</div>
     </div>
 </div>
+    <!-- Initialize the plugin: -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#categoryfilterform').multiselect();
+        });
+    </script>

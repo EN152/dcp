@@ -2,12 +2,19 @@ from dcp.customForms.goodsFroms import *
 from dcp.viewerClasses.timeline import TimelineView
 from dcp.viewerClasses.authentication import getPageAuthenticated
 from dcp.views import View, LoginRequiredMixin
+from dcp.auth.generic import isAllowedToDelete
 
 class SearchMaterialView(TimelineView):
-    def get(self, request, form=None):
+    def get(self, request, form=None, elementList=None):
+        profile = request.user.profile
         if form is None:
-            form = SearchMaterialForm
-        return super().getCreateNew(request, 'glyphicon-search', 'btn-primary' , 'Suchen: Materielles' , form, 'Search_Material')
+            form = SearchMaterialForm      
+        if elementList is None and profile.currentCatastrophe is None:
+            elementList = Search_Material.objects.all().order_by('created_date').reverse()
+        elif elementList is None:
+            elementList = Search_Material.objects.filter(catastrophe=profile.currentCatastrophe).order_by('created_date').reverse()
+        elementList = Goods.sortByBumpCount(elementList)
+        return super().getCreateNew(request, 'glyphicon-search', 'btn-primary' , 'Suchen: Materielles' , form, 'Search_Material', elementList)
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
@@ -19,10 +26,17 @@ class SearchMaterialView(TimelineView):
 
 
 class SearchImmaterialView(TimelineView):
-    def get(self, request, form=None):
+    def get(self, request, form=None, elementList=None):
+        profile = request.user.profile
         if form is None:
             form = SearchImmaterialForm
-        return super().getCreateNew(request, 'glyphicon-search', 'btn-primary', 'Suchen: Immaterielles', form, 'Search_Immaterial')
+
+        if elementList is None and profile.currentCatastrophe is None:
+            elementList = Search_Immaterial.objects.all().order_by('created_date').reverse()
+        elif elementList is None:
+            elementList = Search_Immaterial.objects.filter(catastrophe=profile.currentCatastrophe).order_by('created_date').reverse()
+        elementList = Goods.sortByBumpCount(elementList)
+        return super().getCreateNew(request, 'glyphicon-search', 'btn-primary', 'Suchen: Immaterielles', form, 'Search_Immaterial', elementList=elementList)
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
@@ -34,10 +48,17 @@ class SearchImmaterialView(TimelineView):
 
 
 class OfferMaterialView(TimelineView):
-    def get(self, request, form=None):
+    def get(self, request, form=None, elementList=None):
+        profile = request.user.profile
         if form is None:
             form = OfferMaterialForm
-        return super().getCreateNew(request, 'glyphicon-transfer', 'btn-danger', 'Bieten: Materielles', form, 'Offer_Material')
+
+        if elementList is None and profile.currentCatastrophe is None:
+            elementList = Offer_Material.objects.all().order_by('created_date').reverse()
+        elif elementList is None:
+            elementList = Offer_Material.objects.filter(catastrophe=profile.currentCatastrophe).order_by('created_date').reverse()
+        elementList = Goods.sortByBumpCount(elementList)
+        return super().getCreateNew(request, 'glyphicon-transfer', 'btn-danger', 'Bieten: Materielles', form, 'Offer_Material', elementList=elementList)
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
@@ -48,12 +69,18 @@ class OfferMaterialView(TimelineView):
         return super().post(request)
 
 
-
 class OfferImmaterialView(TimelineView):
-    def get(self, request, form=None):
+    def get(self, request, form=None, elementList=None):
+        profile = request.user.profile
         if form is None:
             form = OfferImmaterialForm
-        return super().getCreateNew(request, 'glyphicon-transfer', 'btn-danger', 'Bieten: Immaterielles', form, 'Offer_Immaterial')
+
+        if elementList is None and profile.currentCatastrophe is None:
+            elementList = Offer_Immaterial.objects.all().order_by('created_date').reverse()
+        elif elementList is None:
+            elementList = Offer_Immaterial.objects.filter(catastrophe=profile.currentCatastrophe).order_by('created_date').reverse()
+        elementList = Goods.sortByBumpCount(elementList)
+        return super().getCreateNew(request, 'glyphicon-transfer', 'btn-danger', 'Bieten: Immaterielles', form, 'Offer_Immaterial', elementList=elementList)
 
     def post(self, request):
         if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():

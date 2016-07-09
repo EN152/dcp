@@ -5,7 +5,6 @@ from django.http.response import HttpResponseForbidden, HttpResponseBadRequest, 
 from django.shortcuts import get_object_or_404, redirect
 from dcp.models.categorysGoods import CategorysGoods
 
-
 class CategorysGoodsMangerView(View):
     """description of class"""
     def get(self, request, create_new_form=None):
@@ -23,7 +22,7 @@ class CategorysGoodsMangerView(View):
             'category_list' : category_list
         }
         return HttpResponse(template.render(context, request))
-        
+
     def post(self, request):
         user = request.user
         if not(user.is_authenticated() and user.is_active and user.is_superuser):

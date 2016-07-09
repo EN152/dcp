@@ -5,12 +5,14 @@ from django.contrib.staticfiles.urls import static
 from django.conf import  settings
 
 urlpatterns = [
+    # Core
     url(r'^$', Index.as_view(),name='Index'),
+    url(r'^catastrophechange/$', CatastropheChangeView.as_view(),name='CatastropheChangeView'),
 
     # Spezialseiten
-    url(r'^anmelden/$', Login.as_view()),
-    url(r'^abmelden/$', Logout.as_view()),
-    url(r'^registrieren/$', Register.as_view()),
+    url(r'^anmelden/$', LoginView.as_view()),
+    url(r'^abmelden/$', LogoutView.as_view()),
+    url(r'^registrieren/$', RegisterView.as_view()),
 
     # Karten
     url(r'^orte/karten/$', Karten.as_view()),
@@ -31,17 +33,17 @@ urlpatterns = [
     url(r'^chat/$', Chat.as_view(), name='Chat'),
     url(r'^nachrichten/$',ChatOverview.as_view(),name='ChatOverview'),
     #url(r'^profil/netzwerke/$',ChatOverview.as_view(),name='ChatOverview'),
-    
+
     # AdminPanel
     url(r'^administator/useroverview/$',UserAdminOverview.as_view(),name='UserAdminOverview'),
     url(r'^adminstrator/edituser/(?P<pk>\d+)/$', AdminEditUserProfileView.as_view(),name='AdminEditUserProfileView'),
     url(r'^administrator/deleteuser/(?P<pk>\d+)/$',DeleteUserView.as_view(),name='DeleteUserView'),
-    url(r'^administrator/createcat/$',CreateCatastrophe.as_view(),name='CreateOrEditCatastrophe'),
-    url(r'^administrator/catoverview/$',CatastropheOverview.as_view(),name='CatastropheOverview'),
-    url(r'^administrator/catdelete/(?P<pk>\d+)/$',DeleteCatastropheView.as_view(),name='DeleteCatastropheView'),
+    url(r'^administrator/editcatastrophe/(?P<pk>\d+)/$',CatastropheEditView.as_view(),name='EditCatastropheView'),
+    url(r'^administrator/catoverview/$',CatastropheOverviewView.as_view(),name='CatastropheOverview'),
     url(r'^administrator/ngomanager/$',NgoManagerView.as_view(),name='NgoManagerView'),
     url(r'^administrator/governmentmanager/$',GovernmentManagerView.as_view(),name='GovernmentManagerView'),
     url(r'^administrator/categorygoodmanager/$',CategorysGoodsMangerView.as_view(),name='CategoryGoodManagerView'),
+    url(r'^administrator/timelinemanager/$',TimelineManagerView.as_view(),name='TimelineManagerView'),
     url(r'^administrator/areaadministrator/$',AreaAdminView.as_view(),name='AreaAdministratorView'),
 
     # Organisationen
@@ -50,16 +52,16 @@ urlpatterns = [
     url(r'^area/(?P<pk>\d+)/$', AreaView.as_view(),name='AreaView'),
 
 #    # Wissen
-    url(r'^wissen/$', Wissen.as_view()),
-    url(r'^wissen/neuigkeiten/$', PostNewsView.as_view(), name='PostNewsView'),
-    url(r'^wissen/gefahren/$', PostDangersView.as_view(), name='PostDangersView'),
-    url(r'^wissen/fragen/$', PostQuestionsView.as_view(), name='PostQuestionsView'),
-    url(r'^wissen/abstimmungen/$', PollsView.as_view(), name = 'PollsView'),
+     url(r'^wissen/$', Wissen.as_view(), name='Wissen'),
+#    url(r'^wissen/neuigkeiten/$', views.wissen_neuigkeiten),
+#    url(r'^wissen/gefahren/$', views.wissen_gefahren),
+#    url(r'^wissen/fragen/$', views.wissen_fragen),
+     url(r'^wissen/abstimmungen/$', PollsView.as_view(), name = 'PollsView'),
 #    url(r'^wissen/archiv/$', views.wissen_archiv),
 
     # Aktionen
     url(r'^aktionen/planung/$', AktionenPlanung.as_view()),
-    url(r'^aktionen/laufende/$', AktionenLaufende.as_view()),
+    url(r'^aktionen/laufende/$', AktionenLaufende.as_view(),name='EventsView'),
 
 
 #    # Orte
@@ -71,6 +73,9 @@ urlpatterns = [
     #Profil
     url(r'^profil/$', MyProfile.as_view(), name='ProfileView'),
     url(r'^profil/bearbeiten/$', EditProfile.as_view()),
+
+    #Benachrichtigungen
+    url(r'^notifications/$', NotificationView.as_view(), name='Notifications'),
 ]
 
 # media url patters

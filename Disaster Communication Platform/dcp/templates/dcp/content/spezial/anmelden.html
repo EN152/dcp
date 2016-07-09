@@ -5,8 +5,10 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>DCP: Disaster Communication Platform</title>
+	<title>Disaster Communication Platform</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="{% static 'js/pace.js' %}"></script> <!--Should be first thing to load! -->
+	<link href="{% static 'css/pace.css' %}" rel="stylesheet">
 	<link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 	<link href="{% static 'css/login.css' %}" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
@@ -14,6 +16,25 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 	<script type="text/javascript">
+
+        {% if notAvailable == False%}
+
+            $(document).ready(
+            function(){
+                appendString = "<div id=\"notAvailableAlert\"> " +
+                        "								<div class='alert alert-danger alert-dismissible' role='alert'>" +
+                        "										<button type='button' class='close' data-dismiss='alert'>" +
+                        "											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>" +
+                        "										</button>" +
+                        "										Der Username ist leider schon vergeben. Probier's nochmal!" +
+                        "									</div>" +
+                        "								</div>";
+                registerForm();
+                $("#register-form").append(appendString);
+            });
+
+
+        {% endif %}
 		window.alert = function(){};
 		var defaultCSS = document.getElementById('bootstrap-css');
 		function changeCSS(css){
@@ -34,7 +55,9 @@
 		});
 	</script>
 </head>
-<body>
+<body background="{% static 'media/glass.png' %}" style="background-repeat: no-repeat; background-position:center; background-size: 100% auto;">
+
+<div class="col-12">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
@@ -68,9 +91,6 @@
 										<input type="checkbox" tabindex="3" class="" name="remember" id="remember">
 										<label for="remember"> angemeldet bleiben</label>
 									</div>
-                                    <div class="form-group">
-                                            {{ catChoiceForm }}
-		                            </div>
 
 									<div class="form-group">
 										<div class="row">
@@ -80,31 +100,28 @@
 										</div>
 									</div>
 								</form>
-
+                                {% if notValid %}
 								<div id="notValidAlert">
-									{% if notValid == false %}
-									{% else %}
 									<div class='alert alert-danger alert-dismissible' role='alert'>
 										<button type='button' class='close' data-dismiss='alert'>
 											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
 										</button>
 										Überprüfe bitte, ob du deinen Usernamen und Passwort richtig geschrieben hast!
 									</div>
-									{% endif %}
+									
 								</div>
+                                {% endif %}
 
-
+                                {% if notAvailable %}
 								<div id="notAvailableAlert">
-									{% if notAvailable == false %}
-									{% else %}
 									<div class='alert alert-danger alert-dismissible' role='alert'>
 										<button type='button' class='close' data-dismiss='alert'>
 											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
 										</button>
 										Der Username ist leider schon vergeben. Probier's nochmal!
 									</div>
-									{% endif %}
 								</div>
+                                {% endif %}
 
 
 								<form id="register-form" action="/registrieren/" method="POST" role="form" style="display: none;">
@@ -129,12 +146,24 @@
 											</div>
 										</div>
 									</div>
+
 								</form>
+                                {% if notAvailable %}
+								<div id="notAvailableAlert">
+									<div class='alert alert-danger alert-dismissible' role='alert'>
+										<button type='button' class='close' data-dismiss='alert'>
+											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
+										</button>
+										Der Username ist leider schon vergeben. Probier's nochmal!
+									</div>
+								</div>
+                                {% endif %}
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
 		</div>
 
 		<center><img src="/static/media/dcp.svg" height="200px" style="padding:20px;"></center>
@@ -149,7 +178,14 @@
 	</div>
 
 	<script type="text/javascript">
-		$(function() {
+        function registerForm(){ // Jump to register form
+                $("#register-form").delay(100).fadeIn(100);
+				$("#login-form").fadeOut(100);
+				$('#login-form-link').removeClass('active');
+				$("#register-form-link").addClass('active');
+
+        }
+		$(function(e) {
 			$('#login-form-link').click(function(e) {
 				$("#login-form").delay(100).fadeIn(100);
 				$("#register-form").fadeOut(100);
@@ -159,11 +195,10 @@
 			});
 
 			$('#register-form-link').click(function(e) {
-				$("#register-form").delay(100).fadeIn(100);
-				$("#login-form").fadeOut(100);
-				$('#login-form-link').removeClass('active');
-				$(this).addClass('active');
+                registerForm();
+
 				e.preventDefault();
+
 			});
 		});
 

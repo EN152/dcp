@@ -1,7 +1,5 @@
 from django.contrib import admin
 
-# Register models here.
-
 from .models import Catastrophe, MissedPeople, Event, Car, Special
 from .models import Search_Material, Search_Immaterial, Offer_Material, Offer_Immaterial
 

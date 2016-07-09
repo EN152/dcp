@@ -1,4 +1,6 @@
 from dcp.importUrls import *
+from dcp.auth.generic import isAllowedToDelete
+from dcp.customclasses.Helpers import url_with_querystring
 
 class AktionenPlanung(View):
 	def get(self, request):
@@ -9,12 +11,25 @@ class AktionenPlanung(View):
 
 	def post(self,request):
 		form = EventPlanningForm(request.POST)
-		event = Event.objects.create(title=request.POST.get('title'), 
-			description=request.POST.get('description'),
-			begin_date =request.POST.get('begin_date'),
-			numberOfUsers = request.POST.get('numberOfUsers'),
-			numberOfCars = request.POST.get('numberOfCars'),
-			numberOfSpecials = request.POST.get('numberOfSpecials'))
+		if form.is_valid():
+			title = form.cleaned_data['title']
+			description = form.cleaned_data['description']
+			begin_date = form.cleaned_data['begin_date']
+			numberofUsers = form.cleaned_data['numberOfUsers']
+			numberofCars = form.cleaned_data['numberOfCars']
+			numberofSpecial = form.cleaned_data['numberOfSpecials']
+			catastrophe = form.cleaned_data['catastrophe']
+		else:
+			template = 'dcp/content/aktionen/planung.html'
+			context = {'form': form}
+			return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
+		event = Event.objects.create(title=title,
+			description=description,
+			begin_date =begin_date,
+			numberOfUsers = numberofUsers,
+			numberOfCars = numberofCars,
+			numberOfSpecials = numberofSpecial,
+			catastrophe = catastrophe,createdby=request.user)
 		event.members.add(request.user)
 		event.save()
 		return HttpResponseRedirect('/aktionen/laufende/#' + str(event.id))
@@ -24,7 +39,7 @@ class AktionenLaufende(View):
 		template = 'dcp/content/aktionen/laufende.html'
 
 		rawEvents = Event.objects.all()
-		
+
 		if len(rawEvents) == 0:
 			error = 'Leider gibt es noch keine Aktionen! :('
 			context = {'error' : error }
@@ -35,6 +50,7 @@ class AktionenLaufende(View):
 		
 		events = []
 		for event in rawEvents:
+			current_user_allowed_to_delete = isAllowedToDelete(catastrophe=event.catastrophe,profile=request.user.profile) or (event.createdby==request.user)
 			numberOfRows = max((event.numberOfUsers, event.numberOfCars, event.numberOfSpecials))
 			nameOfCurrentUser = request.user.username
 
@@ -87,13 +103,14 @@ class AktionenLaufende(View):
 				# 11: idsOfCars
 				# 12: usernamesOfSpecials
 				# 13: idsOfSpecials
+				# 14: current_user_allowed_to_delete
 			events.append((event, range(numberOfRows), numberOfMembers,
 				namesOfMembers, userIsMemberOfCurrentEvent,
 				nameOfCurrentUser, numberOfCars, descriptionsOfCars,
 				numberOfSpecials, descriptionsOfSpecials, usernamesOfCars,
-				idsOfCars, usernamesOfSpecials, idsOfSpecials))
+				idsOfCars, usernamesOfSpecials, idsOfSpecials,current_user_allowed_to_delete))
 
-		context = {'events' : events}
+		context = {'events' : events,'deleteeventform':DeleteEventForm()}
 		return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
 
 	def post(self,request):
@@ -151,6 +168,12 @@ class AktionenLaufende(View):
 			else:
 				context = {'error': 'Hallo!? Das war gar nicht dein besonderer Gegenstand! :('}
 				return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
+		if request.POST.get('post_identifier') == 'delete':
+			form = DeleteEventForm(request.POST,instance=event)
+			if form.is_valid():
+				if (isAllowedToDelete(catastrophe=event.catastrophe,profile=request.user.profile) or (event.createdby==request.user)):
+					event.delete()
+					return  HttpResponseRedirect(reverse_lazy('dcp:EventsView'))
 
 		# ...mit #id springt man direkt wieder zum Event, das man gerade bearbeitet hat :)
 		return HttpResponseRedirect('/aktionen/laufende/#' + str(event.id))

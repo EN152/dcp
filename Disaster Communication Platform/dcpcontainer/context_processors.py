@@ -1,36 +1,23 @@
-from dcp.forms import CatastropheChoice
-from dcp.customclasses import  Helpers
-from dcp.models import Catastrophe,Profile
+from dcp.customForms.catastropheForms import CatastropheChoiceFrom
+from dcp.models.notifications import *
+
 
 def catForm(request):
     """
-    http://stackoverflow.com/questions/6166055/show-a-form-in-my-template-base-using-django
-    :param request:
-    :return:
+    Creates a catastrophe choice form for a user
+    :author Jasper:
+    :param request: Standard HTTP Request to process the catastrophe choice for
+    :return: The catastrophe choice for a user
     """
-    if request.method == 'GET':
-        if request.user.is_anonymous():
-            return {'catChoiceForm': CatastropheChoice()}
-        currentProfile= Profile.get_profile_or_create(request.user)
-        currentCat = currentProfile.currentCatastrophe
-        if currentCat!=None:
-            return {
-                'catChoiceForm':CatastropheChoice(initial={'catastrophe':currentCat.pk})
-            }
-        else:
-            return {'catChoiceForm':CatastropheChoice()}
-    elif request.method == 'POST':
-        if request.user.is_anonymous():
-            return {'catChoiceForm': CatastropheChoice()}
-        newCatId = request.POST.get('catastrophe')
-        p = Profile.get_profile_or_create(request.user)
-        if request.user.is_anonymous():
-            return {'catChoiceForm': CatastropheChoice()}
-        result = p.setCatastropheById(newCatId)
-
-        if result == True: # Valid Katastrophen ID
-            return {
-                'catChoiceForm': CatastropheChoice(initial={'catastrophe': request.user.profile.currentCatastrophe.pk})
-            }
-        else: # Komische id, mache nichts
-            return {'catChoiceForm': CatastropheChoice()}
+    user = request.user
+    notificationcount = None
+    if user.is_authenticated():
+        catastrophe = user.profile.currentCatastrophe
+        if catastrophe is not None:
+            return {'catChoiceForm': CatastropheChoiceFrom(initial={'catastrophe':catastrophe.id})}
+        notificationcount = get_notifications(user).count()
+        print(notificationcount)
+        if notificationcount is None:
+            notificationcount = 0
+    return {'catChoiceForm': CatastropheChoiceFrom(),'notificationCount':notificationcount}
+        

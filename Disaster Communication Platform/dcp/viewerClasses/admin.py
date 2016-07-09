@@ -1,7 +1,6 @@
 # imports
 from dcp.importUrls import *
 
-
 class UserAdminOverview(views.SuperuserRequiredMixin,View):
     template = 'dcp/content/adminstrator/nutzer.html'
     def get(self,request):

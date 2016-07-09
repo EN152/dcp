@@ -4,6 +4,44 @@
 
 {% block content %}
 
+{% if quickstart %}
+<div class="jumbotron">
+    <center>
+  <h1>Hallo, {{ user.username }}!</h1>
+  <p>Du scheinst zum ersten Mal hier zu sein. Hoffentlich findest du dich schnell zurecht.<br><b>Falls du Hilfe brauchst, schau' doch mal im <a href="https://github.com/EN152/dcp/wiki">Wiki</a> vorbei.</b> <p>
+  <p>
+
+    <form action="/suchen" style="display: inline;">
+      <button class="btn btn-primary btn-lg" role="button"><span class="glyphicon glyphicon-search"></span> Erstes Gesuch</button>
+    </form>
+
+    <form action="/bieten" style="display: inline;">
+      <button class="btn btn-danger btn-lg" role="button"><span class="glyphicon glyphicon-transfer"></span> Erstes Gebot</button>
+    </form>
+
+    <form action="/wissen" style="display: inline;">
+      <button class="btn btn-warning btn-lg" role="button"><span class="glyphicon glyphicon-info-sign"></span> Erste Information</button>
+    </form>
+<br>
+<br>
+    <form action="/suchen/personen" style="display: inline;">
+      <button class="btn btn-info btn-lg" role="button"><span class="glyphicon glyphicon-eye-open"></span> Person suchen</button>
+    </form>
+
+    <form action="/aktionen/planung" style="display: inline;">
+      <button class="btn btn-info btn-lg" role="button"><span class="glyphicon glyphicon-calendar"></span> Aktion planen</button>
+    </form>
+<br>
+<br>
+        <form action="/profil" style="display: inline;">
+          <button class="btn btn-success btn-lg" role="button"><span class="glyphicon glyphicon-user"></span> Profil bearbeiten</button>
+        </form>
+
+  </p>
+</div>
+    </center>
+{% else %}
+
             <div class="row">
                 <div class="col-lg-3 col-md-6">
                     <div class="panel panel-primary">
@@ -14,7 +52,7 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">{{ countSearch }}</div>
-                                  
+
                                 </div>
                             </div>
                         </div>
@@ -38,7 +76,7 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">{{ countOffer }}</div>
-                                 
+
                                 </div>
                             </div>
                         </div>
@@ -61,7 +99,7 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">{{ countInformation }}</div>
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -97,7 +135,19 @@
                     </div>
                 </div>
                 </div>
-           
+
+
+
+
 {% include "dcp/design/timeline.html" %}
+
+{% endif %}
+
+
+
+
+
+
+
 
 {% endblock content %}

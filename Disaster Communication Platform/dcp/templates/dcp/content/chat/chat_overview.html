@@ -3,41 +3,40 @@
 {% block title %} Nachrichtenübersicht {% endblock %}
 
 {% block content %}
-<!-- /.panel -->
-<div class="chat-panel panel panel-default">
-    <div class="panel-heading">
-        <i class="fa fa-comments fa-fw"></i>
-        Chat
-    </div>
-    <!-- /.panel-heading -->
-    {% if last_message_list %}
-    <div class="panel-body">
-        <ul class="chat">
+    <script>
+    function viewChat(userid){
+        $("#chatframeid").attr('src', "{% url "dcp:Chat" %}?userid="+ userid);
+        $("#chatframeid").attr('style',"display:inline;border:0"); // Wieder auf default value setzen
+    }
+    </script>
+{% if last_message_list %}
+    <div class="col-md-6">
+        <div class="panel-body">
+            <div class="list-group">
             {% for message in last_message_list %}
-            <li class="right clearfix">
-                <div class="chat-body clearfix">
-                    <div class="header">
+                {% if message.From_id == currentUser.id %}
+                    <a href="{% url "dcp:Chat" %}?userid={{ message.To_id }}" onclick="viewChat({{ message.To_id }});return false;" class="list-group-item">
+                    <b>{{message.To}}</b><br>
 
-                        {% if message.From_id == currentUser.id %}
-                        <a href="{% url "dcp:Chat" %}?userid={{message.To_id}}">
-                           <strong class="primary-font">{{message.To}}</strong></a>
-                        {% else %}
-                        <a href="{% url "dcp:Chat" %}?userid={{message.From_id}}"><strong class="primary-font">{{message.From}}</strong></a>
-                        {% endif %}
-                        <small class="pull-right text-muted">
-                            <i class="fa fa-clock-o fa-fw"></i> {{ message.SendTime }}
-                        </small>
-                    </div>
-                    <p>
-                        {{message.Text}}
-                    </p>
-                </div>
-            </li>
+                {% else %}
+                    <a href="{% url "dcp:Chat" %}?userid={{message.From_id}}" class="list-group-item" onclick="viewChat({{ message.From_id }});return false;">
+                    <b>{{message.From}}</b><br>
+                {% endif %}
+                    {{ message.Text }}
+                    <span class="pull-right text-muted small"><em>{{ message.SendTime }}</em></span>
+                    </a>
             {% endfor %}
-        </ul>
+            </div>
+        </div>
     </div>
-    {% endif %}
-    <!-- /.panel-body -->
-</div>
+{% endif %}
+
 <!-- /.panel .chat-panel -->
+    {% if initial_user %}
+        <iframe id="chatframeid" class="col-md-6" style="border:0" height="550px" src=" {% url "dcp:Chat" %}?userid={{ initial_user }}">
+        </iframe>
+    {% else %}
+        <iframe id="chatframeid" class="col-md-6" frameBorder="0" height="550px" frameBorder="0" src="" style="display: none;border: 0">
+        </iframe>
+    {% endif %}
 {% endblock content %}

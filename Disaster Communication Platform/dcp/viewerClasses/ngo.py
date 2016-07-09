@@ -12,7 +12,7 @@ from django.core.urlresolvers import reverse
 class NgoView(OrganizationView):
     """description of class"""
     def get(self, request, pk, usernameSearchString=None):
-        templatePath= 'dcp/content/organization/ngo.html'
+        templatePath= 'dcp/content/organization/organization.html'
         template = loader.get_template(templatePath)
         user = request.user
         ngo = get_object_or_404(Ngo, id=pk)
@@ -31,8 +31,11 @@ class NgoView(OrganizationView):
             membershipForm = MembershipForm(membership=membership, membershipQuery=memberlist)
             membershipFormList.append(membershipForm)
 
+        areas = ngo.areas.all()
+
         context = {
             'organization': ngo,
+            'areas' : areas,
             'usernameSearchString': usernameSearchString,
             'usernameSearchList': usernameSearchList,
             'membership' : membership,

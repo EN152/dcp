@@ -11,6 +11,8 @@
 
 	<title>DCP &mdash; Disaster Communication Platform</title>
 
+	<script src="{% static 'js/pace.js' %}"></script> <!--Should be first thing to load! -->
+	<link href="{% static 'css/pace.css' %}" rel="stylesheet">
 	<link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 	<link href="{% static 'sb-admin/bower_components/metisMenu/dist/metisMenu.min.css' %}" rel="stylesheet">
 	<link href="{% static 'sb-admin/dist/css/timeline.css' %}" rel="stylesheet">
@@ -18,18 +20,21 @@
 	<link href="{% static 'sb-admin/bower_components/morrisjs/morris.css' %}" rel="stylesheet">
 	<link href="{% static 'sb-admin/bower_components/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
 	<link href="{% static 'dataTables/jquery.dataTables.min.css' %}" rel="stylesheet">
-	
-	
+
+
 	<!-- Please leave them here because, if you move them to the end of the page the map site won't work -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script> <!-- Wird auf fast jeder Subseite verwendet -->
+	<script src="{% static 'js/jquery.min.js' %}"></script><!--https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>  Wird auf fast jeder Subseite verwendet -->
+    <link href="{% static 'css/datepicker.css' %}">
+    <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
     <!-- Leaflet imports-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"/>
-	
-		<!-- SCRIPTS werden am Ende geladen: siehe unten! -->
+
+		<!-- weitere SKRIPTE werden am Ende geladen: siehe unten! -->
 </head>
 
 <body>
+	<div class="col-md-12">
 	<div id="wrapper">
 
 		<!-- Navigation -->
@@ -46,7 +51,9 @@
 			<!-- /.navbar-header -->
 			<ul class="nav navbar-top-links navbar-right">
 				<div class="navbar-form navbar-right">
-					<form role="form" method="POST" style ="float: right; padding: 5px;">{% csrf_token %}
+                   
+					<form action="{% url 'dcp:CatastropheChangeView' %}" role="form" method="POST" style ="float: right; padding: 5px;">
+                        {% csrf_token %}
 						{{ catChoiceForm }}
 					</form>
 
@@ -59,8 +66,7 @@
 				</div>
 
 
-				{{ catastrophe }} <!-- <- Was ist das ? --> 
-
+		
 
 				<!-- /.dropdown -->
 				<li class="dropdown">
@@ -73,41 +79,18 @@
 						<li class="divider"></li>
 						<li><a href="/abmelden/"><i class="fa fa-sign-out fa-fw"></i> Abmelden</a>
 						</li>
+
 					</ul>
 				</li>
 
-				<div class="navbar-form">
-					<form role="filter" method="GET" style="float: left; padding: 5px;" action="None">
-						 <div class="checkbox">
-  						<label><input type="checkbox" value="">  Lebensmittel  </label>
-						 </div>
-						 <div class="checkbox">
-							<label><input type="checkbox" value="">  Infrastruktur  </label>
-						 </div>
-						 <div class="checkbox">
-  						<label><input type="checkbox" value="">  Werkzeuge  </label>
-						 </div>
-						 <div class="checkbox">
-							<label><input type="checkbox" value="">  Medikamente  </label>
-						 </div>
-						 <div class="checkbox">
-  						<label><input type="checkbox" value="">  Sonstige  </label>
-						 </div>
-						 <label><input type="number" id="radius" name="radius" value="2">  km  </label>
-						 <button type="submit" class="btn btn-default">
-							<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Filtern
-						 </button>
-					</form> 
-				</div>
-
+			 {% if notificationCount != None %}
+			 <li class="dropdown">
+					<a   href="{% url 'dcp:Notifications' %}" >
+						<span class="glyphicon glyphicon-bullhorn"></span>  <b> {{ notificationCount }}  </b>
+					</a>
+					</li>
+             {% endif %}
 			</ul>
-
-			
-
-				
-
-			
-
 
 			<div class="navbar-default sidebar" role="navigation">
 				<div class="sidebar-nav navbar-collapse">
@@ -174,7 +157,7 @@
 									<li>
 										<a href="/wissen/archiv/"><span class="glyphicon glyphicon-duplicate"></span> Archiv</a>
 									</li>
-								</ul> 
+								</ul>
 							</div>
 						</li>
 
@@ -213,8 +196,8 @@
 								</li>
 							</ul>
 						</div>
-						</li>		
-						
+						</li>
+
 
 						<li>
 							<div style="padding-top: 7px; padding-bottom: 7px;">
@@ -223,18 +206,21 @@
 							</div>
 							<div id="profil" class="collapse in">
 								<ul class="nav nav-second-level">
-									<li> 
+									<li>
 										<a href="/profil/daten/"><span class="glyphicon glyphicon-th-list"></span> Persönliche Daten</a>
 									</li>
 									<li>
 										<a href="/nachrichten/"><span class="glyphicon glyphicon-envelope"></span> Nachrichten</a>
 									</li>
+                                    <li>
+                                        <a href="{% url 'dcp:Notifications' %}"><span class="glyphicon glyphicon-bullhorn"></span> Benachrichtigungen</a>
+                                    </li>
 	                                {% for ngo in user.profile.ngo.all  %}
 	                                    <li>
 	                                        <a href="{% url 'dcp:NgoView' ngo.id%}"><i class="fa fa-users" aria-hidden="true"></i> {{ngo.name_short}}</a>
 	                                    </li>
                                     {% endfor %}
-	                                
+
 	                                {% for government in user.profile.government.all %}
 	                                    <li>
 	                                        <a href="{% url 'dcp:GovernmentView' government.id %}"><i class="fa fa-globe" aria-hidden="true"></i> {{government.name_short}}</a>
@@ -261,11 +247,17 @@
 									<li>
 										<a href="{% url 'dcp:NgoManagerView' %}"><i class="fa fa-users" aria-hidden="true"></i> NGO</a>
 									</li>
+                                    <li>
+										<a href="{% url 'dcp:AreaAdministratorView' %}"><i class="fa fa-life-ring " aria-hidden="true"></i> Gebiete</a>
+									</li>
 									<li>
 										<a href="{% url 'dcp:GovernmentManagerView' %}"><i class="fa fa-globe" aria-hidden="true"></i> Staat</a>
 									</li>
                                     <li>
                                         <a href="{% url 'dcp:CategoryGoodManagerView' %}"><i class="glyphicon glyphicon-link" aria-hidden="true"></i> Kategorien</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'dcp:TimelineManagerView' %}"><i class="glyphicon glyphicon-warning-sign" aria-hidden="true"></i> Gemeldete Beiträge</a>
                                     </li>
 								</ul>
 							</div>
@@ -287,12 +279,13 @@
 						</div>
 						{% block content %}{% endblock content%}
 					</div>
+					</div>
 
-					<div class="row" id="footer">     
+			<div class="row" id="footer">
 					<hr>
-						<p class="text-center">&copy;  2016  &mdash;  Disaster Communication Platform  &mdash;  <a href="https://github.com/EN152/dcp/">Documentation</a></p>     
+						<p class="text-center">&copy;  2016  &mdash;  Disaster Communication Platform  &mdash;  <a href="https://github.com/EN152/dcp/">Dokumentation</a></p>
 					<hr>
-					</div> 
+					</div>
 			</div>
 				<!--script>
 					$(document).ready(function(){
@@ -304,7 +297,6 @@
   						});
 					});
 				</script-->
-				<script src="{% static 'sb-admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
 				<script src="{% static 'sb-admin/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 				<script src="{% static 'sb-admin/bower_components/metisMenu/dist/metisMenu.min.js' %}"></script>
 				<script src="{% static 'sb-admin/bower_components/raphael/raphael-min.js' %}"></script>
@@ -312,6 +304,6 @@
 				<script src="{% static 'sb-admin/js/morris-data.js' %}"></script>
 				<script src="{% static 'sb-admin/dist/js/sb-admin-2.js' %}"></script>
 				<script src="{% static 'dataTables/jquery.dataTables.min.js' %}"></script>
-				
+				<script type="text/javascript" src="{% static 'js/bootstrap-multiselect.min.js' %}"></script>
 			</body>
 			</html>

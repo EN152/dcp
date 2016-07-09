@@ -14,6 +14,8 @@ class Chat(View):
         Chat-Überseite zu redirecten, falls der Chat bisher nicht existiert
 
         """
+        if request.method != 'GET' and request.method != 'POST':
+            return
         self.otherId = request.GET.get('userid')
         # Checke ob userid wirklich Integer ist
         try:
@@ -39,7 +41,7 @@ class Chat(View):
         :param request:
         :return: Gerendertes Template
         """
-        messages = Message.objects.filter(Conversation=self.conversation)
+        messages = Message.objects.filter(Conversation=self.conversation).order_by('SendTime')
         form = self.form_class()
         return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template,params={'message_list':messages,'otherUser':self.otherUser,'currentUser':self.currentUser,'form':form})
     
@@ -52,8 +54,7 @@ class Chat(View):
             url = url_with_querystring(reverse('dcp:Chat'),userid=self.otherUser.id)
             return HttpResponseRedirect(url)
 
-    def url_with_querystring(path, **kwargs): #TODO: Refactor nach Helpers.
-        return path + '?' + urlencode(kwargs)
+
 
 
 class ChatOverview(View):
@@ -67,25 +68,20 @@ class ChatOverview(View):
         kontaktiert, aber dann doch keine Nachricht schreibt? Soll er diesen Chat dann sehen oder nicht?
         Falls ja -> noch zu implementieren
         """
-        messageDict = defaultdict(list)
         currentUser = request.user
         allConversations = Conversation.objects.filter(Starter=currentUser) | Conversation.objects.filter(Receiver=currentUser)
-        all_chats = Message.objects.filter(Conversation__in = allConversations)
-        # Jetzt teile die Listen jeweils auf in Chat Gruppen
-        for m in all_chats:
-            chatPatner = m.To if m.From.id == currentUser.id else m.From
-            messageDict[chatPatner].append(m)
-        tmpList = list()
-        for key,value in messageDict.items():
-            value.sort(key=lambda message: message.SendTime,reverse=True)
-            tmpList.append(value)
+        initial_user = request.GET.get('userid')
+        if initial_user is not None: # Nochmal abfragen, ob die angegebene Userid auch wirklich existiert
+            # Das eingebundene Frame kontrolliert zusätzlcih, ob bereits ein konversation existiert
+            user = get_object_or_none(User,id=initial_user) #type:user
+            if user is None:
+                initial_user = None
         mList = list()
-        for x in tmpList:
-            mList.append(x[0])
-        return render(request,self.template,context={'last_message_list':mList,'currentUser':request.user})
-
-
-
-
-
-
+        for conv in allConversations: #type:Conversation
+            try:
+                lastMessage = Message.objects.filter(Conversation=conv).latest('SendTime')
+                mList.append(lastMessage)
+            except:
+                templatemessage = Message(From=conv.Starter,To=conv.Receiver,Text="Noch keine Nachricht",SendTime=conv.created_at,Conversation=conv)
+                mList.append(templatemessage)
+        return render(request,self.template,context={'last_message_list':mList,'initial_user':initial_user,'currentUser':request.user})
