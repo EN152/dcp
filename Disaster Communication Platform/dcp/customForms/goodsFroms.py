@@ -39,3 +39,28 @@ class OfferImmaterialForm(GoodForm):
     class Meta:
         model = Offer_Immaterial
         fields = ["title", "catastrophe", "description", "image", "location_x", "location_y"]
+
+class PostNewsForm(GoodForm):
+    radius = forms.ChoiceField(choices=dcp.dcpSettings.RADIUS_CHOICES_GOODS, required=False, label='Suchradius')
+    class Meta:
+        model = Post_News
+        fields = ["title", "catastrophe", "description", "image", "location_x", "location_y"]
+        widgets = {
+            'title': forms.TextInput(attrs={'placholder': 'Strom wieder da'}),
+            'description': forms.TextInput(attrs={'placholder': 'Strom ist in manchen Teilen wieder verfügbar...'}),
+        }
+
+class PostDangersForm(GoodForm):
+    radius = forms.ChoiceField(choices=dcp.dcpSettings.RADIUS_CHOICES_GOODS, required=False, label='Suchradius')
+    class Meta:
+        model = Post_Dangers
+        fields = ["title", "catastrophe", "description", "image", "location_x", "location_y"]
+        widgets = {
+            'title': forms.TextInput(attrs={'placholder': 'Baum Umgekippt'}),
+            'description': forms.TextInput(attrs={'placholder': 'Baum liegt auf dem Gehweg...'}),
+        }
+class PostQuestionsForm(GoodForm):
+    radius = forms.ChoiceField(choices=dcp.dcpSettings.RADIUS_CHOICES_GOODS, required=False, label='Suchradius')
+    class Meta:
+        model = Post_Questions
+        fields = ["title", "description", "image", "location_x", "location_y"]
