@@ -10,6 +10,7 @@ class Question(models.Model):
 	text = models.TextField(max_length=500, null=True, blank=True)
 	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=True)
 	catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True)
+	choice_text = models.CharField(max_length=500, null=False, default="Ja; Nein")
 	pub_date = models.DateTimeField('date published', default=timezone.now())
 
 	def __str__(self):
@@ -20,11 +21,10 @@ class Question(models.Model):
 		return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
 class Choice(models.Model):
-	choice_text = models.CharField(max_length=200, null=True)
+	text = models.CharField(max_length=200, null=True)
 	votes = models.IntegerField(default=0)
-	user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=True)
+	#user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=True)
 	question = models.ForeignKey(Question, on_delete=models.CASCADE, null=False, blank=True)
 
 	def __str__(self):
 		return self.choice_text
-

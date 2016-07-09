@@ -10,14 +10,9 @@ class QuestionForm(forms.ModelForm):
 	title = forms.CharField(required=True,label='Frage',widget=forms.TextInput(attrs={'placeholder': 'Soll Einbruch in Supermärkte für die Dauer der Katastrophe erlaubt werden?'}))
 	text = forms.CharField(required=False, label='Beschreibung (optional)', widget=forms.Textarea(attrs={'placeholder': 'Nähere Begebenheiten?', 'rows': '5'}))
 	catastrophe = forms.ModelChoiceField(required=True, queryset=Catastrophe.objects.all(), label='Katastrophe', empty_label=None)
+	choice_text = forms.CharField(required=True, label='Auswahl', widget=forms.TextInput(attrs={'placeholder': 'Antwortoptionen - mehrere mit Semikolon trennen!'}))
+
 
 	class Meta:
 		model = Question
-		fields = ["title","text","catastrophe"]
-
-class ChoiceForm(forms.ModelForm):
-	choice_text = forms.CharField(required=True, label='Auswahl', widget=forms.TextInput(attrs={'placeholder': 'Antwortoption'}))
-    
-	class Meta:
-		model = Choice
-		fields = ["choice_text"]
+		fields = ["title", "text", "catastrophe", "choice_text"]
