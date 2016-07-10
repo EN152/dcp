@@ -50,6 +50,7 @@ class PollsView(LoginRequiredMixin,View):
 	def post(self, request):
 		template = 'dcp/content/wissen/polls.html'
 		post_identifier = request.POST.get('post_identifier')
+
 		if post_identifier == 'create' and request.user.is_active and request.user.is_authenticated():
 			questionform = QuestionForm(request.POST)
 			if questionform.is_valid():
@@ -60,10 +61,18 @@ class PollsView(LoginRequiredMixin,View):
 					catastrophe=Catastrophe.objects.get(id=request.POST.get('catastrophe')),
 					choice_text=request.POST.get('choice_text'))
 				question.save()
+
 		elif post_identifier == 'vote' and request.user.is_active and request.user.is_authenticated():
 			selected_choice = Choice.objects.get(id = request.POST.get('choice'))
 			selected_choice.votes += 1
 			voted_question = selected_choice.question
 			voted_question.voted_users.add(request.user)
 			selected_choice.save()
-		return HttpResponseRedirect("/wissen/")
+
+		elif post_identifier == 'delete' and request.user.is_active and request.user.is_authenticated():
+			choice_set = Choice.objects.filter(question = question_id)
+			choice_set.delete()
+			del_question = Question.objects.get(id = question.id)
+			del_question.delete()
+
+		return HttpResponseRedirect("/wissen/abstimmungen/")

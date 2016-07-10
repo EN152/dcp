@@ -98,10 +98,17 @@
 
 		{% endif %}
 				<center>
+					{% if  user in question.voted_users.all %}
+					<button class="btn btn-success disabled" style="margin-top: 10px; margin-bottom: 10px;">
+						<span class="glyphicon glyphicon-ok"></span>
+						Abstimmen
+					</button>
+					{% else %}
 					<button type="submit" class="btn btn-success" name="post_identifier" value="vote" style="margin-top: 10px; margin-bottom: 10px;">
 						<span class="glyphicon glyphicon-ok"></span>
 						Abstimmen
 					</button>
+					{% endif %}
 					{% if user.is_active %}
 					{% if user.is_superuser or question.user == user %}
 					<form action="" role="form" id="delete_form" method="post" style="display: inline;">
