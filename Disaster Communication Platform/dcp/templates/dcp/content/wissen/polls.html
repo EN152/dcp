@@ -44,12 +44,14 @@
 		<div class="panel-heading">
 			<b>{{ question.title }}</b>
 		</div>
+		{% if question.text %}
 		<div class="container">
 		<p>
 			<ul><b>Beschreibung:</b></ul>
 			<ul>{{ question.text }}</ul>
 		</p>
 		</div>
+		{% endif %}
 		{% if user in question.voted_users.all %}
 
 		{% if choice_list %}

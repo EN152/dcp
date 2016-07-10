@@ -27,7 +27,7 @@ class PollsView(LoginRequiredMixin,View):
 		for question in latest_question_list:
 			if question.choice_text:
 				if question.choice_text[len(question.choice_text) - 1] == ";":
-					question.choice_text = question.choice_text[:len(question.choice_text) - 2]
+					question.choice_text = question.choice_text[:len(question.choice_text) - 1]
 				all_choices = question.choice_text.split(";")
 
 				
@@ -70,9 +70,10 @@ class PollsView(LoginRequiredMixin,View):
 			selected_choice.save()
 
 		elif post_identifier == 'delete' and request.user.is_active and request.user.is_authenticated():
+			question_id = request.POST.get('question_id')
 			choice_set = Choice.objects.filter(question = question_id)
 			choice_set.delete()
-			del_question = Question.objects.get(id = question.id)
+			del_question = Question.objects.get(id = question_id)
 			del_question.delete()
 
 		return HttpResponseRedirect("/wissen/abstimmungen/")
