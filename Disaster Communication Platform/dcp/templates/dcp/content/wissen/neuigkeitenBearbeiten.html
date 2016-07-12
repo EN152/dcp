@@ -1,0 +1,46 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %}Neuigkeit bearbeiten: {% endblock %}
+{% load static from staticfiles %}
+{% block content %}
+
+<link href="{% static 'css/knowledge.css' %}" rel="stylesheet">
+<script>
+	window.onload = function() {
+		document.getElementById("search").focus();
+		// we set the focuse with this litle trick
+		// at the begining
+	}
+</script>
+
+	<div id="wrap">
+		<form action="" autocomplete="on">
+			{% csrf_token %}
+			<input id="search" name="title" class="search" type="text"
+				placeholder="" maxlength="50" value="{%if knowledgeEntity.title != None%}{{knowledgeEntity.title}}{% endif %}"></input><br>
+			<textarea name="description" class="description" cols="40"
+				placeholder="" rows="5">{%if knowledgeEntity.description != None%}{{knowledgeEntity.description}}{% endif %}</textarea>
+			<br>
+			<input type="hidden" name="knowledgeID" value="{%if knowledgeEntity.id != None%}{{knowledgeEntity.id}}{% endif %}">
+			<button type="submit" name="back" formaction="../" id="btnCust" class="btn btn-secondary-outline">
+				<small>Zurück</small>
+			</button>
+			<button type="submit" name="delete" formmethod="post" id="btnCust" class="btn btn-secondary-outline">
+				<small>Löschen</small>
+			</button>
+			<button type="submit" name="send" formmethod="post" id="btnCust" class="btn btn-secondary-outline">
+				<small>Senden</small>
+			</button>
+		</form>
+	</div>
+
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"
+		integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7"
+		crossorigin="anonymous"></script>
+
+
+{% endblock %}

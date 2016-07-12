@@ -52,7 +52,11 @@ urlpatterns = [
     url(r'^area/(?P<pk>\d+)/$', AreaView.as_view(),name='AreaView'),
 
 #    # Wissen
-     url(r'^wissen/$', Wissen.as_view(), name='Wissen'),
+    url(r'^wissen/$', Wissen.as_view(), name='Wissen'),
+    url(r'^wissen/neuigkeiten/$', Neuigkeiten.as_view(), name='Wissen'),
+    url(r'^wissen/neuigkeiten/bearbeiten/$', NeuigkeitenBearbeiten.as_view(), name='WissenBearbeiten'),
+    url(r'^wissen/neuigkeiten/ansehen/$', NeuigkeitenAnsehen.as_view(), name='WissenAnsehen'),
+    url(r'^wissen/neuigkeiten/anlegen/$', NeuigkeitenAnlegen.as_view(), name='WissenAnlegen'),
 #    url(r'^wissen/neuigkeiten/$', views.wissen_neuigkeiten),
 #    url(r'^wissen/gefahren/$', views.wissen_gefahren),
 #    url(r'^wissen/fragen/$', views.wissen_fragen),
