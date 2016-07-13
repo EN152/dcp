@@ -12,7 +12,6 @@ urlpatterns = [
     # Spezialseiten
     url(r'^anmelden/$', LoginView.as_view()),
     url(r'^abmelden/$', LogoutView.as_view()),
-    url(r'^registrieren/$', RegisterView.as_view()),
 
     # Karten
     url(r'^orte/karten/$', Karten.as_view()),

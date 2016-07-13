@@ -1,5 +1,3 @@
-from numpy.core.tests.test_numerictypes import read_values_nested
-
 from dcp.customForms.goodsFroms import *
 from dcp.viewerClasses.timeline import TimelineView
 from dcp.viewerClasses.authentication import getPageAuthenticated

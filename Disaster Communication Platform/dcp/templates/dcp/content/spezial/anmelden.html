@@ -1,4 +1,5 @@
 ﻿{% load staticfiles %}
+{% load bootstrap3 %}
 
 <!DOCTYPE html>
 <html lang="de">
@@ -17,24 +18,6 @@
 
 	<script type="text/javascript">
 
-        {% if notAvailable == False%}
-
-            $(document).ready(
-            function(){
-                appendString = "<div id=\"notAvailableAlert\"> " +
-                        "								<div class='alert alert-danger alert-dismissible' role='alert'>" +
-                        "										<button type='button' class='close' data-dismiss='alert'>" +
-                        "											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>" +
-                        "										</button>" +
-                        "										Der Username ist leider schon vergeben. Probier's nochmal!" +
-                        "									</div>" +
-                        "								</div>";
-                registerForm();
-                $("#register-form").append(appendString);
-            });
-
-
-        {% endif %}
 		window.alert = function(){};
 		var defaultCSS = document.getElementById('bootstrap-css');
 		function changeCSS(css){
@@ -63,7 +46,6 @@
 			<div class="col-md-6 col-md-offset-3">
 
 				<center><h2><strong>Disaster Communication Platform</strong><br>Emergency Notifications (EN152)</h2><br></center>
-				
 				<div class="panel panel-login">
 					<div class="panel-heading">
 						<div class="row">
@@ -79,85 +61,33 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-12">
-								<form id="login-form" method="post" role="form" style="display: block;">
-									{% csrf_token %}
-									<div class="form-group">
-										<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Benutzername" value="">
-									</div>
-									<div class="form-group">
-										<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Passwort">
-									</div>
-									<div class="form-group text-center">
-										<input type="checkbox" tabindex="3" class="" name="remember" id="remember">
-										<label for="remember"> angemeldet bleiben</label>
-									</div>
+								<form id="login-form" method="POST" role="form" style="display: block;">
+
+                                    {% csrf_token %}
+                                    {% bootstrap_form loginForm %}
 
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6 col-sm-offset-3">
-												<input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Einloggen">
+												<input type="submit" name="post_identifier" id="login-submit" tabindex="4" class="form-control btn btn-login" value="login">
 											</div>
 										</div>
 									</div>
 								</form>
-                                {% if notValid %}
-								<div id="notValidAlert">
-									<div class='alert alert-danger alert-dismissible' role='alert'>
-										<button type='button' class='close' data-dismiss='alert'>
-											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
-										</button>
-										Überprüfe bitte, ob du deinen Usernamen und Passwort richtig geschrieben hast!
-									</div>
-									
-								</div>
-                                {% endif %}
 
-                                {% if notAvailable %}
-								<div id="notAvailableAlert">
-									<div class='alert alert-danger alert-dismissible' role='alert'>
-										<button type='button' class='close' data-dismiss='alert'>
-											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
-										</button>
-										Der Username ist leider schon vergeben. Probier's nochmal!
-									</div>
-								</div>
-                                {% endif %}
-
-
-								<form id="register-form" action="/registrieren/" method="POST" role="form" style="display: none;">
-									{% csrf_token %}
-									<div class="form-group">
-										<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Benutzername/Pseudonym" value="">
-									</div>
-									<div class="form-group">
-										<input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Emailadresse" value="">
-									</div>
-									<div class="form-group">
-										<input type="password" data-minlength="8" name="password" id="password" tabindex="2" class="form-control" placeholder="Passwort">
-									</div>
-									<div class="form-group">
-										<input type="password" data-minlength="8" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Passwort wiederholen">
-									</div>
+								<form id="register-form" method="POST" role="form" style="display: none;">
+                                    {% csrf_token %}
+                                    {% bootstrap_form registerForm %}
 
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6 col-sm-offset-3">
-												<input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Registrieren">
+												<input type="submit" name="post_identifier" id="register-submit" tabindex="4" class="form-control btn btn-register" value="register">
 											</div>
 										</div>
 									</div>
 
 								</form>
-                                {% if notAvailable %}
-								<div id="notAvailableAlert">
-									<div class='alert alert-danger alert-dismissible' role='alert'>
-										<button type='button' class='close' data-dismiss='alert'>
-											<span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span>
-										</button>
-										Der Username ist leider schon vergeben. Probier's nochmal!
-									</div>
-								</div>
-                                {% endif %}
 							</div>
 						</div>
 					</div>
@@ -203,5 +133,12 @@
 		});
 
 	</script>
+    {% if registerForm.errors %}
+     
+        <script>
+            registerForm();
+        </script>
+
+    {% endif %}
 </body>
 </html>
