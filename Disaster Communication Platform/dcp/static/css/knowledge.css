@@ -36,7 +36,6 @@
 	height: 60px;
 	float: right;
 	padding: 0;
-	position: relative;
 }
 
 .inputCustem {
@@ -147,8 +146,6 @@ input[type="submit"]:hover {
 #continerCustem{
 	font-family: Helvetica;
     box-sizing: border-box;
-    margin-left: 200px;
-    margin-top: 200px;
 }
 
 input[type="submit"]:hover {
@@ -157,18 +154,9 @@ input[type="submit"]:hover {
 
 .list-unstyled.love li, .list-unstyled.no-love li {
 	color: #555;
-	background: none;
-	background:
-		url('../media/documentIcon.png')
-		no-repeat;
 	padding: 0 0 5% 45px;
 }
 
-/* change the no-love image */
 .list-unstyled.no-love li {
 	color: #555;
-	background: none;
-	background:
-		url('../media/documentIcon.png')
-		no-repeat;
 }
