@@ -1,5 +1,11 @@
 from dcp.importUrls import *
 
+class Orte(LoginRequiredMixin,View):
+    template = 'dcp/content/orte/orte.html'
+
+    def get(self, request):
+        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template)
+
 class Karten(View):
     template = 'dcp/content/orte/karten.html'
 
