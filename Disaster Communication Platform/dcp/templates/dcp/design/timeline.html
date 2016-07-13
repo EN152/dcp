@@ -53,15 +53,18 @@
             <!--button class="btn btn-success" id="idFilterRadiusButton"><span class="glyphicon glyphicon-record"></span> Filter Radius</button-->
         </div>
 
+
+ <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+                             <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.css">
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.js"></script>
+
 <div class="timeline">
        <!--
         <div id="RadiusFilterPanel">
                 {% load bootstrap3 %}
 
-                <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-                             <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
-                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.css">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.4.0/leaflet-geocoder-mapzen.js"></script>
+               
 
                                 <label><input type="button" class="btn btn-success" value="Aktueller Standort" onClick="getCurrentLocation();"/></label>
                              <div style="height: 360px;" id="mapid"></div>
