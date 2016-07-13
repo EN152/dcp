@@ -28,7 +28,6 @@ urlpatterns = [
     # Chat
     url(r'^chat/$', Chat.as_view(), name='Chat'),
     url(r'^nachrichten/$',ChatOverview.as_view(),name='ChatOverview'),
-    #url(r'^profil/netzwerke/$',ChatOverview.as_view(),name='ChatOverview'),
 
     # AdminPanel
     url(r'^administator/useroverview/$',UserAdminOverview.as_view(),name='UserAdminOverview'),
@@ -46,8 +45,9 @@ urlpatterns = [
     url(r'^ngo/(?P<pk>\d+)/$', NgoView.as_view(), name='NgoView'),
     url(r'^government/(?P<pk>\d+)/$', GovernmentView.as_view(),name='GovernmentView'),
     url(r'^area/(?P<pk>\d+)/$', AreaView.as_view(),name='AreaView'),
-    
+
     # Orte
+    url(r'^orte/$', Orte.as_view()),
     url(r'^orte/karten/$', Karten.as_view()),
 
     # Wissen
@@ -63,7 +63,6 @@ urlpatterns = [
     url(r'^aktionen/$', Aktionen.as_view()),
     url(r'^aktionen/planung/$', AktionenPlanung.as_view()),
     url(r'^aktionen/laufende/$', AktionenLaufende.as_view(),name='EventsView'),
-
 
     #Profil
     url(r'^profil/$', Profil.as_view(), name='Profil'),
