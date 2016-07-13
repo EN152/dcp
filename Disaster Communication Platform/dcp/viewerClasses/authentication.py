@@ -1,5 +1,6 @@
 # imports
 from dcp.importUrls import *
+from dcp.customForms.LoginForms import LoginForm, RegisterForm
 
 
 def getPageAuthenticated(request, template, params={}):
@@ -8,52 +9,44 @@ def getPageAuthenticated(request, template, params={}):
     else:
         return HttpResponseRedirect("/anmelden/")
 
-class RegisterView(View):
-    template = 'dcp/content/spezial/anmelden.html'
-    def post(self, request):
-        if not request.user.is_authenticated():
-            if request.method == "POST":
-                username = request.POST['username']
-                password = request.POST['password']
-                email = request.POST['email']
-                valid = bool(False)
-
-                for users in User.objects.all(): # Nicht lieber objects.get()?
-                    if username == users.username:
-                         return render(request, self.template, {'notAvailable': valid}) # So wird man aber direkt auf die anmelden Seite weitergeleitet
-
-                user = User.objects.create_user(username, email, password)
-                user.save()
-
-                new_user = authenticate(username=username,password=password)
-                login(self.request,new_user)
-                return HttpResponseRedirect(reverse_lazy('dcp:Index'))
-
 class LoginView(View):
-    def get(self, request, context={}):
+    def get(self, request, loginForm=LoginForm, registerForm=RegisterForm):
         templatePath = 'dcp/content/spezial/anmelden.html'
         template = loader.get_template(templatePath)
+        context = {
+            'loginForm' : loginForm,
+            'registerForm' : registerForm
+        }
+
         return HttpResponse(template.render(context=context, request=request))
         
     def post(self, request):
-       template = 'dcp/content/spezial/anmelden.html'
-       username = request.POST.get('username')
-       password = request.POST.get('password')
-
-       user = authenticate(username=username, password=password)
-       if user is not None:
-           if user.is_active:
-               login(request, user)
-               Profile.get_profile_or_create(user)
-               next = request.GET.get('next')
-               if next==None:
-                   return HttpResponseRedirect("/")
-               else:
-                   return HttpResponseRedirect(next)
-           else:
-               return HttpResponse("Inactive user.")
-       else:
-        return self.get(request, context={'notValid': True})
+        post_identifier = request.POST.get('post_identifier')
+        if post_identifier == 'login':
+            form = LoginForm(request.POST)
+            if form.is_valid():
+                user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
+                if user is not None and user.is_active:
+                     login(request, user)
+                     Profile.get_profile_or_create(user)
+                     return HttpResponseRedirect("/")
+                else :
+                     form.add_error('password', 'Die Kombination aus Passwort und Nutzername wurde nicht erkannt')
+                     form.add_error('username', '')
+            
+            return self.get(request, loginForm=form)
+        if post_identifier == 'register':
+            if not request.user.is_authenticated():
+                form = RegisterForm(request.POST)
+                if form.is_valid():
+                    user = User.objects.create_user(form.cleaned_data.get('username'), form.cleaned_data.get('email'), form.cleaned_data.get('password'))
+                    user.save()
+                    user = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
+                    Profile.get_profile_or_create(user=user)
+                    login(request, user)
+                    return HttpResponseRedirect("/")
+            return self.get(request, registerForm=form)
+        return self.get(request)
 
 class LogoutView(View):
     def get(self, request):

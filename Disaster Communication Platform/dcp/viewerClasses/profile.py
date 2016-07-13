@@ -8,6 +8,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
+class Profil(LoginRequiredMixin, View):
+    template = 'dcp/content/spezial/profiluebersicht.html'
+
+    def get(self, request):
+        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template)
+
 class MyProfile(LoginRequiredMixin, View):
     def get(self, request):
         templatePath = 'dcp/content/spezial/profil.html'

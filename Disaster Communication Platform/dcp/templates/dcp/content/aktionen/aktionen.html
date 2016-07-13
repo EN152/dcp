@@ -1,0 +1,32 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %} Wonach suchst Du? {% endblock %}
+
+{% block content %}
+
+<div class="col-lg-4">
+	<div class="panel panel-aktionen">
+		<div class="panel-heading">
+			Aktion planen
+		</div>
+		<div class="panel-body">
+			<p>Hier kannst Du eine neue Aktion/ Veranstaltung erstellen und auf der Webseite veröfentlichen.</p>
+			<h2><span class="glyphicon glyphicon-th-large"></span> <a href="/planen/">Aktion planen</a></h2>
+			<br>
+		</div>
+	</div>
+</div>
+
+<div class="col-lg-4">
+	<div class="panel panel-aktionen">
+		<div class="panel-heading">
+			Laufende Aktionen
+		</div>
+		<div class="panel-body">
+			<p>Hier kannst erhälst du eine Übersicht über alle laufenden Aktionen und kannst dich ggf. in eine eintragen.</p>
+			<h2><span class="glyphicon glyphicon-tags"></span> <a href="/laufende/">Laufende Aktionen</a></h2>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,45 @@
+{% extends "dcp/design/base.html" %}
+
+{% block title %} Was möchtest Du tun? {% endblock %}
+
+{% block content %}
+
+<div class="col-lg-4">
+	<div class="panel panel-aktionen">
+		<div class="panel-heading">
+			Persönliche Daten
+		</div>
+		<div class="panel-body">
+			<p>Hier kannst Du deine persönlichen Daten einsehen.</p>
+			<h2><span class="glyphicon glyphicon-th-list"></span> <a href="./daten/">Persönliche Daten</a></h2>
+			<br>
+		</div>
+	</div>
+</div>
+
+<div class="col-lg-4">
+	<div class="panel panel-aktionen">
+		<div class="panel-heading">
+			Nachrichten
+		</div>
+		<div class="panel-body">
+			<p>Hier kannst Du alle deine Konversationen mit anderen Nutzern ansehen.</p>
+			<h2><span class="glyphicon glyphicon-envelope"></span> <a href="/nachrichten/">Nachrichten</a></h2>
+		</div>
+	</div>
+</div>
+
+
+<div class="col-lg-4">
+	<div class="panel panel-aktionen">
+		<div class="panel-heading">
+			Benachrichtigungen
+		</div>
+		<div class="panel-body">
+			<p>Hier kannst Du deine Beachrichtigungen sehen, also, ob Du eine neue Nachricht, eine Einladung zu einer NGO/ einem Staat oder ähnliches hast.</p>
+			<h2><span class="glyphicon glyphicon-bullhorn"></span> <a href="/notifications/">Benachrichtigungen</a></h2>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}

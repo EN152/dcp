@@ -1,6 +1,6 @@
 {% extends "dcp/design/base.html" %}
 
-{% block title %}Neuigkeit Anlegen: {% endblock %}
+{% block title %}Neuigkeit anlegen {% endblock %}
 {% load static from staticfiles %}
 {% block content %}
 
@@ -17,16 +17,16 @@
 		<form action="" autocomplete="on">
 			{% csrf_token %}
 			<input id="search" name="title" class="search" type="text"
-				placeholder="Bitte einen Title eingeben" maxlength="50" value=""></input><br>
+				placeholder="Bitte einen Titel eingeben" maxlength="50" value=""></input><br>
 			<textarea name="description" class="description" cols="40"
 				placeholder="Bitte eine Beschreibung eingeben" rows="5"></textarea>
 			<br>
 			<input type="hidden" name="knowledgeID" value="">
-			<button type="submit" name="back" formaction="../" id="btnCust" class="btn btn-secondary-outline">
-				<small>Zurück</small>
+			<button type="submit" name="back" formaction="../" id="btnCust" class="btn btn-warning btn">
+				<span class="glyphicon glyphicon-arrow-left"></span> Zurück
 			</button>
-			<button type="submit" name="send" formmethod="post" id="btnCust" class="btn btn-secondary-outline">
-				<small>Senden</small>
+			<button type="submit" name="send" formmethod="post" id="btnCust" class="btn btn-success btn">
+				<span class="glyphicon glyphicon-info-sign"></span> Senden
 			</button>
 		</form>
 	</div>
