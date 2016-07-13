@@ -90,6 +90,7 @@ class OrganizationView(LoginRequiredMixin, View):
         if post_identifier == 'sendInvite':
             inviteUser = get_object_or_404(User, id=request.POST.get('user_invite_id'))
             invite = inviteModel.objects.get_or_create(profile=inviteUser.profile, organization=organization)
+            add_new_notification(title="Neue Einladung!",text="Du wurdest einer Organisation hinzugefügt.",toUser=inviteUser,url=reverse('dcp:ProfileView'))
             return True
 
         if post_identifier == 'discardInvite':

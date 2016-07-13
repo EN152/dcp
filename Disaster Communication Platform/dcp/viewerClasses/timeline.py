@@ -45,6 +45,7 @@ class TimelineView(LoginRequiredMixin, View):
                 conv = Conversation.getConversationOrNone(userOne=user, userTwo=goodOwner)
                 if conv is None: # Wenn noch keine Conversation da ist
                     Conversation.objects.create(Starter=user,Receiver=goodOwner)
+                    add_new_notification("Neuer Chat",user.username.title()+" hat einen Chat mit dir gestartet.",toUser=goodOwner,url=url_with_querystring(reverse('dcp:ChatOverview'),userid=user.id))
                 # Jetzt: Redirect
                 url = url_with_querystring(reverse('dcp:ChatOverview'),userid=goodOwner.id)
 
@@ -69,6 +70,9 @@ class TimelineView(LoginRequiredMixin, View):
                         return HttpResponseRedirect(template)
                 relation = good.bumps
                 Bump.objects.create(user=user,relation=relation)
+                add_new_notification("Neuer Bump", user.username.title() + " hat deinen Post gebumbt!",
+                                     toUser=good.user,
+                                     url=None)
                 template = request.build_absolute_uri()
                 return HttpResponseRedirect(template)
 

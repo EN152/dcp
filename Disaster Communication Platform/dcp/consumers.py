@@ -40,7 +40,7 @@ def msg_consumer(message):
     Group("chat-%s" % conv_id).send({
         "text": json.dumps(dict)
     })
-    add_new_notification(title="Neue Nachricht",text="Neue Nachricht von "+ownuser.username,toUser=otheruser,url=url_with_querystring(reverse('dcp:ChatOverview'),userid=ownuser.id))
+    #add_new_notification(title="Neue Nachricht",text="Neue Nachricht von "+ownuser.username,toUser=otheruser,url=url_with_querystring(reverse('dcp:ChatOverview'),userid=ownuser.id))
    # print("sended")
 
 
@@ -69,7 +69,7 @@ def ws_connect(message,userid):
 
 @channel_session
 def ws_disconnect(message,userid):
-    Group('chat-%s' % channel_session['conversation']).discard(message.reply_channel)
+    Group('chat-%s' % message.channel_session['conversation']).discard(message.reply_channel)
     return
 #@#channel_session_user_from_http
 #def ws_disconnect(message,userid):
@@ -99,6 +99,7 @@ def notify_msg_consumer(message):
     Group(group).send({
         "text": json.dumps(dict)
     })
+    new_count(forUser=user)
 
 @channel_session_user_from_http
 def notifier_ws_connect(message):
@@ -128,7 +129,27 @@ def notifier_ws_message(message):
     user = User.objects.get(id=userid)#type:User
     notification = get_object_or_none(Notification,id=delid)#type:Notification
     notification.noticedBy.add(user)
+    new_count(forUser=user)
 
+@channel_session_user_from_http
+def ws_notifier_count_connect(message):
+    message.channel_session['user'] = message.user.id
+    Group("notifier-count-%s" % message.channel_session['user']).add(message.reply_channel)
+@channel_session
+def ws_notifier_count_disconnect(message):
+    Group('notifier-count-%s' % message.channel_session['user']).discard(message.reply_channel)
+def new_count(forUser):
+    """
+    User hat neuen Count, melde  das!
+    :param forUser: Der User, der einen neuen Count hat oder None, falls alle einen Count haben!
+    :return:
+    """
+    if forUser is  not None:
+        print("senden!!")
+        Group("notifier-count-%s" % forUser.id).send({'text':json.dumps({'newCount':get_notifications(user=forUser).count()})})
+    else:
+        for user in User.objects().all():
+            Group("notifier-count-%s" % user.id).send({'text': json.dumps({'newCount': get_notifications(user=forUser).count()})})
 
 
 #    Channel("chat-messages").send({

@@ -5,40 +5,23 @@
 {% block content %}
 {% load static from staticfiles %}
 <link href="{% static 'css/knowledge.css' %}" rel="stylesheet">
-<style>
-
-.col-lg-12{
-	display: none
-
-	}
-
-
-</style>
 
 <script>
 	window.onload = function() {
 		document.getElementById("search").focus();
-		// we set the focuse with this litle trick
-		// at the begining
 	}
 </script>
-
 		<div id="wrap">
-
 			<form method="post" autocomplete="on">
 				{% csrf_token %}
-				<input id="search" class="inputCustem" name="search" type="text"
-					placeholder="Was suchst du?">
+				<input id="search" class="inputCustem" name="search" type="text" placeholder="Was suchst du?">
 					<input id="search_submit" name="search_submit" value="" type="submit">
 					<button type="submit" name="new" formaction="./anlegen/" formmethod="post" class="btn btn-warning btn-lg"style="position: relative; top: 15px; left: 110px;"><span class="glyphicon glyphicon-info-sign"></span> Neu</button>
 			</form>
-
 		</div>
-
-
 		<div id="continerCustem">
 			<div id="colCust24" style="overflow-y:scroll; overflow-x:hidden; height:400px;">
-				<h4 id="display-4">Ergebnisse:</h4>
+				<h4 id="display-4">Alle Beiträge</h4>
 				<ul class="list-unstyled love">
 					{% for know in knowledgeList %}
 					<li><p><b>{{know.title}}</b></p>
@@ -50,11 +33,10 @@
 						</form>
 					</li>
 					{% endfor %}
-
 				</ul>
 			</div>
 			<div id="colCust42" style="overflow-y:scroll; overflow-x:hidden; height:400px;">
-				<h4 id="display-4">Deine-Wissenseinträge:</h4>
+				<h4 id="display-4">Deine Beiträge</h4>
 
 				<ul class="list-unstyled no-love">
 					{% for know in knowledgeYourList %}
@@ -66,12 +48,8 @@
 							<button type="submit" class="btn btn-warning btn"><span class="glyphicon glyphicon-edit"></span> Bearbeiten</button>
 						</form>
 					</li>
-
 					{% endfor %}
-
 				</ul>
 			</div>
 		</div>
-
-
 {% endblock %}
