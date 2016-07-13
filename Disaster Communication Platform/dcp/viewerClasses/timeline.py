@@ -101,9 +101,9 @@ class TimelineView(LoginRequiredMixin, View):
                 for good in Offer_Immaterial.objects.all():
                     url = reverse('dcp:OfferImmaterialView')
                     url += "#"+str(good.id)
-                for good in Post_Question.objects.all():
+                '''for good in Post_Question.objects.all():
                     url = reverse('dcp:PostQuestionView')
-                    url += "#"+str(good.id)
+                    url += "#"+str(good.id)'''
                 add_new_notification("Neuer Bump", user.username.title() + " hat deinen Post gebumbt!",
                                      toUser=good.user,
                                      url=url)
