@@ -10,10 +10,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%p00p(e9%r!&-b*m1)@nmwxc4e17uoa!w#1_((hj%^9f%inj2-'
+#with open('~/dcp_secret_key.txt') as f:
+#    SECRET_KEY = f.read().strip()
+
+SECRET_KEY = 'DdUE2\7pR`?rc(+%?PTHghp6>nF!'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["127.0.0.1","localhost"]
 
@@ -106,6 +110,10 @@ else:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
+
+
+CONN_MAX_AGE = None
+
 
 
 # Password validation
