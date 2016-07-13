@@ -5,25 +5,27 @@
 {% block content %}
 
 <div class="panel panel-default col-sm-12">
-    <div class="panel-body">
-        <div class="col-sm-6">
+  <div class="panel-body">
+    <div class="col-sm-6">
+      <span class="glyphicon glyphicon-user" style="font-size: 7em; display: inline;"></span>
+      <span style="font-size: 3em;"> <b>{{ user.username }}</b></span>
+      <p>
+        {% if user.email != '' %}
+          Emailadresse: <b>{{ user.email }}</b><br>
+        {% endif %}
 
-		    <h4>Benutzername: <b>{{ user.username }}</b><br>
-		
-		    {% if user.email != '' %}
-		    	Emailadresse: <b>{{ user.email }}</b><br>
-		    {% endif %}
+        Letzter Login: <b>{{ user.last_login }}</b></h4><br>
+        <a href="/profil/bearbeiten/" class="btn btn-primary" type="submit" style="margin-top: 10px;"><span class="glyphicon glyphicon-edit"></span> Profil bearbeiten</a>
+      </p>
 
-		    Letzter Login: <b>{{ user.last_login }}</b></h4>
-            <a href="/profil/bearbeiten/" class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-edit"></span> Profil bearbeiten</a>
-        </div>
     </div>
+  </div>
 </div>
 
 
 {% if inviteNgoList %}
     <h3>Einladungen NGOs</h3>
-    <div class="table-responsive">          
+    <div class="table-responsive">
       <table class="table">
         <thead>
           <tr>
@@ -45,14 +47,14 @@
                     <td>vor {{invite.created_date|timesince}}</td>
                     <td>
                         <form class="form-horizontal" role="form" id="accept_invite" method="post">
-    					    <div class="input-group">         
+    					    <div class="input-group">
                                 {% csrf_token %}
                                 <input type="hidden" name="invite_id" value="{{invite.id}}" />
                                 <span class="input-group-btn">
                                     <button class="btn btn-success" id="btn-chat" type="submit" name="post_identifier" value="acceptNgoInvite">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Akzeptieren
                                     </button>
-                               
+
                                     <button class="btn btn-danger" id="btn-chat" type="submit" name="post_identifier" value="declineNgoInvite">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ablehnen
                                     </button>
@@ -69,7 +71,7 @@
 
 {% if inviteGovernmentList %}
     <h3>Einladungen</h3>
-    <div class="table-responsive">          
+    <div class="table-responsive">
       <table class="table">
         <thead>
           <tr>
@@ -91,14 +93,14 @@
                     <td>vor {{invite.created_date|timesince}}</td>
                     <td>
                         <form class="form-horizontal" role="form" id="accept_invite" method="post">
-    					    <div class="input-group">         
+    					    <div class="input-group">
                                 {% csrf_token %}
                                 <input type="hidden" name="invite_id" value="{{invite.id}}" />
                                 <span class="input-group-btn">
                                     <button class="btn btn-success" id="btn-chat" type="submit" name="post_identifier" value="acceptGovernmentInvite">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Akzeptieren
                                     </button>
-                               
+
                                     <button class="btn btn-danger" id="btn-chat" type="submit" name="post_identifier" value="declineGovernmentInvite">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ablehnen
                                     </button>
