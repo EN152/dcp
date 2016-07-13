@@ -302,7 +302,6 @@ table.dataTable thead .sorting:after {
 .panel-green {
     border-color: #5cb85c;
 }
-
 .panel-green .panel-heading {
     border-color: #5cb85c;
     color: #fff;
@@ -316,6 +315,19 @@ table.dataTable thead .sorting:after {
 .panel-green a:hover {
     color: #3d8b3d;
 }
+
+.panel-aktionen {
+    border-color: #31b0d5;
+}
+.panel-aktionen .panel-heading{
+    border-color: #31b0d5;
+    color: #fff;
+    background-color: #31b0d5
+}
+.panel-aktionen a {
+    color: #31b0d5
+}
+
 
 .panel-red {
     border-color: #d9534f;

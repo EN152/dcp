@@ -2,6 +2,11 @@ from dcp.importUrls import *
 from dcp.auth.generic import isAllowedToDelete
 from dcp.customclasses.Helpers import url_with_querystring
 
+class Aktionen(View):
+	template = 'dcp/content/aktionen/aktionen.html'
+	def get(self, request):
+		return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template)
+
 class AktionenPlanung(View):
 	def get(self, request):
 		template = 'dcp/content/aktionen/planung.html'

@@ -99,7 +99,7 @@ function addToStaticMarkers(location_x, location_y, title) {
     })).bindPopup(title));
 }
 function addToStaticCircles(location_x, location_y, radius, title) {
-    staticCircles.push((L.circle([location_x.replace(",", "."), location_y.replace(",", ".")], (radius.replace(",", ".") * 1000), {
+    staticCircles.push((L.circle([location_x.replace(",", "."), location_y.replace(",", ".")], (radius * 1000), {
         color: 'red',
         fillColor: '#f03',
         fillOpacity: 0.2,

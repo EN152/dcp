@@ -72,10 +72,6 @@ class Goods(models.Model):
             return Offer_Material.objects.get(id=id)
         if type == 'Offer_Immaterial':
             return Offer_Immaterial.objects.get(id=id)
-        if type == 'Post_News':
-            return Post_News.objects.get(id=id)
-        if type == 'Post_Danger':
-            return Post_Danger.objects.get(id=id)
         if type == 'Post_Question':
             return Post_Question.objects.get(id=id)
         return None
@@ -89,10 +85,6 @@ class Goods(models.Model):
             return Offer_Material
         if type == 'Offer_Immaterial':
             return Offer_Immaterial
-        if type == 'Post_News':
-            return Post_News
-        if type == 'Post_Danger':
-            return Post_Danger
         if type == 'Post_Question':
             return Post_Question
         return None
@@ -107,11 +99,7 @@ class Goods(models.Model):
             listOfGoods.append(oneGood)
         for oneGood in Search_Immaterial.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
-        for oneGood in Post_News.objects.all():
-            listOfGoods.append(oneGood)
-        for oneGood in Post_Dangers.objects.all():
-            listOfGoods.append(oneGood)
-        for oneGood in Post_Questions.objects.all():
+        for oneGood in Post_Question.objects.all():
             listOfGoods.append(oneGood)
         return listOfGoods
     def sortByBumpCount(goods_list):
@@ -136,6 +124,11 @@ class Goods(models.Model):
             listOfGoods.append(oneGood)
         return listOfGoods
     
+    def getAllQuestions(**kwargs):
+        listOfGoods = []
+        for oneGood in Post_Question.objects.filter(**kwargs):
+            listOfGoods.append(oneGood)
+        return listOfGoods  
 
     def isSearchedForByString(self, searchString):
         if searchString.upper() in self.description.upper() or searchString.upper() in self.title.upper():
@@ -191,21 +184,7 @@ class Offer_Immaterial(Immaterial_Goods):
     def getGoodType(self):
         return 'Offer_Immaterial'
 
-class Post_News(Goods):
-    timeline_badge_color = models.CharField(max_length=100, null=False, default='yellow')
-    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-info-sign')
-
-    def getGoodType(self):
-        return 'Post_News'
-
-class Post_Dangers(Goods):
-    timeline_badge_color = models.CharField(max_length=100, null=False, default='yellow')
-    timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-info-sign')
-
-    def getGoodType(self):
-        return 'Post_Danger'
-
-class Post_Questions(Goods):
+class Post_Question(Goods):
     timeline_badge_color = models.CharField(max_length=100, null=False, default='yellow')
     timeline_glyphicon = models.CharField(max_length=100, null=False, default='glyphicon-info-sign')
 
