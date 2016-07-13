@@ -32,7 +32,15 @@
 
 		<!-- weitere SKRIPTE werden am Ende geladen: siehe unten! -->
 </head>
+<script>
+    /// Websocket wartet auf die Nachricht, dass neue Benachrichtigungen reingekommen sind.
+        var ws_base = new WebSocket("ws://{{ request.get_host }}/notifications_count/?session_key={{ request.session.session_key }}");
+        ws_base.onmessage = function(e){
+           dict = JSON.parse(e.data);
+           $('#notificationsCount').html(dict.newCount);
+        };
 
+    </script>
 <body>
 	<div class="col-md-12">
 	<div id="wrapper">
@@ -86,7 +94,7 @@
 			 {% if notificationCount != None %}
 			 <li class="dropdown">
 					<a   href="{% url 'dcp:Notifications' %}" >
-						<span class="glyphicon glyphicon-bullhorn"></span>  <b> {{ notificationCount }}  </b>
+						<span class="glyphicon glyphicon-bullhorn"></span>  <b id="notificationsCount"> {{ notificationCount }}  </b>
 					</a>
 					</li>
              {% endif %}
