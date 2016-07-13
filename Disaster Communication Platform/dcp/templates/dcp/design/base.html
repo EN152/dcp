@@ -33,14 +33,14 @@
 		<!-- weitere SKRIPTE werden am Ende geladen: siehe unten! -->
 </head>
 <script>
-    /// Websocket wartet auf die Nachricht, dass neue Benachrichtigungen reingekommen sind.
+    /// Websocket wartet auf die Nachricht, das neue Benachrichtigungen reingekommen sind.
         var ws_base = new WebSocket("ws://{{ request.get_host }}/notifications_count/?session_key={{ request.session.session_key }}");
         ws_base.onmessage = function(e){
            dict = JSON.parse(e.data);
            $('#notificationsCount').html(dict.newCount);
         };
+</script>
 
-    </script>
 <body>
 	<div class="col-md-12">
 	<div id="wrapper">
@@ -59,7 +59,7 @@
 			<!-- /.navbar-header -->
 			<ul class="nav navbar-top-links navbar-right">
 				<div class="navbar-form navbar-right">
-                   
+
 					<form action="{% url 'dcp:CatastropheChangeView' %}" role="form" method="POST" style ="float: right; padding: 5px;">
                         {% csrf_token %}
 						{{ catChoiceForm }}
@@ -74,7 +74,7 @@
 				</div>
 
 
-		
+
 
 				<!-- /.dropdown -->
 				<li class="dropdown">
@@ -184,7 +184,7 @@
 							<div id="aktionen" class="collapse">
 							<ul class="nav nav-second-level">
 								<li>
-									<a href="/aktionen/planung/"><span class="glyphicon glyphicon-paperclip"></span> Aktion planen</a>
+									<a href="/aktionen/planung/"><span class="glyphicon glyphicon-th-large"></span> Aktion planen</a>
 								</li>
 								<li>
 									<a href="/aktionen/laufende/"><i class="fa fa-life-ring" aria-hidden="true"></i> Laufende Aktionen</a>

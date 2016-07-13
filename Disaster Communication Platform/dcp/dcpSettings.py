@@ -1,4 +1,5 @@
-MIN_COMMENT_LENGTH = 1
+# Länge 0 akzeptiert mindestens 1 Zeichen (Denkbar wäre Smiley, Herz, Fragezeichen...)
+MIN_COMMENT_LENGTH = 0
 RADIUS_CHOICES_GOODS = [
     (0, '0 km'),
     (1, '1 km'),

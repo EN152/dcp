@@ -13,7 +13,6 @@
 	});
 </script>
 
-
 <!-- Anfang des Bereich für die Neuerstellung -->
 {% if user.is_active %}
 <div class="panel panel-default">
@@ -26,12 +25,12 @@
 				<h2><span class="glyphicon glyphicon-stats"></span> Worüber soll abgestimmt werden? </h2>
 
 				{% load bootstrap3 %}
-				{% csrf_token %}	
+				{% csrf_token %}
 				{% bootstrap_form questionform %}
 
 				<button type="submit" class="btn btn-success" name="post_identifier" value="create"><span class="glyphicon glyphicon-share"></span> Erstellen</button>
 			</form>
-		</div>	
+		</div>
 	</div>
 </div>
 {% endif %}
@@ -47,8 +46,9 @@
 		{% if question.text %}
 		<div class="container-fluid" style="word-wrap: break-word;">
 			<p>
-				<ul><b>Beschreibung:</b></ul>
-				<ul>{{ question.text }}</ul>
+				<br>
+				<b>Beschreibung: </b>
+				{{ question.text }}</span>
 			</p>
 		</div>
 		{% endif %}
@@ -79,11 +79,9 @@
 			<div class="container">
 				<p>
 					{% for choice in choice_list %}
-
 					{% if choice.question == question %}
-
 					<label for="choice{{ forloop.counter }}">
-						<input type="radio" name="choice" value="{{ choice.id }}">
+						<input type="radio" name="choice" value="{{ choice.id }}" checked>
 						{{ choice.text }}
 					</input>
 				</label>
@@ -117,7 +115,7 @@
 				{% csrf_token %}
 				<input type="hidden" name="question_id" value="{{question.id}}" />
 				<button type="submit" class="btn btn-danger" name="post_identifier" value="delete" style="margin-top: 10px; margin-bottom: 10px;">
-					<span class="glyphicon glyphicon-trash"></span> 
+					<span class="glyphicon glyphicon-trash"></span>
 					Löschen
 				</button>
 			</form>
@@ -130,7 +128,7 @@
 {% endfor %}
 
 {% else %}
-<p>Hinweis: Zur Zeit gibt es nichts, worüber abgestimmt werden müsste!</p>
+<p>(Hinweis: Zur Zeit gibt es nichts, worüber abgestimmt werden müsste.)</p>
 {% endif %}
 
 {% endblock content %}
