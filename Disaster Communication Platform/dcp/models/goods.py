@@ -99,7 +99,7 @@ class Goods(models.Model):
             listOfGoods.append(oneGood)
         for oneGood in Search_Immaterial.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
-        for oneGood in Post_Question.objects.all():
+        for oneGood in Post_Question.objects.filter(**kwargs):
             listOfGoods.append(oneGood)
         return listOfGoods
     def sortByBumpCount(goods_list):

@@ -35,26 +35,31 @@ class TimelineView(LoginRequiredMixin, View):
                         good.save()
                     relation = good.comments
                     Comment.objects.create(text=text,user=user,relation=relation)
-                    for good in Search_Material.objects.all():
-                        url = reverse('dcp:SearchMaterialView')
-                        url += "#"+str(good.id)
-                    for good in Search_Immaterial.objects.all():
-                        url = reverse('dcp:SearchImmaterialView')
-                        url += "#"+str(good.id)
-                    for good in Offer_Material.objects.all():
-                        url = reverse('dcp:OfferMaterialView')
-                        url += "#"+str(good.id)
-                    for good in Offer_Immaterial.objects.all():
-                        url = reverse('dcp:OfferImmaterialView')
-                        url += "#"+str(good.id)
-                    '''for good in Post_Question.objects.all():
-                        url = reverse('dcp:PostQuestionView')
-                        url += "#"+str(good.id)'''
-                    add_new_notification("Neuer Kommentar", user.username.title() + " hat deinen Post kommentiert!",
-                                     toUser=good.user,
-                                     url=url)
-                    template = request.build_absolute_uri()
-                    return HttpResponseRedirect(template)
+                    #man brauch keine notification wenn mana selber kommentiert
+                    if user == good.user:
+                        template = request.build_absolute_uri()
+                        return HttpResponseRedirect(template)
+                    else:
+                        for good in Search_Material.objects.all():
+                            url = reverse('dcp:SearchMaterialView')
+                            url += "#"+str(good.id)
+                        for good in Search_Immaterial.objects.all():
+                            url = reverse('dcp:SearchImmaterialView')
+                            url += "#"+str(good.id)
+                        for good in Offer_Material.objects.all():
+                            url = reverse('dcp:OfferMaterialView')
+                            url += "#"+str(good.id)
+                        for good in Offer_Immaterial.objects.all():
+                            url = reverse('dcp:OfferImmaterialView')
+                            url += "#"+str(good.id)
+                        for good in Post_Question.objects.all():
+                            url = reverse('dcp:PostQuestionView')
+                            url += "#"+str(good.id)
+                        add_new_notification("Neuer Kommentar", user.username.title() + " hat deinen Post kommentiert!", 
+                            toUser=good.user,
+                            url=url)
+                        template = request.build_absolute_uri()
+                        return HttpResponseRedirect(template)
 
             if postIdentifier == 'contact_form':
                 good = self.get_good_or_404(request)
@@ -89,26 +94,30 @@ class TimelineView(LoginRequiredMixin, View):
                         return HttpResponseRedirect(template)
                 relation = good.bumps
                 Bump.objects.create(user=user,relation=relation)
-                for good in Search_Material.objects.all():
-                    url = reverse('dcp:SearchMaterialView')
-                    url += "#"+str(good.id)
-                for good in Search_Immaterial.objects.all():
-                    url = reverse('dcp:SearchImmaterialView')
-                    url += "#"+str(good.id)
-                for good in Offer_Material.objects.all():
-                    url = reverse('dcp:OfferMaterialView')
-                    url += "#"+str(good.id)
-                for good in Offer_Immaterial.objects.all():
-                    url = reverse('dcp:OfferImmaterialView')
-                    url += "#"+str(good.id)
-                '''for good in Post_Question.objects.all():
-                    url = reverse('dcp:PostQuestionView')
-                    url += "#"+str(good.id)'''
-                add_new_notification("Neuer Bump", user.username.title() + " hat deinen Post gebumbt!",
-                                     toUser=good.user,
-                                     url=url)
-                template = request.build_absolute_uri()
-                return HttpResponseRedirect(template)
+                if user == good.user:
+                    template = request.build_absolute_uri()
+                    return HttpResponseRedirect(template)
+                else:
+                    for good in Search_Material.objects.all():
+                        url = reverse('dcp:SearchMaterialView')
+                        url += "#"+str(good.id)
+                    for good in Search_Immaterial.objects.all():
+                        url = reverse('dcp:SearchImmaterialView')
+                        url += "#"+str(good.id)
+                    for good in Offer_Material.objects.all():
+                        url = reverse('dcp:OfferMaterialView')
+                        url += "#"+str(good.id)
+                    for good in Offer_Immaterial.objects.all():
+                        url = reverse('dcp:OfferImmaterialView')
+                        url += "#"+str(good.id)
+                    for good in Post_Question.objects.all():
+                        url = reverse('dcp:PostQuestionView')
+                        url += "#"+str(good.id)
+                    add_new_notification("Neuer Bump", user.username.title() + " hat deinen Post gebumbt!",
+                                         toUser=good.user,
+                                         url=url)
+                    template = request.build_absolute_uri()
+                    return HttpResponseRedirect(template)
 
             if postIdentifier == 'report':
                 good = self.get_good_or_404(request)
