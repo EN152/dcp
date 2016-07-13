@@ -56,7 +56,7 @@ urlpatterns = [
     url(r'^wissen/neuigkeiten/bearbeiten/$', NeuigkeitenBearbeiten.as_view(), name='WissenBearbeiten'),
     url(r'^wissen/neuigkeiten/ansehen/$', NeuigkeitenAnsehen.as_view(), name='WissenAnsehen'),
     url(r'^wissen/neuigkeiten/anlegen/$', NeuigkeitenAnlegen.as_view(), name='WissenAnlegen'),
-    url(r'^wissen/fragen/$', PostQuestionView.as_view()),
+    url(r'^wissen/fragen/$', PostQuestionView.as_view(), name='PostQuestionView'),
     url(r'^wissen/abstimmungen/$', PollsView.as_view(), name = 'PollsView'),
 
     # Aktionen

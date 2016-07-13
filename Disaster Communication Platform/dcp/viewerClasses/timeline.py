@@ -17,6 +17,7 @@ class TimelineView(LoginRequiredMixin, View):
     """ DOCS PENDING
     :author: Jasper
     """
+
     def post(self, request):
         user = request.user
         if user.is_authenticated() and user.is_active:
@@ -34,6 +35,24 @@ class TimelineView(LoginRequiredMixin, View):
                         good.save()
                     relation = good.comments
                     Comment.objects.create(text=text,user=user,relation=relation)
+                    for good in Search_Material.objects.all():
+                        url = reverse('dcp:SearchMaterialView')
+                        url += "#"+str(good.id)
+                    for good in Search_Immaterial.objects.all():
+                        url = reverse('dcp:SearchImmaterialView')
+                        url += "#"+str(good.id)
+                    for good in Offer_Material.objects.all():
+                        url = reverse('dcp:OfferMaterialView')
+                        url += "#"+str(good.id)
+                    for good in Offer_Immaterial.objects.all():
+                        url = reverse('dcp:OfferImmaterialView')
+                        url += "#"+str(good.id)
+                    '''for good in Post_Question.objects.all():
+                        url = reverse('dcp:PostQuestionView')
+                        url += "#"+str(good.id)'''
+                    add_new_notification("Neuer Kommentar", user.username.title() + " hat deinen Post kommentiert!",
+                                     toUser=good.user,
+                                     url=url)
                     template = request.build_absolute_uri()
                     return HttpResponseRedirect(template)
 
@@ -70,9 +89,24 @@ class TimelineView(LoginRequiredMixin, View):
                         return HttpResponseRedirect(template)
                 relation = good.bumps
                 Bump.objects.create(user=user,relation=relation)
+                for good in Search_Material.objects.all():
+                    url = reverse('dcp:SearchMaterialView')
+                    url += "#"+str(good.id)
+                for good in Search_Immaterial.objects.all():
+                    url = reverse('dcp:SearchImmaterialView')
+                    url += "#"+str(good.id)
+                for good in Offer_Material.objects.all():
+                    url = reverse('dcp:OfferMaterialView')
+                    url += "#"+str(good.id)
+                for good in Offer_Immaterial.objects.all():
+                    url = reverse('dcp:OfferImmaterialView')
+                    url += "#"+str(good.id)
+                '''for good in Post_Question.objects.all():
+                    url = reverse('dcp:PostQuestionView')
+                    url += "#"+str(good.id)'''
                 add_new_notification("Neuer Bump", user.username.title() + " hat deinen Post gebumbt!",
                                      toUser=good.user,
-                                     url=None)
+                                     url=url)
                 template = request.build_absolute_uri()
                 return HttpResponseRedirect(template)
 
