@@ -17,7 +17,6 @@ class TimelineView(LoginRequiredMixin, View):
     """ DOCS PENDING
     :author: Jasper
     """
-
     def post(self, request):
         user = request.user
         if user.is_authenticated() and user.is_active:
@@ -197,4 +196,3 @@ class TimelineManagerView(TimelineView):
     def post(self, request):
         super().post(request)
         return self.get(request)
-

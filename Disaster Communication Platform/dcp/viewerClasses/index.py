@@ -24,11 +24,12 @@ class Index(TimelineView):
 			goods_list = Goods.getAllGoods(user=user, catastrophe=profile.currentCatastrophe)#, key=lambda g: g.created_date, reverse=True)
 		else :
 			goods_list = Goods.getAllGoods(user=user)
+
 		goods_list = Goods.sortByBumpCount(goods_list)
+		count_sum = len(list(goods_list))
 		goods_list = getListWithDelete(goods_list, profile)
 		quickstart = False
-		#count_sum = countSearch + countOffer + countInformation + countPeople
-		count_sum = len(list(goods_list))
+		# count_sum = countSearch + countOffer + countInformation + countPeople
 		if count_sum < 1:
 			quickstart = True
 
