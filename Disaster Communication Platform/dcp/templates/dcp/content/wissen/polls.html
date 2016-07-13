@@ -38,25 +38,25 @@
 
 <!-- Ende des Bereiches für die Neuerstellung -->
 {% if latest_question_list %}
-	{% for question in latest_question_list %}
-	<div class="col-sm-4">
+{% for question in latest_question_list %}
+<div class="col-sm-4">
 	<div class="panel panel-yellow" style="vertical-align:bottom;">
 		<div class="panel-heading">
 			<b>{{ question.title }}</b>
 		</div>
 		{% if question.text %}
-		<div class="container">
-		<p>
-			<ul><b>Beschreibung:</b></ul>
-			<ul>{{ question.text }}</ul>
-		</p>
+		<div class="container-fluid" style="word-wrap: break-word;">
+			<p>
+				<ul><b>Beschreibung:</b></ul>
+				<ul>{{ question.text }}</ul>
+			</p>
 		</div>
 		{% endif %}
 		{% if user in question.voted_users.all %}
 
 		{% if choice_list %}
-				<div class="container">
-				<p>
+		<div class="container">
+			<p>
 				{% for choice in choice_list %}
 
 				{% if choice.question == question %}
@@ -67,65 +67,65 @@
 				{% endif %}
 
 				{% endfor %}
-				</p>
-				</div>
-				{% endif %}
+			</p>
+		</div>
+		{% endif %}
 
 		{% else %}
 
-			<form method="POST" enctype="multipart/form-data">
-				{% csrf_token %}
-				{% if choice_list %}
-				<div class="container">
+		<form method="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			{% if choice_list %}
+			<div class="container">
 				<p>
-				{% for choice in choice_list %}
+					{% for choice in choice_list %}
 
-				{% if choice.question == question %}
+					{% if choice.question == question %}
 
-				<label for="choice{{ forloop.counter }}">
-				<input type="radio" name="choice" value="{{ choice.id }}">
-				{{ choice.text }}
-				</input>
+					<label for="choice{{ forloop.counter }}">
+						<input type="radio" name="choice" value="{{ choice.id }}">
+						{{ choice.text }}
+					</input>
 				</label>
 				<br />
 
 				{% endif %}
 
 				{% endfor %}
-				</p>
-				</div>
-				{% endif %}
+			</p>
+		</div>
+		{% endif %}
 
 
 
 		{% endif %}
-				<center>
-					{% if  user in question.voted_users.all %}
-					<button class="btn btn-success disabled" style="margin-top: 10px; margin-bottom: 10px;">
-						<span class="glyphicon glyphicon-ok"></span>
-						Abstimmen
-					</button>
-					{% else %}
-					<button type="submit" class="btn btn-success" name="post_identifier" value="vote" style="margin-top: 10px; margin-bottom: 10px;">
-						<span class="glyphicon glyphicon-ok"></span>
-						Abstimmen
-					</button>
-					{% endif %}
-					{% if user.is_active %}
-					{% if user.is_superuser or question.user == user %}
-					<form action="" role="form" id="delete_form" method="post" style="display: inline;">
-						{% csrf_token %}
-						<input type="hidden" name="question_id" value="{{question.id}}" />
-						<button type="submit" class="btn btn-danger" name="post_identifier" value="delete" style="margin-top: 10px; margin-bottom: 10px;">
-							<span class="glyphicon glyphicon-trash"></span> 
-							Löschen
-						</button>
-					</form>
-					{% endif %}
-					{% endif %}
-				</center>
+		<center>
+			{% if  user in question.voted_users.all %}
+			<button class="btn btn-success disabled" style="margin-top: 10px; margin-bottom: 10px;">
+				<span class="glyphicon glyphicon-ok"></span>
+				Abstimmen
+			</button>
+			{% else %}
+			<button type="submit" class="btn btn-success" name="post_identifier" value="vote" style="margin-top: 10px; margin-bottom: 10px;">
+				<span class="glyphicon glyphicon-ok"></span>
+				Abstimmen
+			</button>
+			{% endif %}
+			{% if user.is_active %}
+			{% if user.is_superuser or question.user == user %}
+			<form action="" role="form" id="delete_form" method="post" style="display: inline;">
+				{% csrf_token %}
+				<input type="hidden" name="question_id" value="{{question.id}}" />
+				<button type="submit" class="btn btn-danger" name="post_identifier" value="delete" style="margin-top: 10px; margin-bottom: 10px;">
+					<span class="glyphicon glyphicon-trash"></span> 
+					Löschen
+				</button>
 			</form>
-	</div>
+			{% endif %}
+			{% endif %}
+		</center>
+	</form>
+</div>
 </div>
 {% endfor %}
 

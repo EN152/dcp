@@ -22,14 +22,14 @@
 				placeholder="" rows="5">{%if knowledgeEntity.description != None%}{{knowledgeEntity.description}}{% endif %}</textarea>
 			<br>
 			<input type="hidden" name="knowledgeID" value="{%if knowledgeEntity.id != None%}{{knowledgeEntity.id}}{% endif %}">
-			<button type="submit" name="back" formaction="../" id="btnCust" class="btn btn-secondary-outline">
-				<small>Zurück</small>
+			<button type="submit" name="back" formaction="../" id="btnCust" class="btn btn-warning btn">
+				<span class="glyphicon glyphicon-arrow-left"></span> Zurück
 			</button>
-			<button type="submit" name="delete" formmethod="post" id="btnCust" class="btn btn-secondary-outline">
-				<small>Löschen</small>
+			<button type="submit" name="delete" formmethod="post" id="btnCust" class="btn btn-danger btn">
+				<span class="glyphicon glyphicon-trash"></span> Löschen
 			</button>
-			<button type="submit" name="send" formmethod="post" id="btnCust" class="btn btn-secondary-outline">
-				<small>Senden</small>
+			<button type="submit" name="send" formmethod="post" id="btnCust" class="btn btn-success btn">
+				<span class="glyphicon glyphicon-info-sign"></span> Update
 			</button>
 		</form>
 	</div>
