@@ -50,7 +50,7 @@
                 <button class="btn btn-success" id="idFilterButton"><span class="glyphicon glyphicon-ok-circle"></span> Filter</button>
             {% endif %}
 
-            <button class="btn btn-success" id="idFilterRadiusButton"><span class="glyphicon glyphicon-record"></span> Filter Radius</button>
+            <!--button class="btn btn-success" id="idFilterRadiusButton"><span class="glyphicon glyphicon-record"></span> Filter Radius</button-->
         </div>
 
 <div class="timeline">
@@ -96,7 +96,7 @@
     			    <div class="timeline-panel {{ good.getCategoryNameAsString }} " id="{{ good.pk }}">
 
                         {% if good.image.url != None and user.profile.show_picture %}
-    				        <img src="{{ good.image.url }}" width="150" style="float:right;" class="img-thumbnail">
+    				        <img src="{{ good.image.url }}" width="150" style="float:right; margin: 10px;" class="img-thumbnail">
                         {% endif %}
     				    <div class="timeline-heading">
     				    	<h4 class="timeline-title"><span class="label label-success">{% if good.user.profile.ngo != None %}{{good.user.profile.ngo.name_short}}{% elif good.user.profile.government != None %}{{good.user.profile.government.name_short}}{% endif %}</span> <b>{{ good.title }}</b></h4>
