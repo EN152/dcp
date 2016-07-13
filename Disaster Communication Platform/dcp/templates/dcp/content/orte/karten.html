@@ -18,7 +18,7 @@
 		
 
         {% for xyBetween in goods %}
-		L.marker(["{{ xyBetween.0 }}".replace(",","."), "{{ xyBetween.1 }}".replace(",",".")]).addTo(mymap).bindPopup("<b>{{ xyBetween.2 }}</b><br />{{ xyBetween.3 }}");
+		L.marker(["{{ xyBetween.0 }}".replace(",","."), "{{ xyBetween.1 }}".replace(",",".")]).addTo(mymap).bindPopup("<a href=\"{{ xyBetween.4 }}\" style=\"color: black;\"><b>{{ xyBetween.2 }}</b><br />{{ xyBetween.3 }}</a>");
         {% endfor %}
 		
 		var popup = L.popup();

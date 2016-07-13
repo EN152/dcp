@@ -6,12 +6,20 @@ class Karten(View):
     def get(self, request):
         listOfGoods = []
         for oneGood in Search_Material.objects.all():
-            listOfGoods.append((oneGood.location_x, oneGood.location_y, oneGood.title, oneGood.description))
+            url = reverse('dcp:SearchMaterialView')
+            url += "#"+str(oneGood.id)
+            listOfGoods.append((oneGood.location_x, oneGood.location_y, oneGood.title, oneGood.description,url))
         for oneGood in Offer_Immaterial.objects.all():
-            listOfGoods.append((oneGood.location_x, oneGood.location_y, oneGood.title, oneGood.description))
+            url = reverse('dcp:OfferImmaterialView')
+            url += "#"+str(oneGood.id)
+            listOfGoods.append((oneGood.location_x, oneGood.location_y, oneGood.title, oneGood.description,url))
         for oneGood in Offer_Material.objects.all():
-            listOfGoods.append((oneGood.location_x, oneGood.location_y, oneGood.title, oneGood.description))
+            url = reverse('dcp:OfferMaterialView')
+            url += "#"+str(oneGood.id)
+            listOfGoods.append((oneGood.location_x, oneGood.location_y, oneGood.title, oneGood.description,url))
         for oneGood in Search_Immaterial.objects.all():
-            listOfGoods.append((oneGood.location_x, oneGood.location_y, oneGood.title, oneGood.description))
+            url = reverse('dcp:SearchImmaterialView')
+            url += "#"+str(oneGood.id)
+            listOfGoods.append((oneGood.location_x, oneGood.location_y, oneGood.title, oneGood.description,url))
         if request.user.is_authenticated():
             return render(request, self.template, {'goods': listOfGoods})

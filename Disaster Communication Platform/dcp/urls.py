@@ -19,15 +19,15 @@ urlpatterns = [
 
     # Suchen
     url(r'^suchen/$', Suchen.as_view()),
-    url(r'^suchen/materielles/$', SearchMaterialView.as_view()),
-    url(r'^suchen/immaterielles/$', SearchImmaterialView.as_view()),
+    url(r'^suchen/materielles/$', SearchMaterialView.as_view(),name='SearchMaterialView'),
+    url(r'^suchen/immaterielles/$', SearchImmaterialView.as_view(),name='SearchImmaterialView'),
     url(r'^suchen/personen/$', Suchen_Personen.as_view()),
     url(r'^suchen/wortsuche/$', WordSearch.as_view(), name='WordSearch'),
 
     # Bieten
     url(r'^bieten/$', Bieten.as_view()),
-    url(r'^bieten/materielles/$', OfferMaterialView.as_view()),
-    url(r'^bieten/immaterielles/$', OfferImmaterialView.as_view()),
+    url(r'^bieten/materielles/$', OfferMaterialView.as_view(),name='OfferMaterialView'),
+    url(r'^bieten/immaterielles/$', OfferImmaterialView.as_view(),name='OfferImmaterialView'),
 
     # Chat
     url(r'^chat/$', Chat.as_view(), name='Chat'),
