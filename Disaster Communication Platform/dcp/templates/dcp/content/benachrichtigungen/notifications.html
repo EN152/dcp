@@ -47,7 +47,7 @@
 
                     {{ notification.text }}
                     <span class="pull-right text-muted small"><em>{{ notification.pubdate }}</em></span>
-                    <button id="ok" class="btn btn-danger" onclick="deleteNotification({{ notification.id }})">Löschen</button>
+                    <button id="ok" class="btn btn-danger" onclick="deleteNotification({{ notification.id }})"><span class="glyphicon glyphicon-trash"></span> Löschen</button>
                      </li>
                 {% endfor %}
         </div>
