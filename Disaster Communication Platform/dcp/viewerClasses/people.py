@@ -2,30 +2,28 @@ from dcp.importUrls import *
 from django.http.response import Http404
 from django.template.context_processors import request
 from django.shortcuts import get_object_or_404
-from dcp.auth.generic import getListWithDelete 
+from dcp.auth.generic import getListWithDelete
 from braces.views import LoginRequiredMixin
 
 class Suchen_Personen(LoginRequiredMixin,View):
 	def get(self, request):
 		profile = request.user.profile
-		
+
 		if profile.currentCatastrophe is not None:
 			missed_people_raw = MissedPeople.objects.filter(catastrophe = profile.currentCatastrophe)
-		else:	
+		else:
 			missed_people_raw = MissedPeople.objects.all()
-			
+
 		form = MissedPeopleForm()
 		characteristicsToUser = []
 		for person in missed_people_raw:
 			if person.characteristics:
 				all_characteristics = person.characteristics.split(";")
-				
+
 				for c in all_characteristics:
 					characteristicsToUser.append((c, person.id))
 
-		
 		missed_people = getListWithDelete(missed_people_raw, profile)
-
 
 		template = 'dcp/content/suchen/personen.html'
 		context = {'missed_people': missed_people, 'characteristicsToUser' : characteristicsToUser, 'form' : form}
@@ -40,24 +38,29 @@ class Suchen_Personen(LoginRequiredMixin,View):
 			if postIdentifier == 'create':
 				form = MissedPeopleForm(request.POST)
 				if form.is_valid():
-					"""
-					missed_person = MissedPeople(title=request.POST.get('title'), 
-					description=request.POST.get('description'), 
-					gender=request.POST.get('gender'), 
-					age=request.POST.get('age'), 
-					name=request.POST.get('name'), 
-					size=request.POST.get('size'), 
-					eyeColor=request.POST.get('eyeColor'), 
-					hairColor=request.POST.get('hairColor'), 
+
+					missed_person = MissedPeople(title=request.POST.get('title'),
+					description=request.POST.get('description'),
+					gender=request.POST.get('gender'),
+					age=request.POST.get('age'),
+					name=request.POST.get('name'),
+					size=request.POST.get('size'),
+					eyeColor=request.POST.get('eyeColor'),
+					hairColor=request.POST.get('hairColor'),
 					characteristics=request.POST.get('characteristics'),
 					picture=request.FILES.get('picture'),
 					user=request.user)
-					catastrophe=Catastrophe.objects.get(id=1)
+
 					missed_person.save()
-					"""
-					person = form.save(commit=False)
-					person.user = request.user
-					person.save()
+
+					#person = form.save(commit=False)
+					#person.user = request.user
+					#person.save()
+
+					url = reverse_lazy('dcp:Suchen_Personen')
+					for u in User.objects.all():
+						add_new_notification("Neue Person vermisst!", "Kennst du diese Person?", toUser=u, url=url)
+
 					template = request.build_absolute_uri()
 					return HttpResponseRedirect(template)
 				else:
@@ -97,8 +100,8 @@ class Suchen_Personen(LoginRequiredMixin,View):
 				person.reports.add(user)
 				template = request.build_absolute_uri()
 				return HttpResponseRedirect(template)
-			
-			
+
+
                 #if people.bumps is None:
                 #    people.bumps = Bump_Relation.objects.create()
                 #    people.save()
@@ -106,10 +109,10 @@ class Suchen_Personen(LoginRequiredMixin,View):
                 #    already_exists = Bump.objects.filter(relation = good.bumps, user = user)
                 #    if already_exists:
                 #        template = request.build_absolute_uri()
-                #        return HttpResponseRedirect(template)       
+                #        return HttpResponseRedirect(template)
                 #relation = people.bumps
                 #Bump.objects.create(user=user,relation=relation)
-                
+
 	def getMissedPeopleOr404(self, request):
 		people = MissedPeople.get(id=request.POST.get('missedpeople_id'))
 		if people is None:

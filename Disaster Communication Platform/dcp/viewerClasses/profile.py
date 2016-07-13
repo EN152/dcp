@@ -41,7 +41,7 @@ class MyProfile(LoginRequiredMixin, View):
             invite = invite = get_object_or_404(GovernmentInvite, id=request.POST.get('invite_id'), profile=user.profile)
             membership = invite.acceptInvite()
             return HttpResponseRedirect(reverse('dcp:GovernmentView', kwargs={'pk':membership.government.id}))
-        
+
         elif post_identifier == 'declineNgoInvite':
             invite = get_object_or_404(NgoInvite, id=request.POST.get('invite_id'), profile=user.profile)
             invite.delete()
@@ -53,7 +53,7 @@ class MyProfile(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse('dcp:ProfileView'))
 
         raise Http404
-        
+
 
 class EditProfile(LoginRequiredMixin, View):
     def get(self, request, editProfileForm=None):
@@ -80,17 +80,19 @@ class EditProfile(LoginRequiredMixin, View):
             user = User.objects.select_related('profile').get(id=request.user.id)
             profile = user.profile
             user.email = form.cleaned_data.get('email')
-            profile.show_picture = form.cleaned_data.get('show_picture')  
+            profile.show_picture = form.cleaned_data.get('show_picture')
             profile.show_map = form.cleaned_data.get('show_map')
-            
+
             password = form.cleaned_data.get('password')
             if password is not None and password != '':
                 user.set_password(password)
             user.save()
             profile.save()
+
+            url = reverse('dcp:ProfileView')
+            add_new_notification("Profil bearbeitet", "Du hast dein Profil editiert!", toUser=user, url=url)
+
             return HttpResponseRedirect(reverse('dcp:ProfileView'))
 
-        else: 
+        else:
             return self.get(request, editProfileForm=form)
-
-

@@ -52,7 +52,7 @@ class AktionenLaufende(View):
 
 		# this step creates an n-tuple because range() cannot be used in template
 		# and many-to-many objects are not iterable...and I didn't want to pass >10 single objects...
-		
+
 		events = []
 		for event in rawEvents:
 			current_user_allowed_to_delete = isAllowedToDelete(catastrophe=event.catastrophe,profile=request.user.profile) or (event.createdby==request.user)
@@ -62,10 +62,10 @@ class AktionenLaufende(View):
 			userIsMemberOfCurrentEvent = False
 			if request.user in event.members.all():
 				userIsMemberOfCurrentEvent = True
-			
-			# people	
+
+			# people
 			numberOfMembers = event.members.count()
-			
+
 			namesOfMembers = []
 			for member in event.members.all():
 				namesOfMembers.append(member.username)
@@ -73,7 +73,7 @@ class AktionenLaufende(View):
 
 			#cars
 			numberOfCars = event.cars.count()
-			
+
 			descriptionsOfCars = []
 			usernamesOfCars = []
 			idsOfCars = []
@@ -85,7 +85,7 @@ class AktionenLaufende(View):
 
 			# specials
 			numberOfSpecials = event.specials.count()
-			
+
 			descriptionsOfSpecials = []
 			usernamesOfSpecials = []
 			idsOfSpecials = []
@@ -113,18 +113,18 @@ class AktionenLaufende(View):
 				namesOfMembers, userIsMemberOfCurrentEvent,
 				nameOfCurrentUser, numberOfCars, descriptionsOfCars,
 				numberOfSpecials, descriptionsOfSpecials, usernamesOfCars,
-				idsOfCars, usernamesOfSpecials, idsOfSpecials,current_user_allowed_to_delete))
+				idsOfCars, usernamesOfSpecials, idsOfSpecials, current_user_allowed_to_delete))
 
 		context = {'events' : events,'deleteeventform':DeleteEventForm()}
 		return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
 
 	def post(self,request):
 		template = 'dcp/content/aktionen/laufende.html'
-
+		
 		user = request.user
 		event_id = request.POST.get('event_id')
 		event = Event.objects.get(id=event_id)
-		
+
 		if event is None:
 			context = {'error': 'Da ist leider etwas schief gelaufen! :('}
 			return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
@@ -135,9 +135,13 @@ class AktionenLaufende(View):
 				context = {'error': 'Du hast dich bei diesem Event bereits eingetragen!'}
 				return dcp.viewerClasses.authentication.getPageAuthenticated(request, template, context)
 
+			url = reverse_lazy('dcp:EventsView') + '#' + str(event.id)
+			for m in event.members.all():
+				add_new_notification("Neuer Teilnehmer", m.username + " nimmt an der Veranstaltung teil!", toUser=m, url=url)
+
 			event.members.add(user)
 			event.save()
-		
+
 		if request.POST.get('post_identifier') == 'remove_user' and request.user.is_active and request.user.is_authenticated():
 			event.members.remove(user)
 			event.save()
@@ -147,7 +151,7 @@ class AktionenLaufende(View):
 			car = Car.objects.create(description=car_description, owner=user)
 			event.cars.add(car)
 			event.save()
-		
+
 		if request.POST.get('post_identifier') == 'remove_car' and request.user.is_active and request.user.is_authenticated():
 			car_id = request.POST.get('car_id')
 			car = Car.objects.get(id=car_id)

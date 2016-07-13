@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^suchen/$', Suchen.as_view()),
     url(r'^suchen/materielles/$', SearchMaterialView.as_view(),name='SearchMaterialView'),
     url(r'^suchen/immaterielles/$', SearchImmaterialView.as_view(),name='SearchImmaterialView'),
-    url(r'^suchen/personen/$', Suchen_Personen.as_view()),
+    url(r'^suchen/personen/$', Suchen_Personen.as_view(), name='Suchen_Personen'),
     url(r'^suchen/wortsuche/$', WordSearch.as_view(), name='WordSearch'),
 
     # Bieten

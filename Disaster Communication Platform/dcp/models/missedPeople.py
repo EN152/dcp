@@ -3,7 +3,7 @@ from dcp.models.catastrophe import Catastrophe
 
 class MissedPeople(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
-    catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=False)
+    catastrophe = models.ForeignKey(Catastrophe, on_delete=models.CASCADE, null=True)
     created_date = models.DateTimeField(default=timezone.now)
     bumps = models.ManyToManyField(User, related_name='PeopleBumps')
     reports = models.ManyToManyField(User, related_name='PeopleReports')

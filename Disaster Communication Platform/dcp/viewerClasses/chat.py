@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from dcp.importUrls import *
 from dcp.customclasses.Helpers import  *
 class Chat(View):
@@ -44,7 +46,7 @@ class Chat(View):
         messages = Message.objects.filter(Conversation=self.conversation).order_by('SendTime')
         form = self.form_class()
         return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template,params={'message_list':messages,'otherUser':self.otherUser,'currentUser':self.currentUser,'form':form})
-    
+
     def post(self,request):
         form = self.form_class(request.POST)
         if form.is_valid():
