@@ -6,7 +6,6 @@
 <link href="{% static 'css/knowledge.css' %}" rel="stylesheet">
 <div class="row">
   <div class="center-block" style="margin-left: 50px;wight:300px;">
-
 	  	<h1 class="display-4">{{knowledgeEntity.title}}</h1>
 	  	<h4 id="display-4">
 			{%if knowledgeEntity.description != None%}
@@ -14,7 +13,7 @@
 			{% endif %}
 		</h4>
 	  	{%if knowledgeEntity.created_date != None%}
-	  	Datum: {{knowledgeEntity.created_date}} | Von: {{knowledgeUser.username}}
+	  	Datum: {{knowledgeEntity.created_date}} | {{knowledgeUser.username}}
 	  	{% endif %}
 	  	<hr>
 	  	<form>
@@ -25,7 +24,4 @@
 		</form>
   </div>
 </div>
-
-
-
 {% endblock %}
