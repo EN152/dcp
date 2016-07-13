@@ -14,9 +14,6 @@ urlpatterns = [
     url(r'^abmelden/$', LogoutView.as_view()),
     url(r'^registrieren/$', RegisterView.as_view()),
 
-    # Karten
-    url(r'^orte/karten/$', Karten.as_view()),
-
     # Suchen
     url(r'^suchen/$', Suchen.as_view()),
     url(r'^suchen/materielles/$', SearchMaterialView.as_view()),
@@ -50,32 +47,28 @@ urlpatterns = [
     url(r'^ngo/(?P<pk>\d+)/$', NgoView.as_view(), name='NgoView'),
     url(r'^government/(?P<pk>\d+)/$', GovernmentView.as_view(),name='GovernmentView'),
     url(r'^area/(?P<pk>\d+)/$', AreaView.as_view(),name='AreaView'),
+    
+    # Orte
+    url(r'^orte/karten/$', Karten.as_view()),
 
-#    # Wissen
+    # Wissen
     url(r'^wissen/$', Wissen.as_view(), name='Wissen'),
     url(r'^wissen/neuigkeiten/$', Neuigkeiten.as_view(), name='Wissen'),
     url(r'^wissen/neuigkeiten/bearbeiten/$', NeuigkeitenBearbeiten.as_view(), name='WissenBearbeiten'),
     url(r'^wissen/neuigkeiten/ansehen/$', NeuigkeitenAnsehen.as_view(), name='WissenAnsehen'),
     url(r'^wissen/neuigkeiten/anlegen/$', NeuigkeitenAnlegen.as_view(), name='WissenAnlegen'),
-#    url(r'^wissen/neuigkeiten/$', views.wissen_neuigkeiten),
-#    url(r'^wissen/gefahren/$', views.wissen_gefahren),
-#    url(r'^wissen/fragen/$', views.wissen_fragen),
-     url(r'^wissen/abstimmungen/$', PollsView.as_view(), name = 'PollsView'),
-#    url(r'^wissen/archiv/$', views.wissen_archiv),
+    url(r'^wissen/fragen/$', PostQuestionView.as_view()),
+    url(r'^wissen/abstimmungen/$', PollsView.as_view(), name = 'PollsView'),
 
     # Aktionen
+    url(r'^aktionen/$', Aktionen.as_view()),
     url(r'^aktionen/planung/$', AktionenPlanung.as_view()),
     url(r'^aktionen/laufende/$', AktionenLaufende.as_view(),name='EventsView'),
 
 
-#    # Orte
-#    url(r'^orte/$', views.orte),
-#    url(r'^orte/anlaufstellen/$', views.orte_anlaufstellen),
-#    url(r'^orte/karten/$', views.orte_karten),
-#    url(r'^orte/fotos/$', views.orte_fotos),
-
     #Profil
-    url(r'^profil/$', MyProfile.as_view(), name='ProfileView'),
+    url(r'^profil/$', Profil.as_view(), name='Profil'),
+    url(r'^profil/daten/$', MyProfile.as_view(), name='ProfileView'),
     url(r'^profil/bearbeiten/$', EditProfile.as_view()),
 
     #Benachrichtigungen

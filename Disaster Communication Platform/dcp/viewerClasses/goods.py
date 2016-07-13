@@ -88,7 +88,27 @@ class OfferImmaterialView(TimelineView):
             if form.is_valid():
                 return super().createNewGood(request, form)
             return self.get(request, form)
-        return super().post(request) 
+        return super().post(request)
+
+class PostQuestionView(TimelineView):
+    def get(self, request, form=None, elementList=None):
+        profile = request.user.profile
+        if form is None:
+            form = PostQuestionForm      
+        if elementList is None and profile.currentCatastrophe is None:
+            elementList = Post_Question.objects.all().order_by('created_date').reverse()
+        elif elementList is None:
+            elementList = Post_Question.objects.filter(catastrophe=profile.currentCatastrophe).order_by('created_date').reverse()
+        elementList = Goods.sortByBumpCount(elementList)
+        return super().getCreateNew(request, 'question-sign', 'btn-warning' , 'Wissen: Fragen' , form, 'Post_Question', elementList)
+
+    def post(self, request):
+        if request.POST.get('post_identifier') == 'create' and request.user.is_active and request.user.is_authenticated():
+            form = PostQuestionForm(request.POST, request.FILES)
+            if form.is_valid():
+                return super().createNewGood(request, form)
+            return self.get(request, form)
+        return super().post(request)
 
 
 class Bieten(LoginRequiredMixin, View):
