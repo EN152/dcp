@@ -30,7 +30,7 @@
 				<input id="search" class="inputCustem" name="search" type="text"
 					placeholder="Was suchst du?">
 					<input id="search_submit" name="search_submit" value="" type="submit">
-					<button type="submit" name="new" formaction="./anlegen/" formmethod="post" class="btn btn-secondary-outline"style="position: relative; top: 15px; left: 110px;"><small>Neuer Eintrag</small></button>
+					<button type="submit" name="new" formaction="./anlegen/" formmethod="post" class="btn btn-warning btn-lg"style="position: relative; top: 15px; left: 110px;"><span class="glyphicon glyphicon-info-sign"></span> Neu</button>
 			</form>
 
 		</div>
@@ -46,7 +46,7 @@
 						<form action="" method="post">
 							{% csrf_token %}
 							<input type="hidden" name="knowledgeID" id="{{know.id}}" value="{{know.id}}">
-							<button type="submit" name="more" formaction="./ansehen/" formmethod="post" class="btn btn-secondary-outline"><small>Mehr</small></button>
+							<button type="submit" name="more" formaction="./ansehen/" formmethod="post" class="btn btn-warning btn"><span class="glyphicon glyphicon-share-alt"></span> Mehr</button>
 						</form>
 					</li>
 					{% endfor %}
@@ -63,7 +63,7 @@
 						<form action="./bearbeiten/" method="post">
 							{% csrf_token %}
 							<input type="hidden" name="knowledgeID" value="{{know.id}}">
-							<button type="submit" class="btn btn-secondary-outline"><small>Bearbeiten</small></button>
+							<button type="submit" class="btn btn-warning btn"><span class="glyphicon glyphicon-edit"></span> Bearbeiten</button>
 						</form>
 					</li>
 

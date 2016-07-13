@@ -1,11 +1,11 @@
 {% load static from staticfiles %}
-@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700);
 
-@import url(https://raw.github.com/FortAwesome/Font-Awesome/master/docs/assets/css/font-awesome.min.css);
+/*@import url(https://raw.github.com/FortAwesome/Font-Awesome/master/docs/assets/css/font-awesome.min.css); */
 
 
 #colCust24{
 	/*margin-left: 16.666667%;*/
+	font-family: Helvetica;
 	width: 50%;
 	float: left;
 	position: relative;
@@ -16,6 +16,7 @@
 }
 
 #colCust42{
+	font-family: Helvetica;
 	width: 50%;
 	float: left;
 	position: relative;
@@ -27,6 +28,7 @@
 
 
 #wrap {
+	font-family: Helvetica;
 	font-size: 15px;
 	margin: 50px 100px;
 	display: inline-block;
@@ -38,10 +40,10 @@
 }
 
 .inputCustem {
+	font-family: Helvetica;
 	height: 60px;
 	font-size: 55px;
 	display: inline-block;
-	font-family: "Lato";
 	font-weight: 100;
 	border: none;
 	outline: none;
@@ -64,10 +66,10 @@
 
 
 .search {
+	font-family: Helvetica;
 	height: 70px;
 	font-size: 55px;
 	display: inline-block;
-	font-family: "Lato";
 	font-weight: 100;
 	border: none;
 	outline: none;
@@ -88,18 +90,14 @@
 	cursor: text;
 }
 
-#display-4 {
-	font-size: 1.5rem;
-	font-weight: 300;
-}
 
 .description {
+	font-family: Helvetica;
 	position: relative;
 	top: 100px;
 	height: 250px;
 	font-size: 55px;
 	display: inline-block;
-	font-family: "Lato";
 	font-weight: 100;
 	border: none;
 	outline: none;
@@ -116,6 +114,7 @@
 }
 
 #btnCust {
+	font-family: Helvetica;
 	position: relative;
 	top: 110px;
 }
@@ -146,6 +145,7 @@ input[type="submit"]:hover {
 }
 
 #continerCustem{
+	font-family: Helvetica;
     box-sizing: border-box;
     margin-left: 200px;
     margin-top: 200px;
@@ -156,7 +156,6 @@ input[type="submit"]:hover {
 }
 
 .list-unstyled.love li, .list-unstyled.no-love li {
-	font-family: "Lato";
 	color: #555;
 	background: none;
 	background:
@@ -167,7 +166,6 @@ input[type="submit"]:hover {
 
 /* change the no-love image */
 .list-unstyled.no-love li {
-	font-family: "Lato";
 	color: #555;
 	background: none;
 	background:
