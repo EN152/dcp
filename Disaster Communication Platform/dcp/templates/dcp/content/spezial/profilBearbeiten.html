@@ -10,11 +10,8 @@
 
 		<form action="#" method="POST">
 		{% csrf_token %}	
-		{% bootstrap_form form %}
-	
-		{% for message in messages %}
-    	<div class="alert alert-{{ message.tags }}">{{ message }}</div>
-		{% endfor %}
+		{% bootstrap_form editProfileForm %}
+
 	
 		{% buttons %}
 		{% bootstrap_button "Profil aktualisieren" button_type="submit" icon="upload" button_class="btn btn-success  btn-lg" name="testbutton" value="testbutton" %}

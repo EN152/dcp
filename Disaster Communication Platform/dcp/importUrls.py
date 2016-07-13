@@ -12,7 +12,6 @@ from braces import views
 from dcp.models import *
 from django.template import loader
 from dcp.forms import *
-from .forms import UserForm
 from .models import Message
 from .models import Catastrophe
 from .forms import *

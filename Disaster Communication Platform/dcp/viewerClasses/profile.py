@@ -7,6 +7,8 @@ from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from dcp.forms import EditProfileForm
+from dcp.dcpSettings import MIN_PASSWORD_LENGTH
 
 class Profil(LoginRequiredMixin, View):
     template = 'dcp/content/spezial/profiluebersicht.html'
@@ -54,32 +56,41 @@ class MyProfile(LoginRequiredMixin, View):
         
 
 class EditProfile(LoginRequiredMixin, View):
-    template = 'dcp/content/spezial/profilBearbeiten.html'
-    def get(self, request):
-        user = User.objects.get(username=request.user.username)
-        form = UserForm(initial={'email' : user.email,'first_name': user.first_name,'last_name':user.last_name,'password':''})
-        return dcp.viewerClasses.authentication.getPageAuthenticated(request, self.template, {'form': form})
+    def get(self, request, editProfileForm=None):
+        templatePath = 'dcp/content/spezial/profilBearbeiten.html'
+        template = loader.get_template(templatePath)
+        user = User.objects.get(id=request.user.id)
+        if editProfileForm is None:
+            editProfileForm = EditProfileForm(initial={
+                'email' : user.email,
+                'first_name': user.first_name,
+                'last_name':user.last_name,
+                'show_picture':user.profile.show_picture,
+                'show_map': user.profile.show_map})
+
+        context = {
+            'editProfileForm' : editProfileForm
+        }
+
+        return HttpResponse(template.render(context, request))
+
     def post(self,request):
-        if request.method == "POST":  
-            form = UserForm(request.POST)
-            if form.is_valid():
-                user = User.objects.get(username=request.user.username)
-                email = request.POST.get("email")
-                password = request.POST.get("password")
-                scndpwd = request.POST.get("scndpwd")
-                if email != None: # Der Nutzer will die Email ändern
-                    user.email = email
-                    user.save()
-                
-                if password != None and password != scndpwd:
-                    messages.add_message(request, messages.INFO,'Passwörter nicht identisch')
-                    return render(request, self.template, {'form': form})
-                else:
-                    user.set_password(password)
-                    user.save()
-                    return HttpResponseRedirect(reverse('dcp:ProfileView'))
-        return HttpResponseRedirect(reverse('dcp:ProfileView'))
+        form = EditProfileForm(request.POST)
+        if form.is_valid():
+            user = User.objects.select_related('profile').get(id=request.user.id)
+            profile = user.profile
+            user.email = form.cleaned_data.get('email')
+            profile.show_picture = form.cleaned_data.get('show_picture')  
+            profile.show_map = form.cleaned_data.get('show_map')
+            
+            password = form.cleaned_data.get('password')
+            if password is not None and password != '':
+                user.set_password(password)
+            user.save()
+            profile.save()
+            return HttpResponseRedirect(reverse('dcp:ProfileView'))
 
-
+        else: 
+            return self.get(request, editProfileForm=form)
 
 

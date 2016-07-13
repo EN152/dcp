@@ -8,7 +8,7 @@ from django.forms.models import *
 from django.db.models.fields import CharField
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from dcp.models.categorysGoods import  *
-# from dcp.customForms.catastropheForms import * # Old stuff
+from dcp.dcpSettings import MIN_PASSWORD_LENGTH
 
 import dcp.dcpSettings
 
@@ -19,13 +19,22 @@ class Offer_Form(ModelForm):
 		model = Goods
 		fields = ['title','description']
 
-class UserForm(ModelForm):
-	email = forms.CharField(widget=forms.EmailInput)
-	password = forms.CharField(widget=forms.PasswordInput, required=False)
-	scndpwd = forms.CharField(max_length=200,widget=forms.PasswordInput, required=False,label='Passwort wiederholen')
+class EditProfileForm(forms.Form):
+	email = forms.EmailField(required=True)
+	password = forms.CharField(label='Passwort', min_length=MIN_PASSWORD_LENGTH, widget=forms.PasswordInput, required=False)
+	passwordRepeat = forms.CharField(label='Passwort wiederholen', min_length=MIN_PASSWORD_LENGTH, widget=forms.PasswordInput, required=False)
+	show_picture = forms.BooleanField(label='Bilder anzeigen', required=False)
+	show_map = forms.BooleanField(label='Karten anzeigen', required=False)
+
 	class Meta:
-		model = User
-		fields = ['email', 'password', 'scndpwd']
+		fields = ['email', 'password', 'scndpwd', 'show_pictures', 'show_map']
+
+	def clean(self):
+		super(EditProfileForm, self).clean()
+		if self.cleaned_data.get('password') != self.cleaned_data.get('passwordRepeat') and self.cleaned_data.get('password') is not None:
+			self.add_error('password', 'Passwörter stimmen nicht überein')
+			self.add_error('passwordRepeat','')
+		return self.cleaned_data
 
 class sendMessage(forms.ModelForm):
     Text = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control input-sm','placeholder': 'Bitte Nachricht eingeben'}))
