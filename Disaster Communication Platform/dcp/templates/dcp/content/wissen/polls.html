@@ -46,8 +46,9 @@
 		{% if question.text %}
 		<div class="container-fluid" style="word-wrap: break-word;">
 			<p>
-				<ul><b>Beschreibung:</b></ul>
-				<ul>{{ question.text }}</ul>
+				<br>
+				<b>Beschreibung: </b>
+				{{ question.text }}</span>
 			</p>
 		</div>
 		{% endif %}
@@ -78,11 +79,9 @@
 			<div class="container">
 				<p>
 					{% for choice in choice_list %}
-
 					{% if choice.question == question %}
-
 					<label for="choice{{ forloop.counter }}">
-						<input type="radio" name="choice" value="{{ choice.id }}">
+						<input type="radio" name="choice" value="{{ choice.id }}" checked>
 						{{ choice.text }}
 					</input>
 				</label>
