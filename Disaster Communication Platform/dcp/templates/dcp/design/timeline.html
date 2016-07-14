@@ -202,9 +202,9 @@
 
     						<script>
     								$(document).ready(function(){
-    									$("#btnEinblenden_{{good.id}}").click(function(){
-    										$("#kommentare_{{good.id}}").toggle();
-    										$("#kommentareFooter_{{good.id}}").toggle();
+    									$("#btnEinblenden_{{forloop.counter}}").click(function(){
+    										$("#kommentare_{{forloop.counter}}").toggle();
+    										$("#kommentareFooter_{{forloop.counter}}").toggle();
     									});
     								});
     						</script>
@@ -215,13 +215,13 @@
                                     <i class="fa fa-comments fa-fw"></i>
                                     Öffentliche Kommentare <span class="badge">{{good.getComments|length}}</span>
 
-    								<button id="btnEinblenden_{{good.id}}" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+    								<button id="btnEinblenden_{{forloop.counter}}" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
                                         <i class="fa fa-chevron-down"></i>
                                     </button>
 
     							</div>
 
-    							<div class="panel-body" id="kommentare_{{good.id}}" style="display: none;">
+    							<div class="panel-body" id="kommentare_{{forloop.counter}}" style="display: none;">
                                     <ul class="chat">
                                            {% for comment in good.getComments %}
 
@@ -244,7 +244,7 @@
 
                                 {% if user.is_active %}
 
-    							<div class="panel-footer" id="kommentareFooter_{{good.id}}" style="display: none;">
+    							<div class="panel-footer" id="kommentareFooter_{{forloop.counter}}" style="display: none;">
                                     <form class="form-horizontal" role="form" id="comment" method="post">
     								    <div class="input-group">
 
